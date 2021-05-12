@@ -12,7 +12,7 @@ module.exports = {
       recursive: true,
       indexAsParent: true,
       includeFiles: /routes\.js$/i,
-      excludeDirs: /^(\utils|_helpers|entry|notification|notification_log|notification_settings|notification_type|product|reciept|stock|stocktaking|stocktaking_product|warehouse)$/,
+      excludeDirs: /^(\utils|_helpers|notification_log|notification_settings|reciept|stocktaking|stocktaking_product)$/,
     });
 
     for (const [name, route] of Object.entries(allRoutes)) {

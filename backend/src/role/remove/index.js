@@ -6,7 +6,7 @@ async function remove(req, res) {
     const savedRole = await Role.findById(req.params.id);
     if (savedRole) {
       const users = User.find({ role_id: savedRole._id });
-      if (users.length == 0) {
+      if (users.length > 0) {
         return res.status(400).send("There are users connected with this role");
       } else {
         await Role.findByIdAndRemove(req.params.id);

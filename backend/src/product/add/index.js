@@ -1,29 +1,73 @@
-const User = require("../../users/schema");
-const Role = require("../schema");
+const Product = require("../schema");
+const Category = require("../../category/schema");
+const Subcategory = require("../../subcategory/schema");
+const Packaging = require("../../packaging/schema");
 const Joi = require("joi");
 
 const serializer = Joi.object({
   name: Joi.string().required(),
+  category_id: Joi.string().length(24).required(),
+  subcategory_id: Joi.string().length(24).allow(null),
+  packaging_id: Joi.string().length(24).allow(null),
 });
 
 async function add(req, res) {
-  delete req.body.userId;
-  delete req.body.accessToken;
   const result = serializer.validate(req.body);
   if (result.error) {
     return res.status(400).send(result.error);
   }
 
-  const savedRole = await Role.findOne({ name: result.value.name });
-  if (savedRole) {
-    return res.status(400).json({ error: "Role already exists" });
+  let errors = [];
+  let isWrongSubcategory = false;
+
+  const categoryExists = await Category.findById(result.value.category_id);
+  if (!categoryExists) {
+    errors.push("Category");
   }
-  const newRole = new Role();
-  newRole.name = result.value.name;
+  
+  if (result.value.packaging_id != null) {
+    const packagingExists = await Packaging.findById(result.value.packaging_id);
+    if (!packagingExists) {
+      errors.push("Packaging");
+    }
+  }
+
+  if (result.value.subcategory_id != null) {
+    const subcategoryExists = await Subcategory.findById(result.value.subcategory_id);
+    if (!subcategoryExists ) {
+      errors.push("Subcategory");
+    }
+    else if(subcategoryExists.category_id != result.value.category_id){
+      isWrongSubcategory = true;
+    }
+  }
+
+  if (errors.length > 0) {
+    if(isWrongSubcategory){
+      return res.status(404).json({ error: `Wrong subcategory and ${errors.join(", ")} not found` });
+    }
+    else{
+      return res.status(404).json({ error: `${errors.join(", ")} not found` });
+    }
+  }
+  else if(isWrongSubcategory){
+    return res.status(404).json({ error: "Wrong subcategory"});
+  }
+
+  const productExists = await Product.findOne({ name: result.value.name });
+  if (productExists) {
+    return res.status(400).json({ error: "Product with given name already exists" });
+  }
+
+  const newProduct = new Product();
+  newProduct.name = result.value.name;
+  newProduct.category_id = result.value.category_id;
+  newProduct.subcategory_id = result.value.subcategory_id;
+  newProduct.packaging_id = result.value.packaging_id;
 
   try {
-    await newRole.save();
-    return res.status(201).json({ status: "Role saved" });
+    await newProduct.save();
+    return res.status(200).json({ status: "Product saved" });
   } catch (err) {
     return res.status(500).json({ error: err });
   }

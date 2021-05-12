@@ -7,7 +7,7 @@ async function remove(req, res) {
     if (savedCity) {
       const locations = await Location.find({ city_id: req.params.id });
 
-      if (locations.length == 0) {
+      if (locations.length > 0) {
         return res.status(400).send("There are locations connected with this city");
       } else {
         await City.findByIdAndRemove(req.params.id);

@@ -1,4 +1,4 @@
-const Role = require("../schema");
+const NotificationType = require("../schema");
 const Joi = require("joi");
 
 const serializer = Joi.object({
@@ -11,16 +11,12 @@ async function add(req, res) {
     return res.status(400).send(result.error);
   }
 
-  const savedRole = await Role.findOne({ name: result.value.name });
-  if (savedRole) {
-    return res.status(400).json({ error: "Role already exists" });
-  }
-  const newRole = new Role();
-  newRole.name = result.value.name;
+  const newNotificationType = new NotificationType();
+  newNotificationType.name = result.value.name;
 
   try {
-    await newRole.save();
-    return res.status(200).json({ status: "Role saved" });
+    await newNotificationType.save();
+    return res.status(200).json({ status: "Notification type saved" });
   } catch (err) {
     return res.status(500).json({ error: err });
   }
