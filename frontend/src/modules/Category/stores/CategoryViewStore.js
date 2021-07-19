@@ -112,7 +112,7 @@ class CategoryViewStore {
 
     @action
     setPagination(page) {
-        if (page != null) {
+        if (page !== null) {
             this.page = page;
         }
         this.totalPages = Math.floor(this.allData.length / this.pageSize);

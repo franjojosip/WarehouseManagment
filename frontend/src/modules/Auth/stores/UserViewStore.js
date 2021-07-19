@@ -1,8 +1,10 @@
 import { action, observable } from "mobx";
+import EmailValidator from "email-validator";
 
-class LocationViewStore {
+
+class UserViewStore {
     constructor(rootStore) {
-        this.dataStore = rootStore.packagingModuleStore.packagingDataStore;
+        this.dataStore = rootStore.authenticationModuleStore.authenticationDataStore;
         this.routerStore = rootStore.routerStore;
 
         this.onFind = this.onFind.bind(this);
@@ -15,26 +17,34 @@ class LocationViewStore {
         this.onPageClick = this.onPageClick.bind(this);
         this.setPagination = this.setPagination.bind(this);
         this.loadPageData = this.loadPageData.bind(this);
-        this.onLocationClicked = this.onLocationClicked.bind(this);
-        this.onNameChange = this.onNameChange.bind(this);
-        this.onCityChange = this.onCityChange.bind(this);
+        this.onUserClicked = this.onUserClicked.bind(this);
+        this.onFirstNameChange = this.onFirstNameChange.bind(this);
+        this.onLastNameChange = this.onLastNameChange.bind(this);
+        this.onPhoneChange = this.onPhoneChange.bind(this);
+        this.onEmailChange = this.onEmailChange.bind(this);
+        this.onPasswordChange = this.onPasswordChange.bind(this);
+        this.onRoleChange = this.onRoleChange.bind(this);
 
         this.setPagination();
     }
 
     @observable isLoaderVisible = false;
 
-    @observable clickedLocation = {
+    @observable clickedUser = {
         id: "",
-        name: "",
-        city_id: "",
-        city_name: "Odaberi grad"
+        fname: "",
+        lname: "",
+        email: "",
+        phone: "",
+        password: "",
+        role_id: "",
+        role_name: "Odaberi ulogu"
     };
-    @observable clickedCategory = {
-        city_id: "",
-        city_name: "Odaberi grad"
+    @observable clickedRole = {
+        role_id: "",
+        role_name: "Odaberi ulogu"
     }
-    
+
     @observable isSubmitDisabled = true;
 
 
@@ -45,35 +55,23 @@ class LocationViewStore {
     @observable nextEnabled = false;
     @observable rows = [];
 
-    title = "Lokacije";
-    columns = ['Naziv ulice', 'Naziv grada', 'Izmjena', 'Brisanje'];
+    title = "Korisnici";
+    columns = ['Ime i prezime korisnika', 'Email', 'Mobitel', 'Uloga', 'Izmjena', 'Brisanje'];
 
     //TESTNI PODATCI
     allData = [
-        { id: 1, name: "MARTINA DIVALTA 120", city_id: 1, city_name: "Grad1" },
-        { id: 2, name: "Testna ulica 11", city_id: 2, city_name: "Grad2" },
-        { id: 3, name: "Sokovi", city_id: 3, city_name: "Grad3" },
-        { id: 4, name: "Cigarete", city_id: 2, city_name: "Grad4" },
-        { id: 5, name: "Koverta", city_id: 3, city_name: "Grad45" },
-        { id: 6, name: "Tst2", city_id: 1, city_name: "Grad6" },
-        { id: 7, name: "Test3", city_id: 4, city_name: "test4" },
-        { id: 8, name: "Test4", city_id: 4, city_name: "test4" },
-        { id: 9, name: "Tst5", city_id: 2, city_name: "test2" },
-        { id: 10, name: "Test6", city_id: 2, city_name: "test2" }
+        { id: 1, fname: "Martin", lname: "Matic", email: "matic1@mail.com", phone: "0955642525", role_id: 1, role_name: "Administrator", password:"test" },
+        { id: 1, fname: "Pero", lname: "Peric", email: "matic2@mail.com", phone: "0955642525", role_id: 2, role_name: "Korisnik", password:"test"  },
+        { id: 1, fname: "Marko", lname: "Matic", email: "matic3@mail.com", phone: "0955642525", role_id: 1, role_name: "Administrator", password:"test"  },
+
     ];
 
-    cities = [{
-        city_id: 1,
-        city_name: "Grad1"
+    roles = [{
+        role_id: 1,
+        role_name: "Administrator"
     }, {
-        city_id: 2,
-        city_name: "Grad2"
-    }, {
-        city_id: 3,
-        city_name: "Grad3"
-    }, {
-        city_id: 4,
-        city_name: "test4"
+        role_id: 2,
+        role_name: "Korisnik"
     }
     ];
 
@@ -95,19 +93,19 @@ class LocationViewStore {
         }
     */
         //this.isLoaderVisible = false; //sakrij loader
-        console.log(this.clickedLocation)
+        console.log(this.clickedUser)
     }
 
     @action
     onEditClick() {
         //EDIT DATA
-        console.log(this.clickedLocation)
+        console.log(this.clickedUser)
     }
 
     @action
     onCreateClick() {
         //CREATE DATA
-        console.log(this.clickedLocation)
+        console.log(this.clickedUser)
     }
 
     @action
@@ -116,21 +114,29 @@ class LocationViewStore {
     };
 
     @action
-    onLocationClicked(data, isCreate) {
+    onUserClicked(data, isCreate) {
         if (isCreate) {
-            this.clickedLocation = {
+            this.clickedUser = {
                 id: "",
-                name: "",
-                city_id: "",
-                city_name: "Odaberi grad"
+                fname: "",
+                lname: "",
+                email: "",
+                phone: "",
+                password: "",
+                role_id: "",
+                role_name: "Odaberi ulogu"
             };
         }
         else {
-            this.clickedLocation = {
+            this.clickedUser = {
                 id: data.id,
-                name: data.name,
-                city_id: data.city_id,
-                city_name: data.city_name
+                fname: data.fname,
+                lname: data.lname,
+                email: data.email,
+                phone: data.phone,
+                password: data.password,
+                role_id: data.role_id,
+                role_name: data.role_name
             };
         }
 
@@ -185,21 +191,55 @@ class LocationViewStore {
 
 
     @action
-    onNameChange(value) {
-        this.clickedLocation.name = value;
+    onFirstNameChange(value) {
+        this.clickedUser.fname = value;
         this.checkFields();
     }
 
     @action
-    onCityChange(value) {
-        this.clickedLocation.city_id = value.city_id;
-        this.clickedLocation.city_name = value.city_name;
+    onLastNameChange(value) {
+        this.clickedUser.lname = value;
+        this.checkFields();
+    }
+
+    @action
+    onEmailChange(value) {
+        this.clickedUser.email = value;
+        this.checkFields();
+    }
+
+    @action
+    onPhoneChange(value) {
+        this.clickedUser.phone = value;
+        this.checkFields();
+    }
+    
+    @action
+    onPasswordChange(value) {
+        this.clickedUser.password = value;
+        this.checkFields();
+    }
+
+    @action
+    onRoleChange(value) {
+        this.clickedUser.role_id = value.role_id;
+        this.clickedUser.role_name = value.role_name;
         this.checkFields();
     }
 
     @action
     checkFields() {
-        if (this.clickedLocation.name.length > 2 && this.clickedLocation.city_id !== null) {
+        let isEmailValid = EmailValidator.validate(this.clickedUser.email);
+        let isValidPhoneNumber = /^\d+$/.test(this.clickedUser.phone);
+
+        if (this.clickedUser.fname.length > 2
+            && this.clickedUser.fname.length > 2
+            && this.clickedUser.password.length >= 4
+            && this.clickedUser.role_id !== null
+            && this.clickedUser.phone.length >= 6
+            && this.clickedUser.phone.length <= 12
+            && isValidPhoneNumber
+            && isEmailValid) {
             this.isSubmitDisabled = false;
         }
         else {
@@ -209,4 +249,4 @@ class LocationViewStore {
 
 }
 
-export default LocationViewStore;
+export default UserViewStore;

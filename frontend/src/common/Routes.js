@@ -38,5 +38,17 @@ export const routes = [
     {
         name: 'warehouse',
         pattern: '/warehouse'
+    },
+    {
+        name: 'user',
+        pattern: '/user'
+    },
+    {
+        name: 'forgotpassword',
+        pattern: '/forgotpassword'
+    },
+    {
+        name: 'reciept',
+        pattern: '/reciept'
     }
 ];

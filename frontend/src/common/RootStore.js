@@ -8,6 +8,8 @@ import SubcategoryModuleStore from "../modules/Subcategory/stores/SubcategoryMod
 import ProductModuleStore from "../modules/Product/stores/ProductModuleStore";
 import LocationModuleStore from "../modules/Location/stores/LocationModuleStore";
 import WarehouseModuleStore from "../modules/Warehouse/stores/WarehouseModuleStore";
+import RecieptModuleStore from "../modules/Reciept/stores/RecieptModuleStore";
+
 
 const notFound = new RouterState('notFound');
 
@@ -23,5 +25,6 @@ export default class RootStore {
         this.productModuleStore = new ProductModuleStore(this);
         this.locationModuleStore = new LocationModuleStore(this);
         this.warehouseModuleStore = new WarehouseModuleStore(this);
+        this.recieptModuleStore = new RecieptModuleStore(this);
     }
 }

@@ -116,7 +116,7 @@ class CityViewStore {
 
     @action
     setPagination(page) {
-        if (page != null) {
+        if (page !== null) {
             this.page = page;
         }
         this.totalPages = Math.floor(this.allData.length / this.pageSize);
@@ -177,7 +177,7 @@ class CityViewStore {
     checkFields() {
         let isValidNumber = /^\d+$/.test(this.clickedCity.zip_code);
 
-        if (this.clickedCity.name.length > 2 && this.clickedCity.zip_code.length == 5 && isValidNumber) {
+        if (this.clickedCity.name.length > 2 && this.clickedCity.zip_code.length === 5 && isValidNumber) {
             this.isSubmitDisabled = false;
         }
         else {

@@ -198,13 +198,12 @@ class ProductViewStore {
             };
         }
 
-        console.log({...this.clickedProduct});
         this.checkFields();
     }
 
     @action
     setPagination(page) {
-        if (page != null) {
+        if (page !== null) {
             this.page = page;
         }
         this.totalPages = Math.floor(this.allData.length / this.pageSize);
@@ -277,7 +276,7 @@ class ProductViewStore {
     @action
     checkFields() {
         console.log("Category ID: " + this.clickedProduct.category_id);
-        if (this.clickedProduct.name.length > 2 && this.clickedProduct.category_id != -1 && this.clickedProduct.category_id.length != 0) {
+        if (this.clickedProduct.name.length > 2 && this.clickedProduct.category_id !== -1 && this.clickedProduct.category_id.length !== 0) {
             this.isSubmitDisabled = false;
         }
         else {

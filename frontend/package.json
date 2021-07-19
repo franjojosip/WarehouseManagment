@@ -12,6 +12,8 @@
         "babel-preset-react-native": "4.0.0",
         "bootstrap": "^5.0.2",
         "customize-cra": "^1.0.0",
+        "email-validator": "^2.0.4",
+        "group-array": "^1.0.0",
         "history": "^5.0.0",
         "mdbreact": "^5.1.0",
         "mobx": "^3.4.1",
