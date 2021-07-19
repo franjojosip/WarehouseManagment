@@ -50,5 +50,9 @@ export const routes = [
     {
         name: 'reciept',
         pattern: '/reciept'
+    },
+    {
+        name: 'stock',
+        pattern: '/stock'
     }
 ];

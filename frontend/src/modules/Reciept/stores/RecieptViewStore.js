@@ -43,11 +43,6 @@ class RecieptViewStore {
         date_created: "23.02.2021."
     };
 
-    @observable clickedCategory = {
-        city_id: "",
-        city_name: "Odaberi grad"
-    }
-
     @observable isSubmitDisabled = true;
 
 
@@ -255,6 +250,7 @@ class RecieptViewStore {
     @action
     onRecieptClicked(clickedData, isCreate) {
         if (isCreate) {
+            console.log("ISCREATE");
             this.clickedReciept = {
                 warehouse_id: -1,
                 warehouse_name: "Odaberi skladište",
@@ -356,8 +352,8 @@ class RecieptViewStore {
 
     @action
     checkFields() {
-        if (this.clickedReciept.warehouse_id !== -1
-            && this.clickedReciept.product_id !== -1
+        if (this.clickedReciept.warehouse_id != -1
+            && this.clickedReciept.product_id != -1
             && this.clickedReciept.quantity > 0) {
             this.isSubmitDisabled = false;
         }

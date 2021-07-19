@@ -139,7 +139,7 @@ class SubcategoryViewStore {
 
     @action
     setPagination(page) {
-        if (page !== null) {
+        if (page) {
             this.page = page;
         }
         this.totalPages = Math.floor(this.allData.length / this.pageSize);
@@ -199,7 +199,7 @@ class SubcategoryViewStore {
 
     @action
     checkFields() {
-        if (this.clickedSubcategory.name.length > 2 && this.clickedSubcategory.category_id !== null) {
+        if (this.clickedSubcategory.name.length > 2 && this.clickedSubcategory.category_id != null) {
             this.isSubmitDisabled = false;
         }
         else {

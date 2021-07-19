@@ -145,7 +145,7 @@ class UserViewStore {
 
     @action
     setPagination(page) {
-        if (page !== null) {
+        if (page != null) {
             this.page = page;
         }
         this.totalPages = Math.floor(this.allData.length / this.pageSize);
@@ -235,7 +235,7 @@ class UserViewStore {
         if (this.clickedUser.fname.length > 2
             && this.clickedUser.fname.length > 2
             && this.clickedUser.password.length >= 4
-            && this.clickedUser.role_id !== null
+            && this.clickedUser.role_id != null
             && this.clickedUser.phone.length >= 6
             && this.clickedUser.phone.length <= 12
             && isValidPhoneNumber

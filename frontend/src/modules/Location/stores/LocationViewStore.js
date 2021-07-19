@@ -139,7 +139,7 @@ class LocationViewStore {
 
     @action
     setPagination(page) {
-        if (page !== null) {
+        if (page != null) {
             this.page = page;
         }
         this.totalPages = Math.floor(this.allData.length / this.pageSize);
@@ -199,7 +199,7 @@ class LocationViewStore {
 
     @action
     checkFields() {
-        if (this.clickedLocation.name.length > 2 && this.clickedLocation.city_id !== null) {
+        if (this.clickedLocation.name.length > 2 && this.clickedLocation.city_id != null) {
             this.isSubmitDisabled = false;
         }
         else {

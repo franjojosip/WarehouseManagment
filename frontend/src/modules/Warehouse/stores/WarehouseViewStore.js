@@ -148,7 +148,7 @@ class WarehouseViewStore {
 
     @action
     setPagination(page) {
-        if (page !== null) {
+        if (page) {
             this.page = page;
         }
         this.totalPages = Math.floor(this.allData.length / this.pageSize);
@@ -208,7 +208,7 @@ class WarehouseViewStore {
 
     @action
     checkFields() {
-        if (this.clickedWarehouse.name.length > 2 && this.clickedWarehouse.location_id !== null) {
+        if (this.clickedWarehouse.name.length > 2 && this.clickedWarehouse.location_id != null) {
             this.isSubmitDisabled = false;
         }
         else {

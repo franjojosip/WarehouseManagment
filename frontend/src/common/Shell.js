@@ -12,7 +12,8 @@ import SubcategoryPage from "../modules/Subcategory/pages/Subcategory";
 import ProductPage from "../modules/Product/pages/Product";
 import LocationPage from "../modules/Location/pages/Location";
 import WarehousePage from "../modules/Warehouse/pages/Warehouse";
-import RecieptPage from "../modules/Reciept/pages/Reciept"
+import RecieptPage from "../modules/Reciept/pages/Reciept";
+import StockPage from "../modules/Stock/pages/Stock";
 
 const viewMap = {
     home: <LoginPage />,
@@ -27,6 +28,7 @@ const viewMap = {
     location: <LocationPage />,
     warehouse: <WarehousePage />,
     reciept: <RecieptPage />,
+    stock: <StockPage />,
     notFound: <NotFoundPage />
 };
 

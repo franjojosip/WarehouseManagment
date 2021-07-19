@@ -9,6 +9,7 @@ import ProductModuleStore from "../modules/Product/stores/ProductModuleStore";
 import LocationModuleStore from "../modules/Location/stores/LocationModuleStore";
 import WarehouseModuleStore from "../modules/Warehouse/stores/WarehouseModuleStore";
 import RecieptModuleStore from "../modules/Reciept/stores/RecieptModuleStore";
+import StockModuleStore from "../modules/Stock/stores/StockModuleStore";
 
 
 const notFound = new RouterState('notFound');
@@ -26,5 +27,6 @@ export default class RootStore {
         this.locationModuleStore = new LocationModuleStore(this);
         this.warehouseModuleStore = new WarehouseModuleStore(this);
         this.recieptModuleStore = new RecieptModuleStore(this);
+        this.stockModuleStore = new StockModuleStore(this);
     }
 }
