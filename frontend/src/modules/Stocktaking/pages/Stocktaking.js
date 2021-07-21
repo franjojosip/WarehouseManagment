@@ -1,25 +1,24 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 import Layout from "../../../common/layouts/Layout"
-import RecieptViewStore from '../stores/RecieptViewStore'
+import StocktakingViewStore from '../stores/StocktakingViewStore'
 import CollapsibleTable from '../../../common/layouts/CollapsibleTable';
-import ModalReciept from '../components/ModalReciept';
+import ModalStocktaking from '../components/ModalStocktaking';
 import Loading from '../../../common/layouts/Loading';
-import { Button } from 'react-bootstrap';
 
-import "../styles/Reciept.css";
+import "../styles/Stocktaking.css";
 
 @inject(
     i => ({
-        viewStore: new RecieptViewStore(i.rootStore)
+        viewStore: new StocktakingViewStore(i.rootStore)
     })
 )
 
 @observer
-class Reciept extends React.Component {
+class Stocktaking extends React.Component {
     render() {
 
-        const { navigateToWarehouse, warehouses, products, clickedRows, clickedReciept, onClickedRow, parentColumns, childColumns, paginatedData, onRecieptClicked, onWarehouseChange, onProductChange, onQuantityChange, isLoaderVisible, title, page, pageSize, totalPages, previousEnabled, nextEnabled, isSubmitDisabled, onPageClick, onChangePageSize, onPreviousPageClick, onNextPageClick, onEditClick, onDeleteClick, onCreateClick } = this.props.viewStore;
+        const { warehouses, products, packagings, clickedRows, clickedStocktaking, onClickedRow, parentColumns, childColumns, paginatedData, onStocktakingClicked, onWarehouseChange, onProductChange, onPackagingChange, onQuantityChange, isLoaderVisible, title, page, pageSize, totalPages, previousEnabled, nextEnabled, isSubmitDisabled, onPageClick, onChangePageSize, onPreviousPageClick, onNextPageClick, onEditClick, onDeleteClick, onCreateClick } = this.props.viewStore;
 
         let tableParentColumns = parentColumns.map((element, i) => {
             return <th key={"parentColumn" + i} className="text-center">{element}</th>
@@ -30,7 +29,6 @@ class Reciept extends React.Component {
 
         let tableNestedRows = (<tr>
             <td>Nema podataka</td>
-            <td className="pt-3-half"></td>
             <td className="pt-3-half"></td>
             <td className="pt-3-half"></td>
         </tr>);
@@ -48,7 +46,6 @@ class Reciept extends React.Component {
                         <tr key={i} onClick={() => onClickedRow(nestedIndex)} className="accordion-toggle collapsed" style={{ backgroundColor: "#F2F2F2" }} id="accordion1" data-toggle="collapse" data-parent="#accordion1" data-target={"#row" + nestedIndex}>
                             <td><i className={clickedRows.includes(nestedIndex) ? "fas fa-arrow-down fa-lg" : "fas fa-arrow-right fa-lg"}></i></td>
                             <td className="pt-3-half">{parentRow[0]}</td>
-                            <td className="pt-3-half">{parentRow[1]}</td>
                             <td className="pt-3-half">{parentRow[2]}</td>
                         </tr>
                         <tr>
@@ -70,13 +67,13 @@ class Reciept extends React.Component {
                                                             <td>{item.quantity}</td>
                                                             <td>
                                                                 <span className="table-remove">
-                                                                    <button type="button" onClick={() => onRecieptClicked(element, false)} data-toggle="modal" data-target="#modalTargetEdit" className="btn btn-primary btn-rounded btn-sm my-0">
+                                                                    <button type="button" onClick={() => onStocktakingClicked(element, false)} data-toggle="modal" data-target="#modalTargetEdit" className="btn btn-primary btn-rounded btn-sm my-0">
                                                                         Izmijeni
                                                                     </button>
                                                                 </span></td>
                                                             <td>
                                                                 <span className="table-remove">
-                                                                    <button type="button" onClick={() => onRecieptClicked(element, false)} data-toggle="modal" data-target="#modalTargetDelete" className="btn btn-danger btn-rounded btn-sm my-0">
+                                                                    <button type="button" onClick={() => onStocktakingClicked(element, false)} data-toggle="modal" data-target="#modalTargetDelete" className="btn btn-danger btn-rounded btn-sm my-0">
                                                                         Obriši
                                                                     </button>
                                                                 </span>
@@ -98,15 +95,14 @@ class Reciept extends React.Component {
 
         return (
             <Layout>
-                <Button onClick={() => navigateToWarehouse()}>NAVIGIRAJ NA WAREHOUSE</Button>
                 <Loading visible={isLoaderVisible} />
-                <ModalReciept modalTarget="modalTargetAdd" warehouses={warehouses} products={products} onSubmit={onCreateClick} warehouse_name={clickedReciept.warehouse_name} product_name={clickedReciept.product_name} quantity={clickedReciept.quantity} onWarehouseChange={onWarehouseChange} onProductChange={onProductChange} onQuantityChange={onQuantityChange} isSubmitDisabled={isSubmitDisabled} />
-                <ModalReciept modalTarget="modalTargetEdit" warehouses={warehouses} products={products} onSubmit={onEditClick} warehouse_name={clickedReciept.warehouse_name} product_name={clickedReciept.product_name} quantity={clickedReciept.quantity} onWarehouseChange={onWarehouseChange} onProductChange={onProductChange} onQuantityChange={onQuantityChange} isSubmitDisabled={isSubmitDisabled} />
-                <ModalReciept modalTarget="modalTargetDelete" warehouses={warehouses} products={products} onSubmit={onDeleteClick} warehouse_name={clickedReciept.warehouse_name} product_name={clickedReciept.product_name} quantity={clickedReciept.quantity} onWarehouseChange={onWarehouseChange} onProductChange={onProductChange} onQuantityChange={onQuantityChange} isSubmitDisabled={isSubmitDisabled} />
-                <CollapsibleTable title={title} tableNestedRows={tableNestedRows} tableParentColumns={tableParentColumns} page={page} pageSize={pageSize} totalPages={totalPages} previousEnabled={previousEnabled} nextEnabled={nextEnabled} onActionClicked={onRecieptClicked} onPageClick={onPageClick} onChangePageSize={onChangePageSize} onPreviousPageClick={onPreviousPageClick} onNextPageClick={onNextPageClick} />
+                <ModalStocktaking modalTarget="modalTargetAdd" warehouses={warehouses} products={products} packagings={packagings} onSubmit={onCreateClick} warehouse_name={clickedStocktaking.warehouse_name} product_name={clickedStocktaking.product_name} packaging_name={clickedStocktaking.packaging_name} quantity={clickedStocktaking.quantity} onWarehouseChange={onWarehouseChange} onProductChange={onProductChange} onPackagingChange={onPackagingChange} onQuantityChange={onQuantityChange} isSubmitDisabled={isSubmitDisabled} />
+                <ModalStocktaking modalTarget="modalTargetEdit" warehouses={warehouses} products={products} packagings={packagings} onSubmit={onEditClick} warehouse_name={clickedStocktaking.warehouse_name} product_name={clickedStocktaking.product_name} packaging_name={clickedStocktaking.packaging_name} quantity={clickedStocktaking.quantity} onWarehouseChange={onWarehouseChange} onProductChange={onProductChange} onPackagingChange={onPackagingChange} onQuantityChange={onQuantityChange} isSubmitDisabled={isSubmitDisabled} />
+                <ModalStocktaking modalTarget="modalTargetDelete" warehouses={warehouses} products={products} packagings={packagings} onSubmit={onDeleteClick} warehouse_name={clickedStocktaking.warehouse_name} product_name={clickedStocktaking.product_name} packaging_name={clickedStocktaking.packaging_name} quantity={clickedStocktaking.quantity} onWarehouseChange={onWarehouseChange} onProductChange={onProductChange} onPackagingChange={onPackagingChange} onQuantityChange={onQuantityChange} isSubmitDisabled={isSubmitDisabled} />
+                <CollapsibleTable title={title} tableNestedRows={tableNestedRows} tableParentColumns={tableParentColumns} page={page} pageSize={pageSize} totalPages={totalPages} previousEnabled={previousEnabled} nextEnabled={nextEnabled} onActionClicked={onStocktakingClicked} onPageClick={onPageClick} onChangePageSize={onChangePageSize} onPreviousPageClick={onPreviousPageClick} onNextPageClick={onNextPageClick} />
             </Layout>
         );
     }
 }
 
-export default Reciept;
+export default Stocktaking;

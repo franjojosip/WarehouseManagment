@@ -3,7 +3,7 @@ import Pagination from './Pagination';
 
 import "./Table.css";
 
-export default function Table({ title, columns, tableRows, page, pageSize, totalPages, previousEnabled, nextEnabled, onActionClicked, onPageClick, onChangePageSize, onPreviousPageClick, onNextPageClick }) {
+export default function Table({ title, hideAddButton, columns, tableRows, page, pageSize, totalPages, previousEnabled, nextEnabled, onActionClicked, onPageClick, onChangePageSize, onPreviousPageClick, onNextPageClick }) {
 
   return (
     <div className="card col-8 mx-auto mt-5 mb-5">
@@ -26,11 +26,16 @@ export default function Table({ title, columns, tableRows, page, pageSize, total
                 </div>
               </div>
             </div>
-            <div className="col-3">
-              <span className="table-add float-right mb-3 mt-3 mr-3">
-                <a className="text-success"><i className="fas fa-plus fa-2x" aria-hidden="true" data-toggle="modal" data-target="#modalTargetAdd" onClick={() => onActionClicked(null, true)}></i></a>
-              </span>
-            </div>
+            {
+              hideAddButton != null ?
+                null
+                :
+                <div className="col-3">
+                  <span className="table-add float-right mb-3 mt-3 mr-3">
+                    <a className="text-success"><i className="fas fa-plus fa-2x" aria-hidden="true" data-toggle="modal" data-target="#modalTargetAdd" onClick={() => onActionClicked(null, true)}></i></a>
+                  </span>
+                </div>
+            }
           </div>
           <table className="table table-bordered table-responsive-md table-striped text-center">
             <thead>

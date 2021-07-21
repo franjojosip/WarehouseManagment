@@ -1,6 +1,6 @@
 import { action, observable } from "mobx";
 
-class RecieptViewStore {
+class StocktakingViewStore {
     constructor(rootStore) {
         this.dataStore = rootStore.recieptModuleStore.recieptDataStore;
         this.routerStore = rootStore.routerStore;
@@ -15,26 +15,21 @@ class RecieptViewStore {
         this.onPageClick = this.onPageClick.bind(this);
         this.setPagination = this.setPagination.bind(this);
         this.loadPageData = this.loadPageData.bind(this);
-        this.onRecieptClicked = this.onRecieptClicked.bind(this);
+        this.onStocktakingClicked = this.onStocktakingClicked.bind(this);
         this.onWarehouseChange = this.onWarehouseChange.bind(this);
         this.onProductChange = this.onProductChange.bind(this);
+        this.onPackagingChange = this.onPackagingChange.bind(this);
         this.onQuantityChange = this.onQuantityChange.bind(this);
         this.onClickedRow = this.onClickedRow.bind(this);
         this.groupData = this.groupData.bind(this);
-        this.navigateToWarehouse = this.navigateToWarehouse.bind(this);
 
         this.groupData();
         this.setPagination();
     }
-    
-    @action
-    navigateToWarehouse(){
-        this.routerStore.goTo("warehouse");
-    }
 
     @observable isLoaderVisible = false;
 
-    @observable clickedReciept = {
+    @observable clickedStocktaking = {
         id: "",
         name: "",
         warehouse_id: "",
@@ -42,7 +37,7 @@ class RecieptViewStore {
         product_id: "",
         product_name: "Odaberi proizvod",
         packaging_id: "",
-        packaging_name: "Ambalaaža",
+        packaging_name: "Odaberi ambalažu",
         user_id: "1",
         user_name: "Martin Matić",
         quantity: "",
@@ -63,8 +58,8 @@ class RecieptViewStore {
     @observable clickedRows = [];
     @observable paginatedData = [];
 
-    title = "Preuzimanja";
-    parentColumns = ['Naziv skladišta', 'Korisnik', 'Datum kreiranja'];
+    title = "Inventura";
+    parentColumns = ['Naziv skladišta', 'Datum kreiranja'];
     childColumns = ['Naziv proizvoda', 'Naziv ambalaže', 'Količina', 'Izmjena', 'Brisanje'];
 
     //TESTNI PODATCI
@@ -203,6 +198,18 @@ class RecieptViewStore {
     }
     ];
 
+    packagings = [{
+        packaging_id: 1,
+        packaging_name: "packaging_id1"
+    }, {
+        packaging_id: 2,
+        packaging_name: "packaging_id2"
+    }, {
+        packaging_id: 3,
+        packaging_name: "packaging_id3"
+    }
+    ];
+
     products = [{
         product_id: 1,
         product_name: "proizvod1"
@@ -233,36 +240,36 @@ class RecieptViewStore {
         }
     */
         //this.isLoaderVisible = false; //sakrij loader
-        console.log(this.clickedReciept)
+        console.log(this.clickedStocktaking)
     }
 
     @action
     onEditClick() {
         //EDIT DATA
-        console.log(this.clickedReciept)
+        console.log(this.clickedStocktaking)
     }
 
     @action
     onCreateClick() {
         //CREATE DATA
-        console.log(this.clickedReciept)
+        console.log(this.clickedStocktaking)
     }
 
     @action
     async onFind() {
-        //FIND Reciept
+        //FIND Stocktaking
     };
 
     @action
-    onRecieptClicked(clickedData, isCreate) {
+    onStocktakingClicked(clickedData, isCreate) {
         if (isCreate) {
-            this.clickedReciept = {
+            this.clickedStocktaking = {
                 warehouse_id: -1,
                 warehouse_name: "Odaberi skladište",
                 product_id: -1,
                 product_name: "Odaberi proizvod",
-                packaging_id: "",
-                packaging_name: "",
+                packaging_id: -1,
+                packaging_name: "Odaberi ambalažu",
                 user_id: "",
                 user_name: "",
                 quantity: ""
@@ -270,7 +277,7 @@ class RecieptViewStore {
         }
         else {
             let data = clickedData.data[0];
-            this.clickedReciept = {
+            this.clickedStocktaking = {
                 id: data.id,
                 warehouse_id: data.warehouse_id,
                 warehouse_name: data.warehouse_name,
@@ -337,29 +344,37 @@ class RecieptViewStore {
 
     @action
     onWarehouseChange(value) {
-        this.clickedReciept.warehouse_id = value.warehouse_id;
-        this.clickedReciept.warehouse_name = value.warehouse_name;
+        this.clickedStocktaking.warehouse_id = value.warehouse_id;
+        this.clickedStocktaking.warehouse_name = value.warehouse_name;
         this.checkFields();
     }
 
     @action
     onProductChange(value) {
-        this.clickedReciept.product_id = value.product_id;
-        this.clickedReciept.product_name = value.product_name;
+        this.clickedStocktaking.product_id = value.product_id;
+        this.clickedStocktaking.product_name = value.product_name;
+        this.checkFields();
+    }
+
+    @action
+    onPackagingChange(value) {
+        this.clickedStocktaking.packaging_id = value.packaging_id;
+        this.clickedStocktaking.packaging_name = value.packaging_name;
         this.checkFields();
     }
 
     @action
     onQuantityChange(value) {
-        this.clickedReciept.quantity = value;
+        this.clickedStocktaking.quantity = value;
         this.checkFields();
     }
 
     @action
     checkFields() {
-        if (this.clickedReciept.warehouse_id != -1
-            && this.clickedReciept.product_id != -1
-            && this.clickedReciept.quantity > 0) {
+        if (this.clickedStocktaking.warehouse_id != -1
+            && this.clickedStocktaking.product_id != -1
+            && this.clickedStocktaking.packaging_id != -1
+            && this.clickedStocktaking.quantity > 0) {
             this.isSubmitDisabled = false;
         }
         else {
@@ -396,4 +411,4 @@ class RecieptViewStore {
 
 }
 
-export default RecieptViewStore;
+export default StocktakingViewStore;

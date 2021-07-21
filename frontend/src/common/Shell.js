@@ -14,6 +14,10 @@ import LocationPage from "../modules/Location/pages/Location";
 import WarehousePage from "../modules/Warehouse/pages/Warehouse";
 import RecieptPage from "../modules/Reciept/pages/Reciept";
 import StockPage from "../modules/Stock/pages/Stock";
+import StocktakingPage from "../modules/Stocktaking/pages/Stocktaking";
+import EntryPage from "../modules/Entry/pages/Entry";
+import NotificationLogPage from "../modules/Notification/pages/NotificationLog";
+import NotificationSettingPage from "../modules/Notification/pages/NotificationSetting";
 
 const viewMap = {
     home: <LoginPage />,
@@ -29,6 +33,10 @@ const viewMap = {
     warehouse: <WarehousePage />,
     reciept: <RecieptPage />,
     stock: <StockPage />,
+    stocktaking: <StocktakingPage />,
+    entry: <EntryPage />,
+    notificationlog: <NotificationLogPage />,
+    notificationsettings: <NotificationSettingPage />,
     notFound: <NotFoundPage />
 };
 

@@ -10,6 +10,9 @@ import LocationModuleStore from "../modules/Location/stores/LocationModuleStore"
 import WarehouseModuleStore from "../modules/Warehouse/stores/WarehouseModuleStore";
 import RecieptModuleStore from "../modules/Reciept/stores/RecieptModuleStore";
 import StockModuleStore from "../modules/Stock/stores/StockModuleStore";
+import StocktakingModuleStore from "../modules/Stocktaking/stores/StocktakingModuleStore";
+import EntryModuleStore from "../modules/Entry/stores/EntryModuleStore";
+import NotificationModuleStore from "../modules/Notification/stores/NotificationModuleStore";
 
 
 const notFound = new RouterState('notFound');
@@ -28,5 +31,8 @@ export default class RootStore {
         this.warehouseModuleStore = new WarehouseModuleStore(this);
         this.recieptModuleStore = new RecieptModuleStore(this);
         this.stockModuleStore = new StockModuleStore(this);
+        this.stocktakingModuleStore = new StocktakingModuleStore(this);
+        this.entryModuleStore = new EntryModuleStore(this);
+        this.notificationModuleStore = new NotificationModuleStore(this);
     }
 }

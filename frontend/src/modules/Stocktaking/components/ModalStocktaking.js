@@ -1,10 +1,10 @@
 import React from "react";
 import { Form, Button, Dropdown, DropdownButton } from 'react-bootstrap';
 
-import '../styles/ModalProduct.css';
+import '../styles/ModalStocktaking.css';
 
 
-export default function ModalProduct({ modalTarget, categories, subcategories, packagings, onSubmit, name, category_name, subcategory_name, packaging_name, onNameChange, onCategoryChange, onSubcategoryChange, onPackagingChange, isSubmitDisabled }) {
+export default function ModalStocktaking({ modalTarget, onSubmit, packaging_name, warehouse_name, product_name, quantity, warehouses, products, packagings, onWarehouseChange, onProductChange, onPackagingChange, onQuantityChange, isSubmitDisabled }) {
 
   let submitClassName = "";
   let modalTitle = "";
@@ -13,17 +13,17 @@ export default function ModalProduct({ modalTarget, categories, subcategories, p
 
   if (modalTarget === "modalTargetAdd") {
     submitClassName = "btn btn-success";
-    modalTitle = "Kreiraj novi proizvod";
+    modalTitle = "Kreiraj novu inventuru";
     submitText = "Dodaj"
   }
   else if (modalTarget === "modalTargetEdit") {
     submitClassName = "btn btn-success";
-    modalTitle = "Izmijenite ovaj proizvod";
+    modalTitle = "Izmijenite ovu inventuru";
     submitText = "Izmijeni";
   }
   else {
     submitClassName = "btn btn-danger";
-    modalTitle = "Želite li sigurno obrisati ovaj proizvod?";
+    modalTitle = "Želite li sigurno obrisati ovu inventuru?";
     submitText = "Obriši";
     isDisabled = true;
   }
@@ -48,57 +48,42 @@ export default function ModalProduct({ modalTarget, categories, subcategories, p
             </button>
           </div>
           <Form style={{ margin: 15 }}>
-            <Form.Group size="md" controlId="product_name">
-              <Form.Label>Naziv Proizvoda *</Form.Label>
-              <Form.Control
-                autoFocus
-                type="text"
-                value={name}
-                minLength="2"
-                required
-                {...config}
-                placeholder="Unesite naziv proizvoda"
-                onChange={(e) => onNameChange(e.target.value)}
-                disabled={isDisabled}
-              />
-            </Form.Group>
-            <Form.Group size="md" controlId="category_name">
-              <Form.Label>Naziv Kategorije *</Form.Label>
+            <Form.Group size="md" controlId="warehouse_name">
+              <Form.Label>Naziv Skladišta *</Form.Label>
               {
                 isDisabled ?
                   <Form.Control
                     type="text"
-                    value={category_name}
+                    value={warehouse_name}
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="formDropdown" variant="secondary" title={category_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
-                    {categories.map((category) => {
-                      return <Dropdown.Item key={"category-" + category.category_id} onSelect={() => onCategoryChange(category)}>{category.category_name}</Dropdown.Item>;
+                  <DropdownButton id="categoryDropdown" variant="secondary" title={warehouse_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                    {warehouses.map((warehouse) => {
+                      return <Dropdown.Item key={warehouse.warehouse_id} onSelect={() => onWarehouseChange(warehouse)}>{warehouse.warehouse_name}</Dropdown.Item>;
                     })}
                   </DropdownButton>
               }
             </Form.Group>
-            <Form.Group size="md" controlId="subcategory_name">
-              <Form.Label>Naziv Potkategorije</Form.Label>
+            <Form.Group size="md" controlId="product_name">
+              <Form.Label>Naziv Proizvoda *</Form.Label>
               {
                 isDisabled ?
                   <Form.Control
                     type="text"
-                    value={subcategory_name}
+                    value={product_name}
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="formDropdown" variant="secondary" title={subcategory_name ? subcategory_name : "Odaberi potkategoriju"} style={{ marginBottom: 10 }} disabled={isDisabled}>
-                    {subcategories.map((subcategory) => {
-                      return <Dropdown.Item key={"subcategory-" + subcategory.subcategory_id} onSelect={() => onSubcategoryChange(subcategory)}>{subcategory.subcategory_name}</Dropdown.Item>;
+                  <DropdownButton id="categoryDropdown" variant="secondary" title={product_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                    {products.map((product) => {
+                      return <Dropdown.Item key={product.product_id} onSelect={() => onProductChange(product)}>{product.product_name}</Dropdown.Item>;
                     })}
                   </DropdownButton>
-
               }
             </Form.Group>
             <Form.Group size="md" controlId="packaging_name">
-              <Form.Label>Naziv Ambalaže</Form.Label>
+              <Form.Label>Naziv Ambalaže *</Form.Label>
               {
                 isDisabled ?
                   <Form.Control
@@ -107,11 +92,35 @@ export default function ModalProduct({ modalTarget, categories, subcategories, p
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="formDropdown" variant="secondary" title={packaging_name ? packaging_name : "Odaberi ambalažu"} style={{ marginBottom: 10 }} disabled={isDisabled}>
+                  <DropdownButton id="categoryDropdown" variant="secondary" title={packaging_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
                     {packagings.map((packaging) => {
-                      return <Dropdown.Item key={"packaging-" + packaging.packaging_id} onSelect={() => onPackagingChange(packaging)}>{packaging.packaging_name}</Dropdown.Item>;
+                      return <Dropdown.Item key={packaging.packaging_id} onSelect={() => onPackagingChange(packaging)}>{packaging.packaging_name}</Dropdown.Item>;
                     })}
                   </DropdownButton>
+              }
+            </Form.Group>
+            <Form.Group size="md" controlId="quantity">
+              <Form.Label>Količina *</Form.Label>
+              {
+                isDisabled ?
+                  <Form.Control
+                    type="text"
+                    value={quantity}
+                    disabled={isDisabled}
+                  />
+                  :
+                  <Form.Control
+                    type="number"
+                    value={quantity}
+                    min="1"
+                    required
+                    {...config}
+                    onChange={(e) => {
+                      onQuantityChange(e.target.value);
+                    }}
+                    placeholder="Unesite količinu (minimalno 1)"
+                    disabled={isDisabled}
+                  />
               }
             </Form.Group>
             <div hidden={isDisabled || !isSubmitDisabled}>

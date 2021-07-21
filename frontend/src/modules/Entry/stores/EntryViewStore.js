@@ -1,8 +1,8 @@
 import { action, observable } from "mobx";
 
-class RecieptViewStore {
+class EntryViewStore {
     constructor(rootStore) {
-        this.dataStore = rootStore.recieptModuleStore.recieptDataStore;
+        this.dataStore = rootStore.entryModuleStore.entryDataStore;
         this.routerStore = rootStore.routerStore;
 
         this.onFind = this.onFind.bind(this);
@@ -15,40 +15,35 @@ class RecieptViewStore {
         this.onPageClick = this.onPageClick.bind(this);
         this.setPagination = this.setPagination.bind(this);
         this.loadPageData = this.loadPageData.bind(this);
-        this.onRecieptClicked = this.onRecieptClicked.bind(this);
+        this.onEntryClicked = this.onEntryClicked.bind(this);
         this.onWarehouseChange = this.onWarehouseChange.bind(this);
+        this.onCityChange = this.onCityChange.bind(this);
+        this.onLocationChange = this.onLocationChange.bind(this);
         this.onProductChange = this.onProductChange.bind(this);
+        this.onPackagingChange = this.onPackagingChange.bind(this);
         this.onQuantityChange = this.onQuantityChange.bind(this);
         this.onClickedRow = this.onClickedRow.bind(this);
         this.groupData = this.groupData.bind(this);
-        this.navigateToWarehouse = this.navigateToWarehouse.bind(this);
 
         this.groupData();
         this.setPagination();
     }
-    
-    @action
-    navigateToWarehouse(){
-        this.routerStore.goTo("warehouse");
-    }
 
     @observable isLoaderVisible = false;
 
-    @observable clickedReciept = {
+    @observable clickedEntry = {
         id: "",
-        name: "",
         warehouse_id: "",
-        warehouse_name: "Odaberi skladište",
+        warehouse_name: "",
+        location_id: "",
+        location_name: "",
         product_id: "",
-        product_name: "Odaberi proizvod",
+        product_name: "",
         packaging_id: "",
-        packaging_name: "Ambalaaža",
-        user_id: "1",
-        user_name: "Martin Matić",
+        packaging_name: "",
         quantity: "",
-        date_created: "23.02.2021."
+        date_created: ""
     };
-
     @observable isSubmitDisabled = true;
 
 
@@ -63,133 +58,21 @@ class RecieptViewStore {
     @observable clickedRows = [];
     @observable paginatedData = [];
 
-    title = "Preuzimanja";
-    parentColumns = ['Naziv skladišta', 'Korisnik', 'Datum kreiranja'];
-    childColumns = ['Naziv proizvoda', 'Naziv ambalaže', 'Količina', 'Izmjena', 'Brisanje'];
+    title = "Unos proizvoda na stanje";
+    parentColumns = ['Naziv skladišta', 'Lokacija', 'Grad', 'Datum kreiranja'];
+    childColumns = ['Naziv proizvoda', 'Naziv ambalaže', 'Količina'];
 
     //TESTNI PODATCI
     allData = [
-        {
-            id: 1,
-            warehouse_id: 1,
-            warehouse_name: "skladiste1",
-            product_id: 1,
-            product_name: "proizvod1",
-            packaging_id: 1,
-            packaging_name: "ambalaza1",
-            user_id: 1,
-            user_name: "Martin Matić",
-            quantity: 4,
-            date_created: "23.02.2021."
-        },
-        {
-            id: 2,
-            warehouse_id: 1,
-            warehouse_name: "skladiste1",
-            product_id: 2,
-            product_name: "proizvod2",
-            packaging_id: 1,
-            packaging_name: "ambalaza1",
-            user_id: 1,
-            user_name: "Martin Matić",
-            quantity: 14,
-            date_created: "23.02.2021."
-        },
-        {
-            id: 3,
-            warehouse_id: 1,
-            warehouse_name: "skladiste1",
-            product_id: 3,
-            product_name: "proizvod3",
-            packaging_id: 1,
-            packaging_name: "ambalaza1",
-            user_id: 1,
-            user_name: "Martin Matić",
-            quantity: 2,
-            date_created: "24.02.2021."
-        },
-
-
-        {
-            id: 4,
-            warehouse_id: 1,
-            warehouse_name: "skladiste1",
-            product_id: 1,
-            product_name: "proizvod1",
-            packaging_id: 1,
-            packaging_name: "ambalaza1",
-            user_id: 1,
-            user_name: "Martin Matić",
-            quantity: 4,
-            date_created: "23.02.2021."
-        },
-        {
-            id: 5,
-            warehouse_id: 1,
-            warehouse_name: "skladiste1",
-            product_id: 2,
-            product_name: "proizvod2",
-            packaging_id: 1,
-            packaging_name: "ambalaza1",
-            user_id: 1,
-            user_name: "Martin Matić",
-            quantity: 14,
-            date_created: "23.02.2021."
-        },
-        {
-            id: 6,
-            warehouse_id: 1,
-            warehouse_name: "skladiste1",
-            product_id: 3,
-            product_name: "proizvod3",
-            packaging_id: 1,
-            packaging_name: "ambalaza1",
-            user_id: 1,
-            user_name: "Martin Matić",
-            quantity: 2,
-            date_created: "24.02.2021."
-        },
-        {
-            id: 7,
-            warehouse_id: 1,
-            warehouse_name: "skladiste1",
-            product_id: 3,
-            product_name: "proizvod3",
-            packaging_id: 1,
-            packaging_name: "ambalaza1",
-            user_id: 2,
-            user_name: "Stamko Matić",
-            quantity: 2,
-            date_created: "24.02.2021."
-        },
-        {
-            id: 8,
-            warehouse_id: 1,
-            warehouse_name: "skladiste1",
-            product_id: 5,
-            product_name: "proizvod5",
-            packaging_id: 1,
-            packaging_name: "ambalaza1",
-            user_id: 2,
-            user_name: "Stamko Matić",
-            quantity: 2,
-            date_created: "24.02.2021."
-        },
-        {
-            id: 8,
-            warehouse_id: 2,
-            warehouse_name: "skladiste2",
-            product_id: 5,
-            product_name: "proizvod5",
-            packaging_id: 1,
-            packaging_name: "ambalaza1",
-            user_id: 2,
-            user_name: "Stamko Matić",
-            quantity: 2,
-            date_created: "24.02.2021."
-        },
-
+        { id: 1, warehouse_id: 1, warehouse_name: "Skladiste1", city_id: 1, city_name: "Osijek", location_id: 1, location_name: "lokjacija1", product_id: 1, product_name: "product1", packaging_id: 1, packaging_name: "packaging_name", quantity: 1, date_created: "15.02.2021." },
+        { id: 2, warehouse_id: 1, warehouse_name: "Skladiste1", city_id: 1, city_name: "Osijek", location_id: 2, location_name: "lokjacija1", product_id: 1, product_name: "product1", packaging_id: 1, packaging_name: "packaging_name", quantity: 1, date_created: "15.02.2021." },
+        { id: 3, warehouse_id: 2, warehouse_name: "Skladiste2", city_id: 1, city_name: "Osijek", location_id: 2, location_name: "lokjacija1", product_id: 1, product_name: "product1", packaging_id: 1, packaging_name: "packaging_name", quantity: 1, date_created: "15.02.2021." },
+        { id: 4, warehouse_id: 2, warehouse_name: "Skladiste2", city_id: 1, city_name: "Osijek", location_id: 3, location_name: "lokjacija1", product_id: 1, product_name: "product1", packaging_id: 1, packaging_name: "packaging_name", quantity: 1, date_created: "15.02.2021." },
+        { id: 5, warehouse_id: 3, warehouse_name: "Skladiste3", city_id: 1, city_name: "Osijek", location_id: 3, location_name: "lokjacija1", product_id: 1, product_name: "product1", packaging_id: 1, packaging_name: "packaging_name", quantity: 1, date_created: "15.02.2021." },
+        { id: 6, warehouse_id: 1, warehouse_name: "Skladiste1", city_id: 1, city_name: "Osijek", location_id: 1, location_name: "lokjacija1", product_id: 1, product_name: "product1", packaging_id: 1, packaging_name: "packaging_name", quantity: 1, date_created: "15.02.2021." },
+        { id: 7, warehouse_id: 1, warehouse_name: "Skladiste1", city_id: 1, city_name: "Osijek", location_id: 1, location_name: "lokjacija1", product_id: 1, product_name: "product1", packaging_id: 1, packaging_name: "packaging_name", quantity: 1, date_created: "15.02.2021." }
     ];
+
 
     warehouses = [{
         warehouse_id: 1,
@@ -203,6 +86,36 @@ class RecieptViewStore {
     }
     ];
 
+    locations = [{
+        location_id: 1,
+        location_name: "location1",
+        city_id: 2,
+        city_name: "city_name2"
+    }, {
+        location_id: 3,
+        location_name: "location12",
+        city_id: 1,
+        city_name: "city_name1"
+    }, {
+        location_id: 3,
+        location_name: "location13",
+        city_id: 1,
+        city_name: "city_name1"
+    }
+    ];
+
+    cities = [{
+        city_id: 1,
+        city_name: "city_name1"
+    }, {
+        city_id: 3,
+        city_name: "city_name2"
+    }, {
+        city_id: 3,
+        city_name: "city_name3"
+    }
+    ];
+
     products = [{
         product_id: 1,
         product_name: "proizvod1"
@@ -212,6 +125,18 @@ class RecieptViewStore {
     }, {
         product_id: 3,
         product_name: "proizvod3"
+    }
+    ];
+
+    packagings = [{
+        packaging_id: 1,
+        packaging_name: "proizvod1"
+    }, {
+        packaging_id: 2,
+        packaging_name: "proizvod2"
+    }, {
+        packaging_id: 3,
+        packaging_name: "proizvod3"
     }
     ];
 
@@ -233,55 +158,59 @@ class RecieptViewStore {
         }
     */
         //this.isLoaderVisible = false; //sakrij loader
-        console.log(this.clickedReciept)
+        console.log(this.clickedEntry)
     }
 
     @action
     onEditClick() {
         //EDIT DATA
-        console.log(this.clickedReciept)
+        console.log(this.clickedEntry)
     }
 
     @action
     onCreateClick() {
         //CREATE DATA
-        console.log(this.clickedReciept)
+        console.log(this.clickedEntry)
     }
 
     @action
     async onFind() {
-        //FIND Reciept
+        //FIND CITY
     };
 
     @action
-    onRecieptClicked(clickedData, isCreate) {
+    onEntryClicked(clickedData, isCreate) {
         if (isCreate) {
-            this.clickedReciept = {
+            this.clickedEntry = {
                 warehouse_id: -1,
                 warehouse_name: "Odaberi skladište",
+                city_id: -1,
+                city_name: "Odaberi grad",
+                location_id: -1,
+                location_name: "Odaberi lokaciju",
                 product_id: -1,
                 product_name: "Odaberi proizvod",
-                packaging_id: "",
-                packaging_name: "",
-                user_id: "",
-                user_name: "",
-                quantity: ""
+                packaging_id: -1,
+                packaging_name: "Odaberi ambalažu",
+                quantity: 0,
+                date_created: ""
             };
         }
         else {
             let data = clickedData.data[0];
-            this.clickedReciept = {
-                id: data.id,
+            this.clickedEntry = {
                 warehouse_id: data.warehouse_id,
                 warehouse_name: data.warehouse_name,
+                city_id: data.city_id,
+                city_name: data.city_name,
+                location_id: data.location_id,
+                location_name: data.location_name,
                 product_id: data.product_id,
                 product_name: data.product_name,
                 packaging_id: data.packaging_id,
                 packaging_name: data.packaging_name,
-                user_id: data.user_id,
-                user_name: data.user_name,
-                quantity: data.quantity,
-                date_created: data.date_created
+                quantity: 4,
+                date_created: "23.02.2021."
             };
         }
 
@@ -334,32 +263,56 @@ class RecieptViewStore {
         this.setPagination();
     }
 
-
     @action
     onWarehouseChange(value) {
-        this.clickedReciept.warehouse_id = value.warehouse_id;
-        this.clickedReciept.warehouse_name = value.warehouse_name;
+        this.clickedEntry.warehouse_id = value.warehouse_id;
+        this.clickedEntry.warehouse_name = value.warehouse_name;
+        this.checkFields();
+    }
+
+    @action
+    onCityChange(value) {
+        this.clickedEntry.city_id = value.city_id;
+        this.clickedEntry.city_name = value.city_name;
+        this.checkFields();
+    }
+
+
+    @action
+    onLocationChange(value) {
+        this.clickedEntry.location_id = value.plocation_id;
+        this.clickedEntry.location_name = value.location_name;
         this.checkFields();
     }
 
     @action
     onProductChange(value) {
-        this.clickedReciept.product_id = value.product_id;
-        this.clickedReciept.product_name = value.product_name;
+        this.clickedEntry.product_id = value.product_id;
+        this.clickedEntry.product_name = value.product_name;
+        this.checkFields();
+    }
+
+    @action
+    onPackagingChange(value) {
+        this.clickedEntry.packaging_id = value.packaging_id;
+        this.clickedEntry.packaging_name = value.packaging_name;
         this.checkFields();
     }
 
     @action
     onQuantityChange(value) {
-        this.clickedReciept.quantity = value;
+        this.clickedEntry.quantity = value;
         this.checkFields();
     }
 
     @action
     checkFields() {
-        if (this.clickedReciept.warehouse_id != -1
-            && this.clickedReciept.product_id != -1
-            && this.clickedReciept.quantity > 0) {
+        if (this.clickedEntry.warehouse_id != -1
+            && this.clickedEntry.city_id != -1
+            && this.clickedEntry.location_id != -1
+            && this.clickedEntry.product_id != -1
+            && this.clickedEntry.packaging_id != -1
+            && this.clickedEntry.quantity > 0) {
             this.isSubmitDisabled = false;
         }
         else {
@@ -385,7 +338,7 @@ class RecieptViewStore {
         this.grouppedData = [];
 
         this.allData.forEach(element => {
-            var key = element.warehouse_id + '-' + element.user_id + '-' + element.date_created;
+            var key = element.warehouse_id + '-' + element.date_created;
             if (this.grouppedData.findIndex((element) => element.name.toString() === key.toString()) === -1) {
                 this.grouppedData.push({ name: key, data: [] });
             }
@@ -396,4 +349,4 @@ class RecieptViewStore {
 
 }
 
-export default RecieptViewStore;
+export default EntryViewStore;

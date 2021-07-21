@@ -1,10 +1,9 @@
-import React from "react";
+import '../styles/ModalEntry.css';
 import { Form, Button, Dropdown, DropdownButton } from 'react-bootstrap';
+import React from "react";
 
-import '../styles/ModalReciept.css';
 
-
-export default function ModalReciept({ modalTarget, onSubmit, warehouse_name, product_name, quantity, warehouses, products, onWarehouseChange, onProductChange, onQuantityChange, isSubmitDisabled }) {
+export default function ModalEntry({ modalTarget, warehouses, cities, locations, products, packagings, warehouse_name, city_name, location_name, product_name, packaging_name, quantity, onSubmit, onWarehouseChange, onCityChange, onLocationChange, onProductChange, onPackagingChange, onQuantityChange, isSubmitDisabled }) {
 
   let submitClassName = "";
   let modalTitle = "";
@@ -13,19 +12,8 @@ export default function ModalReciept({ modalTarget, onSubmit, warehouse_name, pr
 
   if (modalTarget === "modalTargetAdd") {
     submitClassName = "btn btn-success";
-    modalTitle = "Kreiraj novo preuzimanje";
+    modalTitle = "Dodaj proizvod na stanje";
     submitText = "Dodaj"
-  }
-  else if (modalTarget === "modalTargetEdit") {
-    submitClassName = "btn btn-success";
-    modalTitle = "Izmijenite ovo preuzimanje";
-    submitText = "Izmijeni";
-  }
-  else {
-    submitClassName = "btn btn-danger";
-    modalTitle = "Želite li sigurno obrisati ovo preuzimanje?";
-    submitText = "Obriši";
-    isDisabled = true;
   }
   const config = {
     rules: [
@@ -65,6 +53,40 @@ export default function ModalReciept({ modalTarget, onSubmit, warehouse_name, pr
                   </DropdownButton>
               }
             </Form.Group>
+            <Form.Group size="md" controlId="city_name">
+              <Form.Label>Naziv Grada *</Form.Label>
+              {
+                isDisabled ?
+                  <Form.Control
+                    type="text"
+                    value={city_name}
+                    disabled={isDisabled}
+                  />
+                  :
+                  <DropdownButton id="categoryDropdown" variant="secondary" title={city_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                    {cities.map((city) => {
+                      return <Dropdown.Item key={city.city_id} onSelect={() => onCityChange(city)}>{city.city_name}</Dropdown.Item>;
+                    })}
+                  </DropdownButton>
+              }
+            </Form.Group>
+            <Form.Group size="md" controlId="location_name">
+              <Form.Label>Naziv Lokacije *</Form.Label>
+              {
+                isDisabled ?
+                  <Form.Control
+                    type="text"
+                    value={location_name}
+                    disabled={isDisabled}
+                  />
+                  :
+                  <DropdownButton id="categoryDropdown" variant="secondary" title={location_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                    {locations.map((location) => {
+                      return <Dropdown.Item key={location.location_id} onSelect={() => onLocationChange(location)}>{location.location_name}</Dropdown.Item>;
+                    })}
+                  </DropdownButton>
+              }
+            </Form.Group>
             <Form.Group size="md" controlId="product_name">
               <Form.Label>Naziv Proizvoda *</Form.Label>
               {
@@ -82,29 +104,37 @@ export default function ModalReciept({ modalTarget, onSubmit, warehouse_name, pr
                   </DropdownButton>
               }
             </Form.Group>
-            <Form.Group size="md" controlId="quantity">
-              <Form.Label>Količina *</Form.Label>
+
+            <Form.Group size="md" controlId="packaging_name">
+              <Form.Label>Naziv Ambalaže *</Form.Label>
               {
                 isDisabled ?
                   <Form.Control
                     type="text"
-                    value={quantity}
+                    value={packaging_name}
                     disabled={isDisabled}
                   />
                   :
-                  <Form.Control
-                    type="number"
-                    value={quantity}
-                    min="1"
-                    required
-                    {...config}
-                    onChange={(e) => {
-                      onQuantityChange(e.target.value);
-                    }}
-                    placeholder="Unesite količinu (minimalno 1)"
-                    disabled={isDisabled}
-                  />
+                  <DropdownButton id="categoryDropdown" variant="secondary" title={packaging_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                    {packagings.map((packaging) => {
+                      return <Dropdown.Item key={packaging.packaging_id} onSelect={() => onPackagingChange(packaging)}>{packaging.packaging_name}</Dropdown.Item>;
+                    })}
+                  </DropdownButton>
               }
+            </Form.Group>
+            <Form.Group size="md" controlId="quantity">
+              <Form.Label>Količina *</Form.Label>
+              <Form.Control
+                type="number"
+                value={quantity}
+                required
+                {...config}
+                onChange={(e) => {
+                  onQuantityChange(e.target.value);
+                }}
+                placeholder="Unesite količinu koju dodajete na stanje [min: 1]"
+                disabled={isDisabled}
+              />
             </Form.Group>
             <div hidden={isDisabled || !isSubmitDisabled}>
               <p style={{ color: "red" }}>
@@ -113,7 +143,7 @@ export default function ModalReciept({ modalTarget, onSubmit, warehouse_name, pr
             </div>
             <div className="modal-footer" style={{ padding: 0 }}>
               <Button className="btn btn-primary" data-dismiss="modal">Odustani</Button>
-              <Button type="submit" disabled={isSubmitDisabled} className={submitClassName} onClick={(e) => { e.preventDefault(); onSubmit() }}>{submitText}</Button>
+              <Button type="submit" disabled={isSubmitDisabled} className={submitClassName} onClick={onSubmit}>{submitText}</Button>
             </div>
           </Form>
         </div>

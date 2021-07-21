@@ -5,7 +5,7 @@ import Multiselect from 'multiselect-react-dropdown';
 import '../styles/ModalWarehouse.css';
 
 
-export default function ModalWarehouse({ modalTarget, users, selectedUsers, locations, onSubmit, name, location_name, onNameChange, onLocationChange, isSubmitDisabled, onSelect, onRemove }) {
+export default function ModalWarehouse({ modalTarget, users, cities, selectedUsers, locations, onSubmit, name, city_name, location_name, onNameChange, onCityChange, onLocationChange, isSubmitDisabled, onSelect, onRemove }) {
 
   let submitClassName = "";
   let modalTitle = "";
@@ -44,13 +44,13 @@ export default function ModalWarehouse({ modalTarget, users, selectedUsers, loca
     chips: {
       background: "#C2C2C2",
       padding: 8,
-      paddingLeft:12,
-      paddingRight:12,
+      paddingLeft: 12,
+      paddingRight: 12,
       color: "black",
-      textWeight:"500"
+      textWeight: "500"
     }
   };
-  
+
   return (
     <div className="modal fade" id={modalTarget} tabIndex="-1" aria-labelledby="modalTarget" aria-hidden="true">
       <div className="modal-dialog">
@@ -75,6 +75,23 @@ export default function ModalWarehouse({ modalTarget, users, selectedUsers, loca
                 onChange={(e) => onNameChange(e.target.value)}
                 disabled={isDisabled}
               />
+            </Form.Group>
+            <Form.Group size="md" controlId="city_name">
+              <Form.Label>Naziv Grada *</Form.Label>
+              {
+                isDisabled ?
+                  <Form.Control
+                    type="text"
+                    value={city_name}
+                    disabled={isDisabled}
+                  />
+                  :
+                  <DropdownButton id="categoryDropdown" variant="secondary" title={city_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                    {cities.map((city) => {
+                      return <Dropdown.Item key={city.city_id} onSelect={() => onCityChange(city)}>{city.city_name}</Dropdown.Item>;
+                    })}
+                  </DropdownButton>
+              }
             </Form.Group>
             <Form.Group size="md" controlId="location_name">
               <Form.Label>Naziv Lokacije *</Form.Label>
@@ -104,8 +121,14 @@ export default function ModalWarehouse({ modalTarget, users, selectedUsers, loca
                 displayValue="name"
                 closeIcon="circle2"
                 style={multiSelectDropdownStyle}
+                disable={isDisabled}
               />
             </Form.Group>
+            <div hidden={isDisabled || !isSubmitDisabled}>
+              <p style={{ color: "red" }}>
+                Provjerite sva polja !!!
+              </p>
+            </div>
             <div className="modal-footer" style={{ padding: 0 }}>
               <Button className="btn btn-primary" data-dismiss="modal">Odustani</Button>
               <Button type="submit" disabled={isSubmitDisabled} className={submitClassName} onClick={(e) => { e.preventDefault(); onSubmit() }}>{submitText}</Button>

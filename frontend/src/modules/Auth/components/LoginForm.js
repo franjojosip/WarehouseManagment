@@ -46,6 +46,11 @@ export default function LoginForm({ email, password, onEmailChange, onPasswordCh
             onChange={(e) => onPasswordChange(e.target.value)}
           />
         </Form.Group>
+        <div hidden={!isSubmitDisabled}>
+          <p style={{ color: "red", textAlign:"right"}}>
+            Provjerite sva polja !!!
+          </p>
+        </div>
         <a href="/forgotpassword">Zaboravljena lozinka?</a>
         <div className="modal-footer" style={{ padding: 0 }}>
           <Button type="submit" disabled={isSubmitDisabled} className="btn btn-success" onClick={(e) => { e.preventDefault(); onSubmit() }}>Prijavi se</Button>

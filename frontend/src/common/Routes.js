@@ -54,5 +54,21 @@ export const routes = [
     {
         name: 'stock',
         pattern: '/stock'
+    },
+    {
+        name: 'stocktaking',
+        pattern: '/stocktaking'
+    },
+    {
+        name: 'entry',
+        pattern: '/entry'
+    },
+    {
+        name: 'notificationlog',
+        pattern: '/notificationlog'
+    },
+    {
+        name: 'notificationsettings',
+        pattern: '/notificationsettings'
     }
 ];

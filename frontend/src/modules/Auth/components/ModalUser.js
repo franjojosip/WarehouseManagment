@@ -147,6 +147,11 @@ export default function ModalUser({ modalTarget, roles, onSubmit, fname, lname, 
                   </DropdownButton>
               }
             </Form.Group>
+            <div hidden={isDisabled || !isSubmitDisabled}>
+              <p style={{ color: "red" }}>
+                Provjerite sva polja !!!
+              </p>
+            </div>
             <div className="modal-footer" style={{ padding: 0 }}>
               <Button className="btn btn-primary" data-dismiss="modal">Odustani</Button>
               <Button type="submit" disabled={isSubmitDisabled} className={submitClassName} onClick={(e) => { e.preventDefault(); onSubmit() }}>{submitText}</Button>
