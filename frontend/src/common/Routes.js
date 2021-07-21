@@ -9,7 +9,7 @@ export const routes = [
     },
     {
         name: 'notFound',
-        pattern: '/notFound',
+        pattern: '/notfound',
     },
     {
         name: 'city',

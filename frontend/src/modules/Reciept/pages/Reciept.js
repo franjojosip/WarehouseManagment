@@ -5,20 +5,18 @@ import RecieptViewStore from '../stores/RecieptViewStore'
 import CollapsibleTable from '../../../common/layouts/CollapsibleTable';
 import ModalReciept from '../components/ModalReciept';
 import Loading from '../../../common/layouts/Loading';
-import { Button } from 'react-bootstrap';
 
 import "../styles/Reciept.css";
 
 @inject(
     i => ({
-        viewStore: new RecieptViewStore(i.rootStore)
+        viewStore: new RecieptViewStore(i.rootStore),
+        rootStore: i.rootStore
     })
 )
-
 @observer
 class Reciept extends React.Component {
     render() {
-
         const { navigateToWarehouse, warehouses, products, clickedRows, clickedReciept, onClickedRow, parentColumns, childColumns, paginatedData, onRecieptClicked, onWarehouseChange, onProductChange, onQuantityChange, isLoaderVisible, title, page, pageSize, totalPages, previousEnabled, nextEnabled, isSubmitDisabled, onPageClick, onChangePageSize, onPreviousPageClick, onNextPageClick, onEditClick, onDeleteClick, onCreateClick } = this.props.viewStore;
 
         let tableParentColumns = parentColumns.map((element, i) => {
@@ -98,7 +96,6 @@ class Reciept extends React.Component {
 
         return (
             <Layout>
-                <Button onClick={() => navigateToWarehouse()}>NAVIGIRAJ NA WAREHOUSE</Button>
                 <Loading visible={isLoaderVisible} />
                 <ModalReciept modalTarget="modalTargetAdd" warehouses={warehouses} products={products} onSubmit={onCreateClick} warehouse_name={clickedReciept.warehouse_name} product_name={clickedReciept.product_name} quantity={clickedReciept.quantity} onWarehouseChange={onWarehouseChange} onProductChange={onProductChange} onQuantityChange={onQuantityChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalReciept modalTarget="modalTargetEdit" warehouses={warehouses} products={products} onSubmit={onEditClick} warehouse_name={clickedReciept.warehouse_name} product_name={clickedReciept.product_name} quantity={clickedReciept.quantity} onWarehouseChange={onWarehouseChange} onProductChange={onProductChange} onQuantityChange={onQuantityChange} isSubmitDisabled={isSubmitDisabled} />

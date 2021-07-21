@@ -21,15 +21,9 @@ class RecieptViewStore {
         this.onQuantityChange = this.onQuantityChange.bind(this);
         this.onClickedRow = this.onClickedRow.bind(this);
         this.groupData = this.groupData.bind(this);
-        this.navigateToWarehouse = this.navigateToWarehouse.bind(this);
 
         this.groupData();
         this.setPagination();
-    }
-    
-    @action
-    navigateToWarehouse(){
-        this.routerStore.goTo("warehouse");
     }
 
     @observable isLoaderVisible = false;

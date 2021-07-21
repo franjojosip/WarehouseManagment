@@ -1,4 +1,4 @@
-import { RouterState, RouterStore } from "mobx-state-router";
+import { RouterState, RouterStore } from 'mobx-state-router';
 import { routes } from "./Routes";
 import AuthenticationModuleStore from "../modules/Auth/stores/AuthenticationModuleStore";
 import CityModuleStore from "../modules/City/stores/CityModuleStore";
@@ -17,10 +17,11 @@ import NotificationModuleStore from "../modules/Notification/stores/Notification
 
 const notFound = new RouterState('notFound');
 
-export default class RootStore {
-    routerStore = new RouterStore(this, routes, notFound);
+export class RootStore {
     
     constructor() {
+        this.routerStore = new RouterStore(this, routes, notFound);
+        
         this.authenticationModuleStore = new AuthenticationModuleStore(this);
         this.cityModuleStore = new CityModuleStore(this);
         this.packagingModuleStore = new PackagingModuleStore(this);

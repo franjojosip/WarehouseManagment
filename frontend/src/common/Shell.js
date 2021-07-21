@@ -40,7 +40,7 @@ const viewMap = {
     notFound: <NotFoundPage />
 };
 
-export const Shell = inject("rootStore")(
+export const Shell = inject('rootStore')(
     class extends React.Component {
         render() {
             const { rootStore } = this.props;
