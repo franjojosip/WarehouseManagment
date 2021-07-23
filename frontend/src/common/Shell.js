@@ -18,6 +18,7 @@ import StocktakingPage from "../modules/Stocktaking/pages/Stocktaking";
 import EntryPage from "../modules/Entry/pages/Entry";
 import NotificationLogPage from "../modules/Notification/pages/NotificationLog";
 import NotificationSettingPage from "../modules/Notification/pages/NotificationSetting";
+import Example from "./Navigation/Sidebar/SideBar";
 
 const viewMap = {
     home: <LoginPage />,

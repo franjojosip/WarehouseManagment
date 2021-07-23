@@ -5,6 +5,7 @@ import CityViewStore from '../stores/CityViewStore'
 import Table from '../../../common/layouts/Table';
 import ModalCity from '../components/ModalCity';
 import Loading from '../../../common/layouts/Loading';
+import { ToastContainer } from 'react-toastify';
 
 import "../styles/City.css";
 
@@ -24,18 +25,28 @@ class City extends React.Component {
                 <td className="pt-3-half">{element.name}</td>
                 <td className="pt-3-half">{element.zip_code}</td>
                 <td>
-                    <span className="table-edit">
-                        <button type="button" onClick={() => onCityClicked(element, false)} data-toggle="modal" data-target="#modalTargetEdit" className="btn btn-primary btn-rounded btn-sm my-0">
-                            Edit
-                        </button>
-                    </span>
+                    {
+                        element.id !== "" ?
+                            <span className="table-edit">
+                                <button type="button" onClick={() => onCityClicked(element, false)} data-toggle="modal" data-target="#modalTargetEdit" className="btn btn-primary btn-rounded btn-sm my-0">
+                                    Izmijeni
+                                </button>
+                            </span>
+                            :
+                            null
+                    }
                 </td>
                 <td>
-                    <span className="table-remove">
-                        <button type="button" onClick={() => onCityClicked(element, false)} data-toggle="modal" data-target="#modalTargetDelete" className="btn btn-danger btn-rounded btn-sm my-0">
-                            Obriši
-                        </button>
-                    </span>
+                    {
+                        element.id !== "" ?
+                            <span className="table-remove">
+                                <button type="button" onClick={() => onCityClicked(element, false)} data-toggle="modal" data-target="#modalTargetDelete" className="btn btn-danger btn-rounded btn-sm my-0">
+                                    Obriši
+                                </button>
+                            </span>
+                            :
+                            null
+                    }
                 </td>
             </tr>);
         });
@@ -46,6 +57,7 @@ class City extends React.Component {
                 <ModalCity modalTarget="modalTargetEdit" onSubmit={onEditClick} name={clickedCity.name} zip_code={clickedCity.zip_code} onNameChange={onNameChange} onZipCodeChange={onZipCodeChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalCity modalTarget="modalTargetDelete" onSubmit={onDeleteClick} name={clickedCity.name} zip_code={clickedCity.zip_code} onNameChange={onNameChange} onZipCodeChange={onZipCodeChange} isSubmitDisabled={isSubmitDisabled} />
                 <Table title={title} columns={columns} tableRows={tableRows} page={page} pageSize={pageSize} totalPages={totalPages} previousEnabled={previousEnabled} nextEnabled={nextEnabled} onActionClicked={onCityClicked} onPageClick={onPageClick} onChangePageSize={onChangePageSize} onPreviousPageClick={onPreviousPageClick} onNextPageClick={onNextPageClick} />
+                <ToastContainer style={{ fontSize: 15 }} />
             </Layout >
         )
     }

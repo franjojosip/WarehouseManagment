@@ -1,4 +1,8 @@
 import { action, observable } from "mobx";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import toaster from "toasted-notes";
+import "toasted-notes/src/styles.css"; // optional styles
 
 class CityViewStore {
     constructor(rootStore) {
@@ -18,19 +22,23 @@ class CityViewStore {
         this.onCityClicked = this.onCityClicked.bind(this);
         this.onNameChange = this.onNameChange.bind(this);
         this.onZipCodeChange = this.onZipCodeChange.bind(this);
+        this.delay = this.delay.bind(this);
+        this.showLoader = this.showLoader.bind(this);
+        this.hideLoader = this.hideLoader.bind(this);
+        this.processData = this.processData.bind(this);
 
         this.setPagination();
+        this.onFind();
     }
 
     @observable isLoaderVisible = false;
+    @observable isSubmitDisabled = true;
 
     @observable clickedCity = {
         id: "",
         name: "",
         zip_code: ""
     };
-    @observable isSubmitDisabled = true;
-
 
     @observable page = 1;
     @observable pageSize = 5;
@@ -43,59 +51,106 @@ class CityViewStore {
     columns = ['Naziv grada', 'Poštanski broj', 'Izmjena', 'Brisanje'];
 
     //TESTNI PODATCI
-    allData = [
-        { id: 1, name: "Osijek", zip_code: "31000" },
-        { id: 2, name: "Zagreb", zip_code: "31000" },
-        { id: 3, name: "Stari Mikanovci", zip_code: "32284" },
-        { id: 4, name: "Bilje", zip_code: "31000" },
-        { id: 5, name: "Zagreb", zip_code: "31000" },
-        { id: 6, name: "Stari Mikanovci", zip_code: "32284" },
-        { id: 7, name: "Bilje", zip_code: "31000" },
-        { id: 8, name: "Zagreb", zip_code: "31000" },
-        { id: 9, name: "Stari Mikanovci", zip_code: "32284" },
-        { id: 10, name: "Bilje", zip_code: "31000" }
-    ];
+    @observable allData = [];
 
     @action
-    onDeleteClick() {
-        //this.isLoaderVisible = true; //prikaži loader        
-        /*
-        this.deleteResult = await (this.dataStore.delete(this.itemToDeleteId));
-        if (this.deleteResult) {
-            this.isDeleting = false;
-            toaster.notify('Deletion successful!', {
-                duration: 2000
-            })
-            this.onFind();
-        } else {
-            toaster.notify('Deletion failed!', {
-                duration: 2000
-            })
+    async showLoader() {
+        this.isLoaderVisible = true;
+        await this.delay(500);
+    }
+
+    @action
+    hideLoader() {
+        this.isLoaderVisible = false;
+    }
+
+    @action
+    processData(response) {
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
         }
-    */
-        //this.isLoaderVisible = false; //sakrij loader
-        console.log(this.clickedCity)
+        else {
+            toast.success(response.status, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+            this.onFind();
+        }
     }
 
     @action
-    onEditClick() {
-        //EDIT DATA
-        console.log(this.clickedCity)
+    async onDeleteClick() {
+        this.showLoader();
+        let response = await (this.dataStore.delete(this.clickedCity.id));
+        this.processData(response);
+        this.hideLoader();
     }
 
     @action
-    onCreateClick() {
-        //CREATE DATA
-        console.log(this.clickedCity)
+    async onEditClick() {
+        this.showLoader();
+        let response = await (this.dataStore.update(this.clickedCity));
+        this.processData(response);
+        this.hideLoader();
+    }
+
+    @action
+    async onCreateClick() {
+        this.showLoader();
+        let response = await (this.dataStore.create(this.clickedCity));
+        this.processData(response);
+        this.hideLoader();
     }
 
     @action
     async onFind() {
-        //FIND CITY
+        this.showLoader();
+        let response = await (this.dataStore.get())
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+            this.allData = [{ id: "", name: "Neuspješno učitavanje podataka", zip_code: "" }];
+        }
+        else {
+            if (response.cities.length > 0) {
+                this.allData = response.cities;
+            }
+            else {
+                this.allData = [{ id: "", name: "Nema podataka", zip_code: "" }];
+            }
+        }
+        this.setPagination();
+        this.hideLoader();
     };
 
     @action
-    onCityClicked (data, isCreate) {
+    delay(delayInMs) {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve(2);
+            }, delayInMs);
+        });
+    }
+
+    @action
+    onCityClicked(data, isCreate) {
         if (isCreate) {
             this.clickedCity = {
                 id: "",
@@ -110,7 +165,6 @@ class CityViewStore {
                 zip_code: data.zip_code
             };
         }
-
         this.checkFields();
     }
 
@@ -131,12 +185,7 @@ class CityViewStore {
 
     @action
     loadPageData() {
-        if (this.allData.length === 0) {
-            this.rows = [{ id: -1, name: "Nema podataka", zip_code: "" }];
-        }
-        else {
-            this.rows = this.allData.slice((this.page - 1) * this.pageSize, this.page * this.pageSize)
-        }
+        this.rows = this.allData.slice((this.page - 1) * this.pageSize, this.page * this.pageSize)
     }
 
     @action
@@ -177,7 +226,11 @@ class CityViewStore {
     checkFields() {
         let isValidNumber = /^\d+$/.test(this.clickedCity.zip_code);
 
-        if (this.clickedCity.name.length > 2 && this.clickedCity.zip_code.length == 5 && isValidNumber) {
+        if (this.clickedCity.name.length > 2
+            && this.clickedCity.zip_code.toString().length == 5
+            && isValidNumber
+            && this.clickedCity.zip_code >= 10000
+            && this.clickedCity.zip_code <= 54000) {
             this.isSubmitDisabled = false;
         }
         else {
