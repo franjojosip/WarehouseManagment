@@ -6,7 +6,7 @@ export default class CityDataStore extends React.Component {
         super();
         this.httpClient = new HttpClient("city"); //TODO SET FINAL ROUTE FOR CITIES
     }
-    
+
     create = async (city) => {
         const headers = new Headers();
         headers.append("Content-Type", "application/json");

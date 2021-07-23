@@ -84,7 +84,7 @@ export default function ModalCity({ modalTarget, onSubmit, name, zip_code, onNam
             </div>
             <div className="modal-footer" style={{ padding: 0 }}>
               <Button className="btn btn-primary" data-dismiss="modal">Odustani</Button>
-              <Button type="submit" disabled={isSubmitDisabled && !isDisabled} className={submitClassName} onClick={(e)=>{e.preventDefault(); onSubmit()}}  data-dismiss="modal">{submitText}</Button>
+              <Button type="submit" disabled={isSubmitDisabled && !isDisabled} className={submitClassName} onClick={(e) => { e.preventDefault(); onSubmit() }} data-dismiss="modal">{submitText}</Button>
             </div>
           </Form>
         </div>

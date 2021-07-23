@@ -1,8 +1,6 @@
 import { action, observable } from "mobx";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import toaster from "toasted-notes";
-import "toasted-notes/src/styles.css"; // optional styles
 
 class CityViewStore {
     constructor(rootStore) {
@@ -50,7 +48,6 @@ class CityViewStore {
     title = "Gradovi";
     columns = ['Naziv grada', 'Poštanski broj', 'Izmjena', 'Brisanje'];
 
-    //TESTNI PODATCI
     @observable allData = [];
 
     @action
