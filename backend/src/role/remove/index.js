@@ -2,6 +2,9 @@ const Role = require("../schema");
 const User = require("../../users/schema");
 
 async function remove(req, res) {
+  if(req.body.password == null || req.body.password != process.env.SUPER_ADMIN_PASSWORD){
+    return res.status(403).send("Invalid password");
+  }
   try {
     const savedRole = await Role.findById(req.params.id);
     if (savedRole) {

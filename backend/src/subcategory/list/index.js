@@ -7,7 +7,8 @@ async function list(req, res) {
       return {
         id: subcategory.id,
         name: subcategory.name,
-        category: subcategory.category_id.name
+        category_id: subcategory.category_id.id,
+        category_name: subcategory.category_id.name
       };
     });
     return res.status(200).json({ subcategories });

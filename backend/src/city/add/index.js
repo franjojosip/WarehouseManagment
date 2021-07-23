@@ -9,12 +9,12 @@ const serializer = Joi.object({
 async function add(req, res) {
   const result = serializer.validate(req.body);
   if (result.error) {
-    return res.status(400).send(result.error);
+    return res.status(400).send({ error: "Poslani su neispravni podatci!" });
   }
 
   const zipCodeExists = await City.findOne({ zip_code: result.value.zip_code });
   if (zipCodeExists) {
-    return res.status(400).json({ error: "Zip code already in use" });
+    return res.status(400).json({ error: "Poštanski broj se već koristi!" });
   }
   const newCity = new City();
   newCity.name = result.value.name;
@@ -22,9 +22,9 @@ async function add(req, res) {
 
   try {
     await newCity.save();
-    return res.status(200).json({ status: "City saved" });
+    return res.status(200).json({ status: "Uspješno dodan grad!" });
   } catch (err) {
-    return res.status(500).json({ error: err });
+    return res.status(500).json({ error: "Dogodila se pogreška, molimo kontaktirajte administratora!" });
   }
 }
 

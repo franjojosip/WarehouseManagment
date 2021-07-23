@@ -1,7 +1,6 @@
 const User = require("../schema");
 const Role = require("../../role/schema");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 const Joi = require("joi");
 
 const serializer = Joi.object({

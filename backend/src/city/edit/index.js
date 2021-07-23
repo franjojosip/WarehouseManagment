@@ -9,7 +9,7 @@ const serializer = Joi.object({
 async function edit(req, res) {
   const result = serializer.validate(req.body);
   if (result.error) {
-    return res.status(400).send(result.error);
+    return res.status(400).send({ error: "Poslani su neispravni podatci!" });
   }
 
   const city = await City.findById(req.params.id);
@@ -17,7 +17,7 @@ async function edit(req, res) {
   if(city.zip_code != result.value.zip_code){
     const zipCodeExists = await City.findOne({zip_code: result.value.zip_code});
     if(zipCodeExists){
-      return res.status(400).json({ error: "Zip code already in use" });
+      return res.status(400).json({ error: "Poštanski broj se već koristi!" });
     }
   }
 
@@ -26,9 +26,9 @@ async function edit(req, res) {
 
   try {
     await city.save();
-    return res.status(200).json({ status: "City successfully edited" });
+    return res.status(200).json({ status: "Uspješna izmjena grada!" });
   } catch (err) {
-    return res.status(500).json({ error: err });
+    return res.status(500).json({ error: "Dogodila se pogreška, molimo kontaktirajte administratora!" });
   }
 }
 
