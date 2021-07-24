@@ -1,9 +1,9 @@
-import '../styles/ModalNotification.css';
 import { Form, Button, DropdownButton, Dropdown } from 'react-bootstrap';
 import React from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 
+import "../../../common/styles/Modal.css";
 
 export default function ModalNotificationSetting({ modalTarget, onSubmit, days, day_of_week_name, time, email, notification_type_name, notification_types, onDayOfWeekChange, onTimeChange, onNotificationTypeChange, isSubmitDisabled }) {
   let classes = makeStyles((theme) => ({
@@ -70,7 +70,7 @@ export default function ModalNotificationSetting({ modalTarget, onSubmit, days, 
                     value={day_of_week_name}
                     disabled={isDisabled}
                   /> :
-                  <DropdownButton id="categoryDropdown" variant="secondary" title={day_of_week_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                  <DropdownButton id="customDropdown" variant="secondary" title={day_of_week_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
                     {days.map((day) => {
                       return <Dropdown.Item key={day.id} onSelect={() => onDayOfWeekChange(day)}>{day.name}</Dropdown.Item>;
                     })}
@@ -110,7 +110,7 @@ export default function ModalNotificationSetting({ modalTarget, onSubmit, days, 
                     value={notification_type_name}
                     disabled={isDisabled}
                   /> :
-                  <DropdownButton id="categoryDropdown" variant="secondary" title={notification_type_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                  <DropdownButton id="customDropdown" variant="secondary" title={notification_type_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
                     {notification_types.map((type) => {
                       return <Dropdown.Item key={type.notification_type_id} onSelect={() => onNotificationTypeChange(type)}>{type.notification_type_name}</Dropdown.Item>;
                     })}

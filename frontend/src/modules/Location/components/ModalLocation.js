@@ -1,10 +1,10 @@
 import React from "react";
 import { Form, Button, Dropdown, DropdownButton } from 'react-bootstrap';
 
-import '../styles/ModalLocation.css';
+import "../../../common/styles/Modal.css";
 
 
-export default function ModalLocation({ modalTarget, cities, onSubmit, name, city_name, onNameChange, onCityChange, isSubmitDisabled }) {
+export default function ModalLocation({ modalTarget, errorMessage, cities, onSubmit, name, city_name, onNameChange, onCityChange, isSubmitDisabled }) {
 
   let submitClassName = "";
   let modalTitle = "";
@@ -61,6 +61,14 @@ export default function ModalLocation({ modalTarget, cities, onSubmit, name, cit
                 onChange={(e) => onNameChange(e.target.value)}
                 disabled={isDisabled}
               />
+              <div hidden={isDisabled || !isSubmitDisabled} style={{ paddingTop: 5 }}>
+                <p style={{ color: "red" }}>
+                  {errorMessage.name ?
+                    errorMessage.name
+                    : null
+                  }
+                </p>
+              </div>
             </Form.Group>
             <Form.Group size="md" controlId="city_name">
               <Form.Label>Naziv Grada *</Form.Label>
@@ -72,21 +80,24 @@ export default function ModalLocation({ modalTarget, cities, onSubmit, name, cit
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="categoryDropdown" variant="secondary" title={city_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                  <DropdownButton id="customDropdown" variant="secondary" title={city_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
                     {cities.map((city) => {
                       return <Dropdown.Item key={city.city_id} onSelect={() => onCityChange(city)}>{city.city_name}</Dropdown.Item>;
                     })}
                   </DropdownButton>
               }
+              <div hidden={isDisabled || !isSubmitDisabled}>
+                <p style={{ color: "red" }}>
+                  {errorMessage.city ?
+                    errorMessage.city
+                    : null
+                  }
+                </p>
+              </div>
             </Form.Group>
-            <div hidden={isDisabled || !isSubmitDisabled}>
-              <p style={{ color: "red" }}>
-                Provjerite sva polja !!!
-              </p>
-            </div>
             <div className="modal-footer" style={{ padding: 0 }}>
               <Button className="btn btn-primary" data-dismiss="modal">Odustani</Button>
-              <Button type="submit" disabled={isSubmitDisabled} className={submitClassName} onClick={(e) => { e.preventDefault(); onSubmit() }}>{submitText}</Button>
+              <Button type="submit" data-dismiss="modal" disabled={isSubmitDisabled && !isDisabled} className={submitClassName} onClick={(e) => { e.preventDefault(); onSubmit() }}>{submitText}</Button>
             </div>
           </Form>
         </div>

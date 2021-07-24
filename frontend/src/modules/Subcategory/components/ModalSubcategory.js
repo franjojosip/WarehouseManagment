@@ -1,7 +1,7 @@
 import React from "react";
 import { Form, Button, Dropdown, DropdownButton } from 'react-bootstrap';
 
-import '../styles/ModalSubcategory.css';
+import "../../../common/styles/Modal.css";
 
 
 export default function ModalSubcategory({ modalTarget, categories, onSubmit, name, category_name, onNameChange, onCategoryChange, isSubmitDisabled }) {
@@ -72,7 +72,7 @@ export default function ModalSubcategory({ modalTarget, categories, onSubmit, na
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="categoryDropdown" variant="secondary" title={category_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                  <DropdownButton id="customDropdown" variant="secondary" title={category_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
                     {categories.map((category) => {
                       return <Dropdown.Item key={category.category_id} onSelect={() => onCategoryChange(category)}>{category.category_name}</Dropdown.Item>;
                     })}

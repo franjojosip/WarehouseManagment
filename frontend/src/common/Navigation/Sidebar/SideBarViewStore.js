@@ -1,4 +1,4 @@
-import { action } from "mobx";
+import { action, observable } from "mobx";
 
 
 class SideBarViewStore {
@@ -7,9 +7,11 @@ class SideBarViewStore {
         this.onNavigate = this.onNavigate.bind(this);
     }
 
+    @observable selectedRoute = "home";
+
     @action
     onNavigate(route) {
-        console.log(route)
+        this.selectedRoute = route;
         this.routerStore.goTo(route);
     }
 

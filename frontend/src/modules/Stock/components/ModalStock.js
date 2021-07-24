@@ -1,7 +1,7 @@
 import React from "react";
 import { Form, Button, Dropdown, DropdownButton } from 'react-bootstrap';
 
-import '../styles/ModalStock.css';
+import "../../../common/styles/Modal.css";
 
 
 export default function ModalStock({ modalTarget, cities, locations, warehouses, products, onSubmit, city_name, location_name, warehouse_name, product_name, quantity, min_quantity, onCityChange, onLocationChange, onWarehouseChange, onProductChange, onQuantityChange, onMinimumQuantityChange, isSubmitDisabled }) {
@@ -66,7 +66,7 @@ export default function ModalStock({ modalTarget, cities, locations, warehouses,
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="categoryDropdown" variant="secondary" title={city_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                  <DropdownButton id="customDropdown" variant="secondary" title={city_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
                     {cities.map((city) => {
                       return <Dropdown.Item key={city.city_id} onSelect={() => onCityChange(city)}>{city.city_name}</Dropdown.Item>;
                     })}
@@ -84,7 +84,7 @@ export default function ModalStock({ modalTarget, cities, locations, warehouses,
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="categoryDropdown" variant="secondary" title={location_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                  <DropdownButton id="customDropdown" variant="secondary" title={location_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
                     {locations.map((location) => {
                       return <Dropdown.Item key={location.location_id} onSelect={() => onLocationChange(location)}>{location.location_name}</Dropdown.Item>;
                     })}
@@ -101,7 +101,7 @@ export default function ModalStock({ modalTarget, cities, locations, warehouses,
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="categoryDropdown" variant="secondary" title={warehouse_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                  <DropdownButton id="customDropdown" variant="secondary" title={warehouse_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
                     {warehouses.map((warehouse) => {
                       return <Dropdown.Item key={warehouse.warehouse_id} onSelect={() => onWarehouseChange(warehouse)}>{warehouse.warehouse_name}</Dropdown.Item>;
                     })}
@@ -118,7 +118,7 @@ export default function ModalStock({ modalTarget, cities, locations, warehouses,
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="categoryDropdown" variant="secondary" title={product_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                  <DropdownButton id="customDropdown" variant="secondary" title={product_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
                     {products.map((product) => {
                       return <Dropdown.Item key={product.product_id} onSelect={() => onProductChange(product)}>{product.product_name}</Dropdown.Item>;
                     })}

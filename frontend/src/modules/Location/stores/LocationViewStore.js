@@ -1,8 +1,10 @@
 import { action, observable } from "mobx";
+import { toast } from 'react-toastify';
 
 class LocationViewStore {
     constructor(rootStore) {
-        this.dataStore = rootStore.packagingModuleStore.packagingDataStore;
+        this.dataStore = rootStore.locationModuleStore.locationDataStore;
+        this.cityDataStore = rootStore.cityModuleStore.cityDataStore;
         this.routerStore = rootStore.routerStore;
 
         this.onFind = this.onFind.bind(this);
@@ -18,8 +20,16 @@ class LocationViewStore {
         this.onLocationClicked = this.onLocationClicked.bind(this);
         this.onNameChange = this.onNameChange.bind(this);
         this.onCityChange = this.onCityChange.bind(this);
+        this.delay = this.delay.bind(this);
+        this.showLoader = this.showLoader.bind(this);
+        this.hideLoader = this.hideLoader.bind(this);
+        this.processData = this.processData.bind(this);
+        this.findCities = this.findCities.bind(this);
+        this.locationNameExist = this.locationNameExist.bind(this);
 
         this.setPagination();
+        this.findCities();
+        this.onFind();
     }
 
     @observable isLoaderVisible = false;
@@ -34,7 +44,11 @@ class LocationViewStore {
         city_id: "",
         city_name: "Odaberi grad"
     }
-    
+    @observable errorMessage = {
+        name: null,
+        city: null
+    };
+
     @observable isSubmitDisabled = true;
 
 
@@ -49,71 +63,126 @@ class LocationViewStore {
     columns = ['Naziv ulice', 'Naziv grada', 'Izmjena', 'Brisanje'];
 
     //TESTNI PODATCI
-    allData = [
-        { id: 1, name: "MARTINA DIVALTA 120", city_id: 1, city_name: "Grad1" },
-        { id: 2, name: "Testna ulica 11", city_id: 2, city_name: "Grad2" },
-        { id: 3, name: "Sokovi", city_id: 3, city_name: "Grad3" },
-        { id: 4, name: "Cigarete", city_id: 2, city_name: "Grad4" },
-        { id: 5, name: "Koverta", city_id: 3, city_name: "Grad45" },
-        { id: 6, name: "Tst2", city_id: 1, city_name: "Grad6" },
-        { id: 7, name: "Test3", city_id: 4, city_name: "test4" },
-        { id: 8, name: "Test4", city_id: 4, city_name: "test4" },
-        { id: 9, name: "Tst5", city_id: 2, city_name: "test2" },
-        { id: 10, name: "Test6", city_id: 2, city_name: "test2" }
-    ];
-
-    cities = [{
-        city_id: 1,
-        city_name: "Grad1"
-    }, {
-        city_id: 2,
-        city_name: "Grad2"
-    }, {
-        city_id: 3,
-        city_name: "Grad3"
-    }, {
-        city_id: 4,
-        city_name: "test4"
-    }
-    ];
+    @observable allData = [];
+    @observable cities = [];
 
     @action
-    onDeleteClick() {
-        //this.isLoaderVisible = true; //prikaži loader        
-        /*
-        this.deleteResult = await (this.dataStore.delete(this.itemToDeleteId));
-        if (this.deleteResult) {
-            this.isDeleting = false;
-            toaster.notify('Deletion successful!', {
-                duration: 2000
-            })
-            this.onFind();
-        } else {
-            toaster.notify('Deletion failed!', {
-                duration: 2000
-            })
+    async showLoader() {
+        this.isLoaderVisible = true;
+        await this.delay(500);
+    }
+
+    @action
+    hideLoader() {
+        this.isLoaderVisible = false;
+    }
+
+    @action
+    processData(response) {
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
         }
-    */
-        //this.isLoaderVisible = false; //sakrij loader
-        console.log(this.clickedLocation)
+        else {
+            toast.success(response.status, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+            this.onFind();
+        }
     }
 
     @action
-    onEditClick() {
-        //EDIT DATA
-        console.log(this.clickedLocation)
+    delay(delayInMs) {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve(2);
+            }, delayInMs);
+        });
     }
 
     @action
-    onCreateClick() {
-        //CREATE DATA
-        console.log(this.clickedLocation)
+    async onDeleteClick() {
+        await this.showLoader();
+        let response = await (this.dataStore.delete(this.clickedLocation.id));
+        this.processData(response);
+        this.hideLoader();
+    }
+
+    @action
+    async onEditClick() {
+        await this.showLoader();
+        let response = await (this.dataStore.update(this.clickedLocation));
+        this.processData(response);
+        this.hideLoader();
+    }
+
+    @action
+    async onCreateClick() {
+        await this.showLoader();
+        let response = await (this.dataStore.create(this.clickedLocation));
+        this.processData(response);
+        this.hideLoader();
     }
 
     @action
     async onFind() {
-        //FIND Location
+        await this.showLoader();
+        let response = await (this.dataStore.get())
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+            this.allData = [{ id: "", name: "Neuspješno učitavanje podataka", city_id: "", city_name: "" }];
+        }
+        else {
+            if (response.locations.length > 0) {
+                this.allData = response.locations;
+            }
+            else {
+                this.allData = [{ id: "", name: "Nema podataka", city_id: "", city_name: "" }];
+            }
+        }
+        this.setPagination();
+        this.hideLoader();
     };
+
+    @action
+    async findCities() {
+        let response = await (this.cityDataStore.get())
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+        }
+        else {
+            if (response.cities.length > 0) {
+                this.cities = response.cities.map((city) => {
+                    return { city_id: city.id, city_name: city.name }
+                });
+            }
+        }
+    }
 
     @action
     onLocationClicked(data, isCreate) {
@@ -132,9 +201,8 @@ class LocationViewStore {
                 city_id: data.city_id,
                 city_name: data.city_name
             };
+            this.checkFields();
         }
-
-        this.checkFields();
     }
 
     @action
@@ -147,19 +215,14 @@ class LocationViewStore {
             this.totalPages = this.totalPages + 1;
         }
         this.previousEnabled = this.page > 1;
-        this.nextEnabled = Math.floor(this.allData.length / this.pageSize) > this.page;
+        this.nextEnabled = this.page < this.totalPages;
 
         this.loadPageData()
     }
 
     @action
     loadPageData() {
-        if (this.allData.length === 0) {
-            this.rows = [{ id: -1, name: "Nema podataka" }];
-        }
-        else {
-            this.rows = this.allData.slice((this.page - 1) * this.pageSize, this.page * this.pageSize)
-        }
+        this.rows = this.allData.slice((this.page - 1) * this.pageSize, this.page * this.pageSize)
     }
 
     @action
@@ -199,12 +262,34 @@ class LocationViewStore {
 
     @action
     checkFields() {
-        if (this.clickedLocation.name.length > 2 && this.clickedLocation.city_id != null) {
+        this.errorMessage = {
+            name: null,
+            city: null
+        };
+        if (this.locationNameExist()) {
+            this.errorMessage.name = "Lokacija s istim nazivom već postoji!";
+        }
+        if (this.clickedLocation.name.length < 2) {
+            this.errorMessage.name = "Neispravna duljina naziva lokacije!";
+        }
+        if (this.clickedLocation.city_id.toString() == "") {
+            this.errorMessage.city = "Odaberite grad!";
+        }
+        if (this.errorMessage.name == null && this.errorMessage.city == null) {
             this.isSubmitDisabled = false;
         }
         else {
             this.isSubmitDisabled = true;
         }
+    }
+
+    @action
+    locationNameExist() {
+        if (this.clickedLocation.name.length > 0) {
+            let filteredLocations = this.allData.filter(location => location.id !== this.clickedLocation.id);
+            return filteredLocations.findIndex(clickedLocation => clickedLocation.name.toLowerCase() == this.clickedLocation.name.toLowerCase()) !== -1;
+        }
+        return false;
     }
 
 }

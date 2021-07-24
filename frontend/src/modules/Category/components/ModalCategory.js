@@ -1,7 +1,7 @@
-import '../styles/ModalCategory.css';
 import { Form, Button } from 'react-bootstrap';
 import React from "react";
 
+import "../../../common/styles/Modal.css";
 
 export default function ModalCategory({ modalTarget, onSubmit, name, onNameChange, isSubmitDisabled }) {
 

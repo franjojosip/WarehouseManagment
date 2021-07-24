@@ -2,7 +2,7 @@ import React from "react";
 import { Form, Button, Dropdown, DropdownButton } from 'react-bootstrap';
 import Multiselect from 'multiselect-react-dropdown';
 
-import '../styles/ModalWarehouse.css';
+import "../../../common/styles/Modal.css";
 
 
 export default function ModalWarehouse({ modalTarget, users, cities, selectedUsers, locations, onSubmit, name, city_name, location_name, onNameChange, onCityChange, onLocationChange, isSubmitDisabled, onSelect, onRemove }) {
@@ -86,7 +86,7 @@ export default function ModalWarehouse({ modalTarget, users, cities, selectedUse
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="categoryDropdown" variant="secondary" title={city_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                  <DropdownButton id="customDropdown" variant="secondary" title={city_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
                     {cities.map((city) => {
                       return <Dropdown.Item key={city.city_id} onSelect={() => onCityChange(city)}>{city.city_name}</Dropdown.Item>;
                     })}
@@ -103,7 +103,7 @@ export default function ModalWarehouse({ modalTarget, users, cities, selectedUse
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="categoryDropdown" variant="secondary" title={location_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                  <DropdownButton id="customDropdown" variant="secondary" title={location_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
                     {locations.map((location) => {
                       return <Dropdown.Item key={location.location_id} onSelect={() => onLocationChange(location)}>{location.location_name}</Dropdown.Item>;
                     })}

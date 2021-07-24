@@ -1,7 +1,7 @@
 import React from "react";
 import { Form, Button, Dropdown, DropdownButton } from 'react-bootstrap';
 
-import '../styles/ModalReciept.css';
+import "../../../common/styles/Modal.css";
 
 
 export default function ModalReciept({ modalTarget, onSubmit, warehouse_name, product_name, quantity, warehouses, products, onWarehouseChange, onProductChange, onQuantityChange, isSubmitDisabled }) {
@@ -58,7 +58,7 @@ export default function ModalReciept({ modalTarget, onSubmit, warehouse_name, pr
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="categoryDropdown" variant="secondary" title={warehouse_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                  <DropdownButton id="customDropdown" variant="secondary" title={warehouse_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
                     {warehouses.map((warehouse) => {
                       return <Dropdown.Item key={warehouse.warehouse_id} onSelect={() => onWarehouseChange(warehouse)}>{warehouse.warehouse_name}</Dropdown.Item>;
                     })}
@@ -75,7 +75,7 @@ export default function ModalReciept({ modalTarget, onSubmit, warehouse_name, pr
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="categoryDropdown" variant="secondary" title={product_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                  <DropdownButton id="customDropdown" variant="secondary" title={product_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
                     {products.map((product) => {
                       return <Dropdown.Item key={product.product_id} onSelect={() => onProductChange(product)}>{product.product_name}</Dropdown.Item>;
                     })}

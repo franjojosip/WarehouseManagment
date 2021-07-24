@@ -1,7 +1,7 @@
-import '../styles/ModalEntry.css';
 import { Form, Button, Dropdown, DropdownButton } from 'react-bootstrap';
 import React from "react";
 
+import "../../../common/styles/Modal.css";
 
 export default function ModalEntry({ modalTarget, warehouses, cities, locations, products, packagings, warehouse_name, city_name, location_name, product_name, packaging_name, quantity, onSubmit, onWarehouseChange, onCityChange, onLocationChange, onProductChange, onPackagingChange, onQuantityChange, isSubmitDisabled }) {
 
@@ -46,7 +46,7 @@ export default function ModalEntry({ modalTarget, warehouses, cities, locations,
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="categoryDropdown" variant="secondary" title={warehouse_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                  <DropdownButton id="customDropdown" variant="secondary" title={warehouse_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
                     {warehouses.map((warehouse) => {
                       return <Dropdown.Item key={warehouse.warehouse_id} onSelect={() => onWarehouseChange(warehouse)}>{warehouse.warehouse_name}</Dropdown.Item>;
                     })}
@@ -63,7 +63,7 @@ export default function ModalEntry({ modalTarget, warehouses, cities, locations,
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="categoryDropdown" variant="secondary" title={city_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                  <DropdownButton id="customDropdown" variant="secondary" title={city_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
                     {cities.map((city) => {
                       return <Dropdown.Item key={city.city_id} onSelect={() => onCityChange(city)}>{city.city_name}</Dropdown.Item>;
                     })}
@@ -80,7 +80,7 @@ export default function ModalEntry({ modalTarget, warehouses, cities, locations,
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="categoryDropdown" variant="secondary" title={location_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                  <DropdownButton id="customDropdown" variant="secondary" title={location_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
                     {locations.map((location) => {
                       return <Dropdown.Item key={location.location_id} onSelect={() => onLocationChange(location)}>{location.location_name}</Dropdown.Item>;
                     })}
@@ -97,7 +97,7 @@ export default function ModalEntry({ modalTarget, warehouses, cities, locations,
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="categoryDropdown" variant="secondary" title={product_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                  <DropdownButton id="customDropdown" variant="secondary" title={product_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
                     {products.map((product) => {
                       return <Dropdown.Item key={product.product_id} onSelect={() => onProductChange(product)}>{product.product_name}</Dropdown.Item>;
                     })}
@@ -115,7 +115,7 @@ export default function ModalEntry({ modalTarget, warehouses, cities, locations,
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="categoryDropdown" variant="secondary" title={packaging_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                  <DropdownButton id="customDropdown" variant="secondary" title={packaging_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
                     {packagings.map((packaging) => {
                       return <Dropdown.Item key={packaging.packaging_id} onSelect={() => onPackagingChange(packaging)}>{packaging.packaging_name}</Dropdown.Item>;
                     })}

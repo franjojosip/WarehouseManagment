@@ -1,6 +1,5 @@
 import { action, observable } from "mobx";
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 class CityViewStore {
     constructor(rootStore) {
@@ -25,10 +24,12 @@ class CityViewStore {
         this.hideLoader = this.hideLoader.bind(this);
         this.processData = this.processData.bind(this);
 
+        this.cityNameExist = this.cityNameExist.bind(this);
+        this.cityZipCodeExist = this.cityZipCodeExist.bind(this);
+
         this.setPagination();
         this.onFind();
     }
-
     @observable isLoaderVisible = false;
     @observable isSubmitDisabled = true;
 
@@ -36,6 +37,11 @@ class CityViewStore {
         id: "",
         name: "",
         zip_code: ""
+    };
+
+    @observable errorMessage = {
+        name: null,
+        zip_code: null
     };
 
     @observable page = 1;
@@ -88,7 +94,7 @@ class CityViewStore {
 
     @action
     async onDeleteClick() {
-        this.showLoader();
+        await this.showLoader();
         let response = await (this.dataStore.delete(this.clickedCity.id));
         this.processData(response);
         this.hideLoader();
@@ -96,7 +102,7 @@ class CityViewStore {
 
     @action
     async onEditClick() {
-        this.showLoader();
+        await this.showLoader();
         let response = await (this.dataStore.update(this.clickedCity));
         this.processData(response);
         this.hideLoader();
@@ -104,7 +110,7 @@ class CityViewStore {
 
     @action
     async onCreateClick() {
-        this.showLoader();
+        await this.showLoader();
         let response = await (this.dataStore.create(this.clickedCity));
         this.processData(response);
         this.hideLoader();
@@ -112,7 +118,7 @@ class CityViewStore {
 
     @action
     async onFind() {
-        this.showLoader();
+        await this.showLoader();
         let response = await (this.dataStore.get())
         if (response.error) {
             toast.error(response.error, {
@@ -162,7 +168,6 @@ class CityViewStore {
                 zip_code: data.zip_code
             };
         }
-        this.checkFields();
     }
 
     @action
@@ -222,17 +227,49 @@ class CityViewStore {
     @action
     checkFields() {
         let isValidNumber = /^\d+$/.test(this.clickedCity.zip_code);
-
-        if (this.clickedCity.name.length > 2
-            && this.clickedCity.zip_code.toString().length == 5
-            && isValidNumber
-            && this.clickedCity.zip_code >= 10000
-            && this.clickedCity.zip_code <= 54000) {
+        this.errorMessage = {
+            name: null,
+            zip_code: null
+        };
+        if (this.clickedCity.name.length < 3) {
+            this.errorMessage.name = "Neispravna duljina naziva grada!";
+        }
+        if (this.clickedCity.zip_code.toString().length != 5
+            || this.clickedCity.zip_code < 10000
+            || this.clickedCity.zip_code > 54000
+            || !isValidNumber) {
+            this.errorMessage.zip_code = "Neispravan poštanski broj!";
+        }
+        if (this.cityNameExist()) {
+            this.errorMessage.name = "Grad s istim nazivom već postoji!";
+        }
+        if (this.cityZipCodeExist()) {
+            this.errorMessage.zip_code = "Poštanski broj se već koristi!";
+        }
+        if (this.errorMessage.name == null && this.errorMessage.zip_code == null) {
             this.isSubmitDisabled = false;
         }
         else {
             this.isSubmitDisabled = true;
         }
+    }
+
+    @action
+    cityNameExist() {
+        if (this.clickedCity.name.length > 0) {
+            let filteredCities = this.allData.filter(city => city.id !== this.clickedCity.id);
+            return filteredCities.findIndex(city => city.name.toLowerCase() == this.clickedCity.name.toLowerCase()) !== -1;
+        }
+        return false;
+    }
+
+    @action
+    cityZipCodeExist() {
+        if (this.clickedCity.zip_code) {
+            let filteredCities = this.allData.filter(city => city.id !== this.clickedCity.id);
+            return filteredCities.findIndex(city => city.zip_code == this.clickedCity.zip_code) !== -1;
+        }
+        return false;
     }
 
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import { Form, Button, Dropdown, DropdownButton } from 'react-bootstrap';
 
-import '../styles/ModalUser.css';
+import "../../../common/styles/Modal.css";
 
 
 export default function ModalUser({ modalTarget, roles, onSubmit, fname, lname, email, phone, password, role_name, onRoleChange, onFirstNameChange, onLastNameChange, onEmailChange, onPhoneChange, onPasswordChange, isSubmitDisabled }) {
@@ -140,7 +140,7 @@ export default function ModalUser({ modalTarget, roles, onSubmit, fname, lname, 
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="categoryDropdown" variant="secondary" title={role_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                  <DropdownButton id="customDropdown" variant="secondary" title={role_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
                     {roles.map((role) => {
                       return <Dropdown.Item key={role.role_id} onSelect={() => onRoleChange(role)}>{role.role_name}</Dropdown.Item>;
                     })}

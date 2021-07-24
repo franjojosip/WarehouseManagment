@@ -25,7 +25,7 @@
   display: none;
 }
 
-#categoryDropdown {
+.customDropdown {
   background-color: rgba(151, 151, 151, 0.247) !important;
   border-radius: 3px;
   color: black;

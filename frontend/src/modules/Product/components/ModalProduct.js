@@ -1,7 +1,7 @@
 import React from "react";
 import { Form, Button, Dropdown, DropdownButton } from 'react-bootstrap';
 
-import '../styles/ModalProduct.css';
+import "../../../common/styles/Modal.css";
 
 
 export default function ModalProduct({ modalTarget, categories, subcategories, packagings, onSubmit, name, category_name, subcategory_name, packaging_name, onNameChange, onCategoryChange, onSubcategoryChange, onPackagingChange, isSubmitDisabled }) {

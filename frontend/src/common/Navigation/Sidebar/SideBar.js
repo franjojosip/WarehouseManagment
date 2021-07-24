@@ -11,7 +11,7 @@ import "./SideBar.css"
 )
 class SideBar extends React.Component {
     render() {
-        const { onNavigate } = this.props.viewStore;
+        const { selectedRoute, onNavigate } = this.props.viewStore;
 
         let textStyle = {
             color: "white",
@@ -28,7 +28,7 @@ class SideBar extends React.Component {
                 }}
             >
                 <SideNav.Toggle />
-                <SideNav.Nav defaultSelected="home">
+                <SideNav.Nav defaultSelected={selectedRoute}>
                     <NavItem eventKey="home">
                         <NavIcon>
                             <i className="fa fa-fw fa-home" style={{ color: "white", fontSize: '1.75em' }} />
@@ -145,7 +145,7 @@ class SideBar extends React.Component {
                     </NavItem>
                 </SideNav.Nav>
             </SideNav>
-            
+
         );
     }
 }

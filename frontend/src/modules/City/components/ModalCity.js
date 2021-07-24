@@ -1,9 +1,9 @@
-import '../styles/ModalCity.css';
 import { Form, Button } from 'react-bootstrap';
 import React from "react";
 
+import "../../../common/styles/Modal.css";
 
-export default function ModalCity({ modalTarget, onSubmit, name, zip_code, onNameChange, onZipCodeChange, isSubmitDisabled }) {
+export default function ModalCity({ modalTarget, onSubmit, name, zip_code, onNameChange, onZipCodeChange, isSubmitDisabled, errorMessage }) {
 
   let submitClassName = "";
   let modalTitle = "";
@@ -53,38 +53,45 @@ export default function ModalCity({ modalTarget, onSubmit, name, zip_code, onNam
                 autoFocus
                 type="text"
                 value={name}
-                minLength="2"
-                required
-                {...config}
+                minLength="3"
                 placeholder="Unesite naziv grada"
                 onChange={(e) => onNameChange(e.target.value)}
                 disabled={isDisabled}
               />
+              <div hidden={isDisabled || !isSubmitDisabled} style={{ paddingTop: 5 }}>
+                <p style={{ color: "red" }}>
+                  {errorMessage.name ?
+                    errorMessage.name
+                    : null
+                  }
+                </p>
+              </div>
             </Form.Group>
             <Form.Group size="md" controlId="city_zip_code">
               <Form.Label>Poštanski broj [5 znamenki] *</Form.Label>
               <Form.Control
                 type="text"
                 value={zip_code}
-                required
                 minLength="5"
                 maxLength="5"
-                {...config}
                 onChange={(e) => {
                   onZipCodeChange(e.target.value);
                 }}
                 placeholder="Unesite poštanski broj"
                 disabled={isDisabled}
               />
+              <div hidden={isDisabled || !isSubmitDisabled} style={{ paddingTop: 5 }}>
+                <p style={{ color: "red" }}>
+                  {errorMessage.zip_code ?
+                    errorMessage.zip_code
+                    : null
+                  }
+                </p>
+              </div>
             </Form.Group>
-            <div hidden={isDisabled || !isSubmitDisabled}>
-              <p style={{ color: "red" }}>
-                Provjerite sva polja !!!
-              </p>
-            </div>
             <div className="modal-footer" style={{ padding: 0 }}>
               <Button className="btn btn-primary" data-dismiss="modal">Odustani</Button>
-              <Button type="submit" disabled={isSubmitDisabled && !isDisabled} className={submitClassName} onClick={(e) => { e.preventDefault(); onSubmit() }} data-dismiss="modal">{submitText}</Button>
+              <Button type="submit" data-dismiss="modal" disabled={isSubmitDisabled && !isDisabled} className={submitClassName} onClick={(e) => { e.preventDefault(); onSubmit() }}>{submitText}</Button>
             </div>
           </Form>
         </div>

@@ -1,7 +1,7 @@
-import '../styles/ModalPackaging.css';
 import { Form, Button } from 'react-bootstrap';
 import React from "react";
 
+import "../../../common/styles/Modal.css";
 
 export default function ModalPackaging({ modalTarget, onSubmit, name, onNameChange, isSubmitDisabled }) {
 

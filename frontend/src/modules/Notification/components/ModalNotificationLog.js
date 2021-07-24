@@ -1,7 +1,7 @@
-import '../styles/ModalNotification.css';
 import { Form, Button } from 'react-bootstrap';
 import React from "react";
 
+import "../../../common/styles/Modal.css";
 
 export default function ModalNotificationLog({ modalTarget, notification_name, notification_type, notification_products, email, date_created }) {
   let isDisabled = true;

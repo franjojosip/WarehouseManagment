@@ -18,7 +18,7 @@ import "../styles/City.css";
 @observer
 class City extends React.Component {
     render() {
-        const { isLoaderVisible, title, clickedCity, columns, rows, page, pageSize, totalPages, previousEnabled, nextEnabled, isSubmitDisabled, onPageClick, onChangePageSize, onNameChange, onZipCodeChange, onCityClicked, onPreviousPageClick, onNextPageClick, onEditClick, onDeleteClick, onCreateClick } = this.props.viewStore;
+        const { isLoaderVisible, errorMessage, title, clickedCity, columns, rows, page, pageSize, totalPages, previousEnabled, nextEnabled, isSubmitDisabled, onPageClick, onChangePageSize, onNameChange, onZipCodeChange, onCityClicked, onPreviousPageClick, onNextPageClick, onEditClick, onDeleteClick, onCreateClick } = this.props.viewStore;
 
         let tableRows = rows.map((element, i) => {
             return (<tr key={i}>
@@ -53,9 +53,9 @@ class City extends React.Component {
         return (
             <Layout>
                 <Loading visible={isLoaderVisible} />
-                <ModalCity modalTarget="modalTargetAdd" onSubmit={onCreateClick} name={clickedCity.name} zip_code={clickedCity.zip_code} onNameChange={onNameChange} onZipCodeChange={onZipCodeChange} isSubmitDisabled={isSubmitDisabled} />
-                <ModalCity modalTarget="modalTargetEdit" onSubmit={onEditClick} name={clickedCity.name} zip_code={clickedCity.zip_code} onNameChange={onNameChange} onZipCodeChange={onZipCodeChange} isSubmitDisabled={isSubmitDisabled} />
-                <ModalCity modalTarget="modalTargetDelete" onSubmit={onDeleteClick} name={clickedCity.name} zip_code={clickedCity.zip_code} onNameChange={onNameChange} onZipCodeChange={onZipCodeChange} isSubmitDisabled={isSubmitDisabled} />
+                <ModalCity modalTarget="modalTargetAdd" onSubmit={onCreateClick} errorMessage={errorMessage} name={clickedCity.name} zip_code={clickedCity.zip_code} onNameChange={onNameChange} onZipCodeChange={onZipCodeChange} isSubmitDisabled={isSubmitDisabled} />
+                <ModalCity modalTarget="modalTargetEdit" onSubmit={onEditClick} errorMessage={errorMessage} name={clickedCity.name} zip_code={clickedCity.zip_code} onNameChange={onNameChange} onZipCodeChange={onZipCodeChange} isSubmitDisabled={isSubmitDisabled} />
+                <ModalCity modalTarget="modalTargetDelete" onSubmit={onDeleteClick} errorMessage={errorMessage} name={clickedCity.name} zip_code={clickedCity.zip_code} onNameChange={onNameChange} onZipCodeChange={onZipCodeChange} isSubmitDisabled={isSubmitDisabled} />
                 <Table title={title} columns={columns} tableRows={tableRows} page={page} pageSize={pageSize} totalPages={totalPages} previousEnabled={previousEnabled} nextEnabled={nextEnabled} onActionClicked={onCityClicked} onPageClick={onPageClick} onChangePageSize={onChangePageSize} onPreviousPageClick={onPreviousPageClick} onNextPageClick={onNextPageClick} />
                 <ToastContainer style={{ fontSize: 15 }} />
             </Layout >

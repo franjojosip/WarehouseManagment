@@ -1,7 +1,7 @@
 import React from "react";
 import { Form, Button, Dropdown, DropdownButton } from 'react-bootstrap';
 
-import '../styles/ModalStocktaking.css';
+import "../../../common/styles/Modal.css";
 
 
 export default function ModalStocktaking({ modalTarget, onSubmit, packaging_name, warehouse_name, product_name, quantity, warehouses, products, packagings, onWarehouseChange, onProductChange, onPackagingChange, onQuantityChange, isSubmitDisabled }) {
@@ -58,7 +58,7 @@ export default function ModalStocktaking({ modalTarget, onSubmit, packaging_name
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="categoryDropdown" variant="secondary" title={warehouse_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                  <DropdownButton id="customDropdown" variant="secondary" title={warehouse_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
                     {warehouses.map((warehouse) => {
                       return <Dropdown.Item key={warehouse.warehouse_id} onSelect={() => onWarehouseChange(warehouse)}>{warehouse.warehouse_name}</Dropdown.Item>;
                     })}
@@ -75,7 +75,7 @@ export default function ModalStocktaking({ modalTarget, onSubmit, packaging_name
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="categoryDropdown" variant="secondary" title={product_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                  <DropdownButton id="customDropdown" variant="secondary" title={product_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
                     {products.map((product) => {
                       return <Dropdown.Item key={product.product_id} onSelect={() => onProductChange(product)}>{product.product_name}</Dropdown.Item>;
                     })}
@@ -92,7 +92,7 @@ export default function ModalStocktaking({ modalTarget, onSubmit, packaging_name
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="categoryDropdown" variant="secondary" title={packaging_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                  <DropdownButton id="customDropdown" variant="secondary" title={packaging_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
                     {packagings.map((packaging) => {
                       return <Dropdown.Item key={packaging.packaging_id} onSelect={() => onPackagingChange(packaging)}>{packaging.packaging_name}</Dropdown.Item>;
                     })}
