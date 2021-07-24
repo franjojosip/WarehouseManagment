@@ -10,7 +10,7 @@ const serializer = Joi.object({
 async function edit(req, res) {
   const result = serializer.validate(req.body);
   if (result.error) {
-    return res.status(400).send(result.error);
+    return res.status(400).json({ error: "Poslani su neispravni podatci!" });
   }
 
   const notification = await Notification.findById(req.params.id);
@@ -18,13 +18,13 @@ async function edit(req, res) {
   if(notification.name != result.value.name){
     const notificationExists = await Notification.findOne({name: result.value.name});
     if(notificationExists && notificationExists.notification_type_id == result.value.notification_type_id){
-      return res.status(400).json({ error: "Notification already in use" });
+      return res.status(400).json({ error: "Naziv notifikacije se već koristi!" });
     }
   }
 
   const notificationTypeExists = await NotificationType.findById(result.value.notification_type_id);
   if (!notificationTypeExists) {
-    return res.status(400).json({ error: "Notification type doesn't exist" });
+    return res.status(400).json({ error: "Tip notifikacije nije pronađen!" });
   }
 
   notification.name = result.value.name;
@@ -32,9 +32,9 @@ async function edit(req, res) {
 
   try {
     await notification.save();
-    return res.status(200).json({ status: "Notification successfully edited" });
+    return res.status(200).json({ status: "Uspješna izmjena notifikacije!" });
   } catch (err) {
-    return res.status(500).json({ error: err });
+    return res.status(500).json({ error: "Dogodila se pogreška, molimo kontaktirajte administratora!" });
   }
 }
 

@@ -11,12 +11,12 @@ const serializer = Joi.object({
 async function add(req, res) {
   const result = serializer.validate(req.body);
   if (result.error) {
-    return res.status(400).send(result.error);
+    return res.status(400).json({ error: "Poslani su neispravni podatci!" });
   }
 
   const locationExists = await Location.findById(result.value.location_id);
   if (!locationExists) {
-    return res.status(400).json({ error: "Location doesn't exist" });
+    return res.status(400).json({ error: "Lokacija nije pronađena!" });
   }
 
   let isUserIDWrong = false;
@@ -26,7 +26,7 @@ async function add(req, res) {
     }
   });
   if (isUserIDWrong) {
-    return res.status(400).json({ error: "Check users" });
+    return res.status(400).json({ error: "Provjerite korisnike!" });
   }
 
   const newWarehouse = new Warehouse();
@@ -36,9 +36,9 @@ async function add(req, res) {
 
   try {
     await newWarehouse.save();
-    return res.status(200).json({ status: "Warehouse saved" });
+    return res.status(200).json({ status: "Uspješno kreirano skladište!" });
   } catch (err) {
-    return res.status(500).json({ error: err });
+    return res.status(500).json({ error: "Dogodila se pogreška, molimo kontaktirajte administratora!" });
   }
 }
 

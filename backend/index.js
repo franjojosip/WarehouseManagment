@@ -20,7 +20,7 @@ mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useFindAndM
   loadRoutes(app);
 
   app.get('/', (req, res) => {
-      res.send('Warehouse Managament API..');
+    res.status(200).json({ status: 'Warehouse Managament API..' });
   });
 });
 

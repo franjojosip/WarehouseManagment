@@ -14,7 +14,7 @@ const serializer = Joi.object({
 async function edit(req, res) {
   const result = serializer.validate(req.body);
   if (result.error) {
-    return res.status(400).send(result.error);
+    return res.status(400).json({ error: "Poslani su neispravni podatci!" });
   }
 
   let errors = [];
@@ -22,20 +22,20 @@ async function edit(req, res) {
 
   const categoryExists = await Category.findById(result.value.category_id);
   if (!categoryExists) {
-    errors.push("Category");
+    errors.push("Kategorija");
   }
   
   if (result.value.packaging_id != null) {
     const packagingExists = await Packaging.findById(result.value.packaging_id);
     if (!packagingExists) {
-      errors.push("Packaging");
+      errors.push("Ambalaža");
     }
   }
 
   if (result.value.subcategory_id != null) {
     const subcategoryExists = await Subcategory.findById(result.value.subcategory_id);
     if (!subcategoryExists ) {
-      errors.push("Subcategory");
+      errors.push("Potkategorija");
     }
     else if(subcategoryExists.category_id != result.value.category_id){
       isWrongSubcategory = true;
@@ -44,14 +44,14 @@ async function edit(req, res) {
 
   if (errors.length > 0) {
     if(isWrongSubcategory){
-      return res.status(404).json({ error: `Wrong subcategory and ${errors.join(", ")} not found` });
+      return res.status(404).json({ error: `Pogrešna potkategorija i ${errors.join(", ")} nije pronađena!` });
     }
     else{
-      return res.status(404).json({ error: `${errors.join(", ")} not found` });
+      return res.status(404).json({ error: `${errors.join(", ")} nije pronađena!` });
     }
   }
   else if(isWrongSubcategory){
-    return res.status(404).json({ error: "Wrong subcategory"});
+    return res.status(404).json({ error: "Pogrešna potkategorija"});
   }
 
   try {
@@ -61,9 +61,9 @@ async function edit(req, res) {
       subcategory_id: result.value.subcategory_id,
       packaging_id: result.value.packaging_id,
     });
-    return res.status(200).json({ status: "Product successfully edited" });
+    return res.status(200).json({ status: "Uspješna izmjena proizvoda!" });
   } catch (err) {
-    return res.status(500).json({ error: err });
+    return res.status(500).json({ error: "Dogodila se pogreška, molimo kontaktirajte administratora!" });
   }
 }
 

@@ -2,24 +2,24 @@ const Role = require("../schema");
 const User = require("../../users/schema");
 
 async function remove(req, res) {
-  if(req.body.password == null || req.body.password != process.env.SUPER_ADMIN_PASSWORD){
-    return res.status(403).send("Invalid password");
+  if (req.body.password == null || req.body.password != process.env.SUPER_ADMIN_PASSWORD) {
+    return res.status(403).json({ error: "Neispravna lozinka!" });
   }
   try {
     const savedRole = await Role.findById(req.params.id);
     if (savedRole) {
       const users = User.find({ role_id: savedRole._id });
       if (users.length > 0) {
-        return res.status(400).send("There are users connected with this role");
+        return res.status(400).json({ error: "Postoje korisnici povezani s ovom ulogom!" });
       } else {
         await Role.findByIdAndRemove(req.params.id);
-        return res.status(200).send("Role removed");
+        return res.status(200).json({ status: "Uspješno obrisana uloga!" });
       }
     } else {
-      return res.status(404).send("Role not found");
+      return res.status(404).json({ error: "Uloga nije pronađena!" });
     }
   } catch (err) {
-    return res.status(500).json({ error: err });
+    return res.status(500).json({ error: "Dogodila se pogreška, molimo kontaktirajte administratora!" });
   }
 }
 

@@ -8,7 +8,7 @@ const serializer = Joi.object({
 async function add(req, res) {
   const result = serializer.validate(req.body);
   if (result.error) {
-    return res.status(400).send(result.error);
+    return res.status(400).json({ error: "Poslani su neispravni podatci!" });
   }
 
   const newNotificationType = new NotificationType();
@@ -16,9 +16,9 @@ async function add(req, res) {
 
   try {
     await newNotificationType.save();
-    return res.status(200).json({ status: "Notification type saved" });
+    return res.status(200).json({ status: "Uspješno kreiran tip notifikacije!" });
   } catch (err) {
-    return res.status(500).json({ error: err });
+    return res.status(500).json({ error: "Dogodila se pogreška, molimo kontaktirajte administratora!" });
   }
 }
 

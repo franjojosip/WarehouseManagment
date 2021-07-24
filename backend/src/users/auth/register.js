@@ -15,12 +15,12 @@ const serializer = Joi.object({
 async function register(req, res) {
   const result = serializer.validate(req.body);
   if (result.error) {
-    return res.status(400).send(result.error);
+    return res.status(400).json({ error: "Poslani su neispravni podatci!" });
   }
 
   const userExists = await User.findOne({ email: result.value.email });
   if (userExists) {
-    return res.status(400).json({ error: "Email already in use" });
+    return res.status(400).json({ error: "Email je u upotrebi!" });
   }
   const newUser = new User();
   const passwordHash = bcrypt.hashSync(result.value.password, 10);
@@ -47,7 +47,7 @@ async function register(req, res) {
       name: 1,
     });
 
-    return res.json({
+    return res.status(200).json({
       user: {
         id: user._id,
         fname: user.fname,
@@ -58,7 +58,7 @@ async function register(req, res) {
       }
     });
   } catch (err) {
-    return res.status(500).json({ error: err });
+    return res.status(500).json({ error: "Dogodila se pogreška, molimo kontaktirajte administratora!" });
   }
 }
 

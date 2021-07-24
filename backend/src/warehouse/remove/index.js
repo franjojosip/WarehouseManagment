@@ -5,12 +5,12 @@ async function remove(req, res) {
     const savedWarehouse = await Warehouse.findById(req.params.id);
     if (savedWarehouse) {
       await Warehouse.findByIdAndRemove(req.params.id);
-      return res.status(200).send("Warehouse removed");
+      return res.status(200).json({ status: "Uspješno obrisano skladište!" });
     } else {
-      return res.status(404).send("Warehouse not found");
+      return res.status(404).json({ error: "Skladište nije pronađeno!" });
     }
   } catch (err) {
-    return res.status(500).json({ error: err });
+    return res.status(500).json({ error: "Dogodila se pogreška, molimo kontaktirajte administratora!" });
   }
 }
 

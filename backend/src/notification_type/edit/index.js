@@ -8,7 +8,7 @@ const serializer = Joi.object({
 async function edit(req, res) {
   const result = serializer.validate(req.body);
   if (result.error) {
-    return res.status(400).send(result.error);
+    return res.status(400).json({ error: "Poslani su neispravni podatci!" });
   }
 
   const type = await NotificationType.findById(req.params.id);
@@ -16,7 +16,7 @@ async function edit(req, res) {
   if(type.name != result.value.name){
     const typeExists = await NotificationType.findOne({name: result.value.name});
     if(typeExists){
-      return res.status(400).json({ error: "Notification type already in use" });
+      return res.status(400).json({ error: "Tip notifikacije se već koristi!" });
     }
   }
 
@@ -24,9 +24,9 @@ async function edit(req, res) {
 
   try {
     await type.save();
-    return res.status(200).json({ status: "Notification type successfully edited" });
+    return res.status(200).json({ status: "Uspješno izmjenjen tip notifikacije!" });
   } catch (err) {
-    return res.status(500).json({ error: err });
+    return res.status(500).json({ error: "Dogodila se pogreška, molimo kontaktirajte administratora!" });
   }
 }
 

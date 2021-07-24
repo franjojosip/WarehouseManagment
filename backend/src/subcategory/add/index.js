@@ -10,17 +10,17 @@ const serializer = Joi.object({
 async function add(req, res) {
   const result = serializer.validate(req.body);
   if (result.error) {
-    return res.status(400).send(result.error);
+    return res.status(400).json({ error: "Poslani su neispravni podatci!" });
   }
 
   const categoryExists = await Category.findById(result.value.category_id);
   const subcategoryExists = await Subcategory.findOne({ name: result.value.name });
 
   if (!categoryExists) {
-    return res.status(404).json({ error: "Category not found" });
+    return res.status(404).json({ error: "Kategorija nije pronađena!" });
   }
   if (subcategoryExists) {
-    return res.status(400).json({ error: "Subcategory already in use" });
+    return res.status(400).json({ error: "Potkategorija s istim nazivom već postoji!" });
   }
 
   const newSubcategory = new Subcategory();
@@ -29,9 +29,9 @@ async function add(req, res) {
 
   try {
     await newSubcategory.save();
-    return res.status(200).json({ status: "Subcategory saved" });
+    return res.status(200).json({ status: "Uspješno kreirana potkategorija!" });
   } catch (err) {
-    return res.status(500).json({ error: err });
+    return res.status(500).json({ error: "Dogodila se pogreška, molimo kontaktirajte administratora!" });
   }
 }
 

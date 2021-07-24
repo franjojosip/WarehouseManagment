@@ -5,12 +5,12 @@ async function remove(req, res) {
     const savedNotificationType = await NotificationType.findById(req.params.id);
     if (savedNotificationType) {
       await NotificationType.findByIdAndRemove(req.params.id);
-      return res.status(200).send("Notification type removed");
+      return res.status(200).json({ status: "Uspješno obrisan tip notifikacije!" });
     } else {
-      return res.status(404).send("Notification type not found");
+      return res.status(404).json({ error: "Tip notifikacije nije pronađen!" });
     }
   } catch (err) {
-    return res.status(500).json({ error: err });
+    return res.status(500).json({ error: "Dogodila se pogreška, molimo kontaktirajte administratora!" });
   }
 }
 

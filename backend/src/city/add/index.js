@@ -9,7 +9,7 @@ const serializer = Joi.object({
 async function add(req, res) {
   const result = serializer.validate(req.body);
   if (result.error) {
-    return res.status(400).send({ error: "Poslani su neispravni podatci!" });
+    return res.status(400).json({ error: "Poslani su neispravni podatci!" });
   }
 
   const zipCodeExists = await City.findOne({ zip_code: result.value.zip_code });

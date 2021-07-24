@@ -5,7 +5,8 @@ async function authenticateAdmin(req, res, next) {
     _id: req.body.userId,
   }).populate("role_id", { name: 1 });
 
-  if (authorizedUser.role_id.name != "Administrator") return res.sendStatus(403);
+  if (authorizedUser.role_id.name != "Administrator")
+  return res.status(403).json({ error: "Nemate pristup!" });
 
   next();
 }

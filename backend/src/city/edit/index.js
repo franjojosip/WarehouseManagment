@@ -9,7 +9,7 @@ const serializer = Joi.object({
 async function edit(req, res) {
   const result = serializer.validate(req.body);
   if (result.error) {
-    return res.status(400).send({ error: "Poslani su neispravni podatci!" });
+    return res.status(400).json({ error: "Poslani su neispravni podatci!" });
   }
 
   const city = await City.findById(req.params.id);

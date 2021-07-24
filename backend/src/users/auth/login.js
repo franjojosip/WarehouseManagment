@@ -11,11 +11,11 @@ const serializer = Joi.object({
 async function login(req, res) {
   const result = serializer.validate(req.body);
   if (result.error) {
-    return res.status(400).send(result.error);
+    return res.status(400).json({ error: "Poslani su neispravni podatci!" });
   }
 
   const user = await User.findOne({ email: result.value.email }).populate("role_id", { name: 1 });
-  if (!user) return res.status(401).json({ error: "Invalid user credentials" });
+  if (!user) return res.status(401).json({ error: "Neispravni korisnički podatci!" });
 
   const passwordHash = user.password;
   if (bcrypt.compareSync(result.value.password, passwordHash)) {
@@ -31,8 +31,8 @@ async function login(req, res) {
     user.refreshToken = refreshToken;
 
     await user.save();
-    
-    return res.json({
+
+    return res.status(200).json({
       user: {
         id: user.id,
         fname: user.fname,
@@ -44,7 +44,7 @@ async function login(req, res) {
       },
     });
   }
-  return res.status(401).json({ error: "Invalid user credentials" });
+  return res.status(401).json({ error: "Neispravni korisnički podatci!" });
 }
 
 module.exports = login;

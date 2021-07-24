@@ -5,12 +5,12 @@ async function remove(req, res) {
     const savedEntry = await Entry.findById(req.params.id);
     if (savedEntry) {
       await Entry.findByIdAndRemove(req.params.id);
-      return res.status(200).send("Entry removed");
+      return res.status(200).json({ status: "Uspješno obrisan unos!" });
     } else {
-      return res.status(404).send("Entry not found");
+      return res.status(404).json({ error: "Unos nije pronađen!" });
     }
   } catch (err) {
-    return res.status(500).json({ error: err });
+    return res.status(500).json({ error: "Dogodila se pogreška, molimo kontaktirajte administratora!" });
   }
 }
 

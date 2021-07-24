@@ -12,14 +12,14 @@ const serializer = Joi.object({
 async function edit(req, res) {
   const result = serializer.validate(req.body);
   if (result.error) {
-    return res.status(400).send(result.error);
+    return res.status(400).json({ error: "Poslani su neispravni podatci!" });
   }
 
   const user = await User.findById(req.params.id);
   if(user.email.toLowerCase() != result.value.email.toLowerCase()){
     const userExist = await User.findOne({email: result.value.email});
     if(userExist){
-      return res.status(400).json({ error: "Email already in use" });
+      return res.status(400).json({ error: "Email je već u upotrebi!" });
     }
   }
 
@@ -31,9 +31,9 @@ async function edit(req, res) {
       phone: result.value.phone,
       role_id: result.value.role_id,
     });
-    return res.status(200).json({ status: "User successfully edited" });
+    return res.status(200).json({ status: "Uspješna izmjena korisnika!" });
   } catch (err) {
-    return res.status(500).json({ error: err });
+    return res.status(500).json({ error: "Dogodila se pogreška, molimo kontaktirajte administratora!" });
   }
 }
 

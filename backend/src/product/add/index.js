@@ -14,7 +14,7 @@ const serializer = Joi.object({
 async function add(req, res) {
   const result = serializer.validate(req.body);
   if (result.error) {
-    return res.status(400).send(result.error);
+    return res.status(400).json({ error: "Poslani su neispravni podatci!" });
   }
 
   let errors = [];
@@ -22,20 +22,20 @@ async function add(req, res) {
 
   const categoryExists = await Category.findById(result.value.category_id);
   if (!categoryExists) {
-    errors.push("Category");
+    errors.push("Kategorija");
   }
   
   if (result.value.packaging_id != null) {
     const packagingExists = await Packaging.findById(result.value.packaging_id);
     if (!packagingExists) {
-      errors.push("Packaging");
+      errors.push("Ambalaža");
     }
   }
 
   if (result.value.subcategory_id != null) {
     const subcategoryExists = await Subcategory.findById(result.value.subcategory_id);
     if (!subcategoryExists ) {
-      errors.push("Subcategory");
+      errors.push("Potkategorija");
     }
     else if(subcategoryExists.category_id != result.value.category_id){
       isWrongSubcategory = true;
@@ -44,19 +44,19 @@ async function add(req, res) {
 
   if (errors.length > 0) {
     if(isWrongSubcategory){
-      return res.status(404).json({ error: `Wrong subcategory and ${errors.join(", ")} not found` });
+      return res.status(404).json({ error: `Pogrešna potkategorija i ${errors.join(", ")} nije pronađena!` });
     }
     else{
-      return res.status(404).json({ error: `${errors.join(", ")} not found` });
+      return res.status(404).json({ error: `${errors.join(", ")} nije pronađena!` });
     }
   }
   else if(isWrongSubcategory){
-    return res.status(404).json({ error: "Wrong subcategory"});
+    return res.status(404).json({ error: "Pogrešna potkategorija!"});
   }
 
   const productExists = await Product.findOne({ name: result.value.name });
   if (productExists) {
-    return res.status(400).json({ error: "Product with given name already exists" });
+    return res.status(400).json({ error: "Naziv proizvoda se već koristi!" });
   }
 
   const newProduct = new Product();
@@ -67,9 +67,9 @@ async function add(req, res) {
 
   try {
     await newProduct.save();
-    return res.status(200).json({ status: "Product saved" });
+    return res.status(200).json({ status: "Uspješno kreiran proizvo!" });
   } catch (err) {
-    return res.status(500).json({ error: err });
+    return res.status(500).json({ error: "Dogodila se pogreška, molimo kontaktirajte administratora!" });
   }
 }
 

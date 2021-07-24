@@ -23,7 +23,7 @@ async function list(req, res) {
     });
     return res.status(200).json({ products });
   } catch (err) {
-    return res.status(500).json({ error: err });
+    return res.status(500).json({ error: "Dogodila se pogreška, molimo kontaktirajte administratora!" });
   }
 }
 

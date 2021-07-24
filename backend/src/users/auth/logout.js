@@ -6,7 +6,7 @@ async function logout(req, res) {
   if (user) {
     user.refreshToken = "";
     await user.save();
-    return res.json({ msg: "User successfully logged out!" });
+    return res.status(200).json({ status: "Korisnik je uspješno odjavljen!" });
   }
-  else return res.sendStatus(400);
+  else return res.status(400).json({ error: "Neispravni podatci!" });;
 }
