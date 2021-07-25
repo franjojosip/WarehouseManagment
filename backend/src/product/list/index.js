@@ -11,13 +11,16 @@ async function list(req, res) {
       let object = {
         id: product.id,
         name: product.name,
-        category: product.category_id.name
+        category_id: product.category_id.id,
+        category_name: product.category_id.name
       };
       if(product.subcategory_id != null){
-        object.subcategory = product.subcategory_id.name;
+        object.subcategory_id = product.subcategory_id.id;
+        object.subcategory_name = product.subcategory_id.name;
       }
       if(product.packaging_id != null){
-        object.packaging = product.packaging_id.name;
+        object.packaging_id = product.packaging_id.id;
+        object.packaging_name = product.packaging_id.name;
       }
       return object;
     });

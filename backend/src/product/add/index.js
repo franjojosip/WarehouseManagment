@@ -67,7 +67,7 @@ async function add(req, res) {
 
   try {
     await newProduct.save();
-    return res.status(200).json({ status: "Uspješno kreiran proizvo!" });
+    return res.status(200).json({ status: "Uspješno kreiran proizvod!" });
   } catch (err) {
     return res.status(500).json({ error: "Dogodila se pogreška, molimo kontaktirajte administratora!" });
   }

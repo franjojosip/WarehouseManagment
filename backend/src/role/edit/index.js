@@ -24,7 +24,7 @@ async function edit(req, res) {
       return res.status(200).json({ status: "Uspješna izmjena uloge!" });
     }
     else {
-      return res.status(404).json({ status: "Uloga nije pronađena!" });
+      return res.status(404).json({ error: "Uloga nije pronađena!" });
     }
   } catch (err) {
     return res.status(500).json({ error: "Dogodila se pogreška, molimo kontaktirajte administratora!" });

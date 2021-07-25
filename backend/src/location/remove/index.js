@@ -8,7 +8,7 @@ async function remove(req, res) {
       return res.status(200).json({ status: "Uspješno obrisana lokacija!" });
     }
     else {
-      return res.status(404).json({ status: "Lokacija nije pronađena!" });
+      return res.status(404).json({ error: "Lokacija nije pronađena!" });
     }
   } catch (err) {
     return res.status(500).json({ error: "Dogodila se pogreška, molimo kontaktirajte administratora!" });

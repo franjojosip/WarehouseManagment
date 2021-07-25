@@ -10,7 +10,8 @@ async function list(req, res) {
         lname: user.lname,
         email: user.email,
         phone: user.phone,
-        role: user.role_id.name,
+        role_id: user.role_id.id,
+        role_name: user.role_id.name
       };
     });
     return res.status(200).json({ users });

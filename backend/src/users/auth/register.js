@@ -8,7 +8,7 @@ const serializer = Joi.object({
   lname: Joi.string().required(),
   email: Joi.string().email().required(),
   password: Joi.string().required(),
-  role: Joi.string(),
+  role_id: Joi.string(),
   phone: Joi.string().required(),
 });
 
@@ -27,10 +27,14 @@ async function register(req, res) {
 
   const roles = await Role.find({});
 
-  if (!result.value.role || result.value.role == "Radnik") {
+  if (result.value.role_id && result.value.role_id.length == 24) {
+    const foundRole = await Role.findById(result.value.role_id);
+    if (!foundRole) {
+      return res.status(404).json({ error: "Nije pronađena uloga!" });
+    }
+  }
+  else {
     result.value.role_id = getRoleId("Radnik", roles);
-  } else {
-    result.value.role_id = getRoleId("Administrator", roles);
   }
 
   newUser.fname = result.value.fname;
@@ -42,21 +46,7 @@ async function register(req, res) {
 
   try {
     await newUser.save();
-
-    const user = await User.findOne({ email: newUser.email }).populate("role_id", {
-      name: 1,
-    });
-
-    return res.status(200).json({
-      user: {
-        id: user._id,
-        fname: user.fname,
-        lname: user.lname,
-        email: user.email,
-        phone: user.phone,
-        role: user.role_id.name
-      }
-    });
+    return res.status(200).json({ status: "Uspješno kreiran korisnik!" });
   } catch (err) {
     return res.status(500).json({ error: "Dogodila se pogreška, molimo kontaktirajte administratora!" });
   }
