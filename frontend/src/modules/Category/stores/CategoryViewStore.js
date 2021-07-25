@@ -56,13 +56,13 @@ class CategoryViewStore {
     @observable allData = [];
 
     @action
-    async showLoader() {
+    showLoader() {
         this.isLoaderVisible = true;
-        await this.delay(500);
     }
 
     @action
-    hideLoader() {
+    async hideLoader() {
+        await this.delay(500);
         this.isLoaderVisible = false;
     }
 

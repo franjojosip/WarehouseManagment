@@ -79,7 +79,7 @@ class UserViewStore {
 
 
     @action
-    async showLoader() {
+    showLoader() {
         this.isLoaderVisible = true;
     }
 
