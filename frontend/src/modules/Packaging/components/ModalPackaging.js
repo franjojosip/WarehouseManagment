@@ -3,7 +3,7 @@ import React from "react";
 
 import "../../../common/styles/Modal.css";
 
-export default function ModalPackaging({ modalTarget, onSubmit, name, onNameChange, isSubmitDisabled }) {
+export default function ModalPackaging({ modalTarget, onSubmit, name, onNameChange, isSubmitDisabled, errorMessage }) {
 
   let submitClassName = "";
   let modalTitle = "";
@@ -60,15 +60,18 @@ export default function ModalPackaging({ modalTarget, onSubmit, name, onNameChan
                 onChange={(e) => onNameChange(e.target.value)}
                 disabled={isDisabled}
               />
+              <div hidden={isDisabled || !isSubmitDisabled} style={{ paddingTop: 5 }}>
+                <p style={{ color: "red" }}>
+                  {errorMessage.name ?
+                    errorMessage.name
+                    : null
+                  }
+                </p>
+              </div>
             </Form.Group>
-            <div hidden={isDisabled || !isSubmitDisabled}>
-              <p style={{ color: "red" }}>
-                Provjerite sva polja !!!
-              </p>
-            </div>
             <div className="modal-footer" style={{ padding: 0 }}>
               <Button className="btn btn-primary" data-dismiss="modal">Odustani</Button>
-              <Button type="submit" disabled={isSubmitDisabled} className={submitClassName} onClick={(e) => { e.preventDefault(); onSubmit() }}>{submitText}</Button>
+              <Button type="submit" data-dismiss="modal" disabled={isSubmitDisabled && !isDisabled} className={submitClassName} onClick={(e) => { e.preventDefault(); onSubmit() }}>{submitText}</Button>
             </div>
           </Form>
         </div>

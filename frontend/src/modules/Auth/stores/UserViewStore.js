@@ -1,10 +1,12 @@
 import { action, observable } from "mobx";
+import { toast } from 'react-toastify';
 import EmailValidator from "email-validator";
 
 
 class UserViewStore {
     constructor(rootStore) {
         this.dataStore = rootStore.authenticationModuleStore.authenticationDataStore;
+        this.roleDataStore = rootStore.roleModuleStore.roleDataStore;
         this.routerStore = rootStore.routerStore;
 
         this.onFind = this.onFind.bind(this);
@@ -25,10 +27,31 @@ class UserViewStore {
         this.onPasswordChange = this.onPasswordChange.bind(this);
         this.onRoleChange = this.onRoleChange.bind(this);
 
+        this.delay = this.delay.bind(this);
+        this.showLoader = this.showLoader.bind(this);
+        this.hideLoader = this.hideLoader.bind(this);
+        this.processData = this.processData.bind(this);
+
+        this.findRoles = this.findRoles.bind(this);
+        this.emailExists = this.emailExists.bind(this);
+
         this.setPagination();
+        this.findRoles();
+        this.onFind();
     }
 
     @observable isLoaderVisible = false;
+    @observable isSubmitDisabled = true;
+    @observable isCreateClick = false;
+
+    @observable errorMessage = {
+        fname: null,
+        lname: null,
+        email: null,
+        phone: null,
+        password: null,
+        role: null
+    };
 
     @observable clickedUser = {
         id: "",
@@ -40,13 +63,6 @@ class UserViewStore {
         role_id: "",
         role_name: "Odaberi ulogu"
     };
-    @observable clickedRole = {
-        role_id: "",
-        role_name: "Odaberi ulogu"
-    }
-
-    @observable isSubmitDisabled = true;
-
 
     @observable page = 1;
     @observable pageSize = 5;
@@ -58,64 +74,139 @@ class UserViewStore {
     title = "Korisnici";
     columns = ['Ime i prezime korisnika', 'Email', 'Mobitel', 'Uloga', 'Izmjena', 'Brisanje'];
 
-    //TESTNI PODATCI
-    allData = [
-        { id: 1, fname: "Martin", lname: "Matic", email: "matic1@mail.com", phone: "0955642525", role_id: 1, role_name: "Administrator", password:"test" },
-        { id: 1, fname: "Pero", lname: "Peric", email: "matic2@mail.com", phone: "0955642525", role_id: 2, role_name: "Korisnik", password:"test"  },
-        { id: 1, fname: "Marko", lname: "Matic", email: "matic3@mail.com", phone: "0955642525", role_id: 1, role_name: "Administrator", password:"test"  },
+    @observable allData = [];
+    @observable roles = [];
 
-    ];
-
-    roles = [{
-        role_id: 1,
-        role_name: "Administrator"
-    }, {
-        role_id: 2,
-        role_name: "Korisnik"
-    }
-    ];
 
     @action
-    onDeleteClick() {
-        //this.isLoaderVisible = true; //prikaži loader        
-        /*
-        this.deleteResult = await (this.dataStore.delete(this.itemToDeleteId));
-        if (this.deleteResult) {
-            this.isDeleting = false;
-            toaster.notify('Deletion successful!', {
-                duration: 2000
-            })
-            this.onFind();
-        } else {
-            toaster.notify('Deletion failed!', {
-                duration: 2000
-            })
+    async showLoader() {
+        this.isLoaderVisible = true;
+    }
+
+    @action
+    async hideLoader() {
+        await this.delay(500);
+        this.isLoaderVisible = false;
+    }
+
+    @action
+    delay(delayInMs) {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve(2);
+            }, delayInMs);
+        });
+    }
+
+    @action
+    async processData(response) {
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
         }
-    */
-        //this.isLoaderVisible = false; //sakrij loader
-        console.log(this.clickedUser)
+        else {
+            toast.success(response.status, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+            this.onFind();
+        }
     }
 
     @action
-    onEditClick() {
-        //EDIT DATA
-        console.log(this.clickedUser)
+    async onDeleteClick() {
+        await this.showLoader();
+        let response = await (this.dataStore.delete(this.clickedUser.id));
+        this.processData(response);
+        this.hideLoader();
     }
 
     @action
-    onCreateClick() {
-        //CREATE DATA
-        console.log(this.clickedUser)
+    async onEditClick() {
+        await this.showLoader();
+        let response = await (this.dataStore.update(this.clickedUser));
+        this.processData(response);
+        this.hideLoader();
+    }
+
+    @action
+    async onCreateClick() {
+        await this.showLoader();
+        let response = await (this.dataStore.create(this.clickedUser));
+        this.processData(response);
+        this.hideLoader();
     }
 
     @action
     async onFind() {
-        //FIND Location
+        await this.showLoader();
+        let response = await (this.dataStore.get())
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+            this.allData = [{ id: "", fname: "Nema podataka", lname: "", email: "", phone: "", role_id: "", role_name: "", password: "" }];
+        }
+        else {
+            if (response.users.length > 0) {
+                this.allData = response.users;
+            }
+            else {
+                this.allData = [{ id: "", fname: "Nema podataka", lname: "", email: "", phone: "", role_id: "", role_name: "", password: "" }];
+            }
+        }
+        this.setPagination();
+        this.hideLoader();
     };
 
     @action
+    async findRoles() {
+        let response = await (this.roleDataStore.get())
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+        }
+        else {
+            if (response.roles.length > 0) {
+                this.roles = response.roles.map((role) => {
+                    return { role_id: role.id, role_name: role.name }
+                });
+            }
+        }
+    }
+    @action
     onUserClicked(data, isCreate) {
+        this.errorMessage = {
+            fname: null,
+            lname: null,
+            email: null,
+            phone: null,
+            password: null,
+            role: null
+        };
         if (isCreate) {
+            this.isCreateClick = true;
             this.clickedUser = {
                 id: "",
                 fname: "",
@@ -128,19 +219,19 @@ class UserViewStore {
             };
         }
         else {
+            this.isCreateClick = false;
             this.clickedUser = {
                 id: data.id,
                 fname: data.fname,
                 lname: data.lname,
                 email: data.email,
                 phone: data.phone,
-                password: data.password,
+                password: "",
                 role_id: data.role_id,
                 role_name: data.role_name
             };
+            console.log(data);
         }
-
-        this.checkFields();
     }
 
     @action
@@ -153,19 +244,14 @@ class UserViewStore {
             this.totalPages = this.totalPages + 1;
         }
         this.previousEnabled = this.page > 1;
-        this.nextEnabled = Math.floor(this.allData.length / this.pageSize) > this.page;
+        this.nextEnabled = this.page < this.totalPages;
 
-        this.loadPageData()
+        this.loadPageData();
     }
 
     @action
     loadPageData() {
-        if (this.allData.length === 0) {
-            this.rows = [{ id: -1, name: "Nema podataka" }];
-        }
-        else {
-            this.rows = this.allData.slice((this.page - 1) * this.pageSize, this.page * this.pageSize)
-        }
+        this.rows = this.allData.slice((this.page - 1) * this.pageSize, this.page * this.pageSize)
     }
 
     @action
@@ -185,8 +271,10 @@ class UserViewStore {
 
     @action
     onChangePageSize(pageSize) {
-        this.pageSize = pageSize;
-        this.setPagination();
+        if (this.pageSize != pageSize) {
+            this.pageSize = pageSize;
+            this.setPagination(1);
+        }
     }
 
 
@@ -213,7 +301,7 @@ class UserViewStore {
         this.clickedUser.phone = value;
         this.checkFields();
     }
-    
+
     @action
     onPasswordChange(value) {
         this.clickedUser.password = value;
@@ -229,6 +317,15 @@ class UserViewStore {
 
     @action
     checkFields() {
+        this.errorMessage = {
+            fname: null,
+            lname: null,
+            email: null,
+            phone: null,
+            password: null,
+            role: null
+        };
+
         let isEmailValid = EmailValidator.validate(this.clickedUser.email);
         let isValidPhoneNumber = /^\d+$/.test(this.clickedUser.phone);
 
@@ -245,6 +342,70 @@ class UserViewStore {
         else {
             this.isSubmitDisabled = true;
         }
+    }
+
+    @action
+    checkFields() {
+        this.errorMessage = {
+            fname: null,
+            lname: null,
+            email: null,
+            phone: null,
+            password: null,
+            role: null
+        };
+
+        let isEmailValid = EmailValidator.validate(this.clickedUser.email);
+        let isValidPhoneNumber = /^\d+$/.test(this.clickedUser.phone);
+
+        if (this.emailExists()) {
+            this.errorMessage.email = "Email se već koristi!";
+        }
+        if(!isEmailValid){
+            this.errorMessage.email = "Neispravan format email-a!";
+        }
+        if(!isValidPhoneNumber){
+            this.errorMessage.phone = "Neispravan broj telefona!";
+        }
+        if (this.clickedUser.fname.length < 2) {
+            this.errorMessage.fname = "Neispravna duljina imena (min. 2)";
+        }
+        if (this.clickedUser.lname.length < 2) {
+            this.errorMessage.lname = "Neispravna duljina prezimena (min. 2)";
+        }
+        if (this.clickedUser.phone.length < 6) {
+            this.errorMessage.phone = "Neispravna duljina telefona (6-10 znamenki)";
+        }
+        if (this.clickedUser.email.length < 4) {
+            this.errorMessage.email = "Neispravna duljina email-a (min. 4)";
+        }
+        if (this.isCreateClick && this.clickedUser.password.length < 6) {
+            this.errorMessage.password = "Neispravna duljina šifre (min. 6)";
+        }
+        if(this.clickedUser.role_id.toString() == ""){
+            this.errorMessage.role = "Odaberite ulogu!";
+        }
+
+        if (this.errorMessage.fname == null
+            && this.errorMessage.lname == null
+            && this.errorMessage.email == null
+            && this.errorMessage.phone == null
+            && this.errorMessage.password == null
+            && this.errorMessage.role == null) {
+            this.isSubmitDisabled = false;
+        }
+        else {
+            this.isSubmitDisabled = true;
+        }
+    }
+
+    @action
+    emailExists() {
+        if (this.clickedUser.email.length > 0) {
+            let filteredUsers = this.allData.filter(user => user.id !== this.clickedUser.id);
+            return filteredUsers.findIndex(user => user.email.toLowerCase() == this.clickedUser.email.toLowerCase()) !== -1;
+        }
+        return false;
     }
 
 }

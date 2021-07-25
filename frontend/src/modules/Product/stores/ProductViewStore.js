@@ -1,8 +1,12 @@
 import { action, observable } from "mobx";
+import { toast } from 'react-toastify';
 
 class ProductViewStore {
     constructor(rootStore) {
         this.dataStore = rootStore.productModuleStore.productDataStore;
+        this.categoryDataStore = rootStore.categoryModuleStore.categoryDataStore;
+        this.subcategoryDataStore = rootStore.subcategoryModuleStore.subcategoryDataStore;
+        this.packagingDataStore = rootStore.packagingModuleStore.packagingDataStore;
         this.routerStore = rootStore.routerStore;
 
         this.onFind = this.onFind.bind(this);
@@ -21,36 +25,41 @@ class ProductViewStore {
         this.onSubcategoryChange = this.onSubcategoryChange.bind(this);
         this.onPackagingChange = this.onPackagingChange.bind(this);
 
+        this.delay = this.delay.bind(this);
+        this.showLoader = this.showLoader.bind(this);
+        this.hideLoader = this.hideLoader.bind(this);
+        this.processData = this.processData.bind(this);
+
+        this.findCategories = this.findCategories.bind(this);
+        this.findSubcategories = this.findSubcategories.bind(this);
+        this.findPackagings = this.findPackagings.bind(this);
+        this.productNameExist = this.productNameExist.bind(this);
+
         this.setPagination();
+        this.findCategories();
+        this.findSubcategories();
+        this.findPackagings();
+        this.onFind();
     }
 
     @observable isLoaderVisible = false;
+    @observable isSubmitDisabled = true;
 
     @observable clickedProduct = {
         id: "",
         name: "",
-        category_id: -1,
-        category_name: "",
-        subcategory_id: -1,
-        subcategory_name: "",
-        packaging_id: -1,
-        packaging_name: ""
+        category_id: "",
+        category_name: "Odaberi kategoriju",
+        subcategory_id: "",
+        subcategory_name: "Odaberi potkategoriju",
+        packaging_id: "",
+        packaging_name: "Odaberi ambalažu"
     };
-    @observable clickedCategory = {
-        category_id: -1,
-        category_name: ""
-    }
-    @observable clickedSubcategory = {
-        subcategory_id: -1,
-        subcategory_name: ""
-    }
-    @observable clickedPackaging = {
-        packaging_id: -1,
-        packaging_name: ""
-    }
 
-    @observable isSubmitDisabled = true;
-
+    @observable errorMessage = {
+        name: null,
+        category: null
+    };
 
     @observable page = 1;
     @observable pageSize = 5;
@@ -62,128 +71,200 @@ class ProductViewStore {
     title = "Proizvodi";
     columns = ['Naziv proizvoda', 'Naziv kategorije', 'Naziv potkategorije', 'Naziv ambalaže', 'Izmjena', 'Brisanje'];
 
-    //TESTNI PODATCI
-    allData = [
-        { id: 1, name: "Piće", category_id: 1, category_name: "test1", subcategory_id: 1, subcategory_name: "test1", packaging_id: 1, packaging_name: "test1" },
-        { id: 2, name: "Rekviziti", category_id: 2, category_name: "test2", subcategory_id: 1, subcategory_name: "test1", packaging_id: 1, packaging_name: "test1" },
-        { id: 3, name: "Sokovi", category_id: 3, category_name: "test3", subcategory_id: 1, subcategory_name: "test1", packaging_id: 1, packaging_name: "test1" },
-        { id: 4, name: "Cigarete", category_id: 2, category_name: "test2", subcategory_id: 1, subcategory_name: "test1", packaging_id: 1, packaging_name: "test1" },
-        { id: 5, name: "Koverta", category_id: 3, category_name: "test3", subcategory_id: 1, subcategory_name: "test1", packaging_id: 1, packaging_name: "test1" },
-        { id: 6, name: "Tst2", category_id: 1, category_name: "test1", subcategory_id: 1, subcategory_name: "test1", packaging_id: 1, packaging_name: "test1" },
-        { id: 7, name: "Test3", category_id: 4, category_name: "test4", subcategory_id: 1, subcategory_name: "test1", packaging_id: 1, packaging_name: "test1" },
-        { id: 8, name: "Test4", category_id: 4, category_name: "test4", subcategory_id: 1, subcategory_name: "test1", packaging_id: 1, packaging_name: "test1" },
-        { id: 9, name: "Tst5", category_id: 2, category_name: "test2", subcategory_id: 1, subcategory_name: "test1", packaging_id: null, packaging_name: "" },
-        { id: 10, name: "Test6", category_id: 2, category_name: "test2", subcategory_id: null, subcategory_name: "", packaging_id: 1, packaging_name: "test1" }
-    ];
+    @observable allData = [];
+    @observable categories = [];
+    @observable subcategories = [];
+    @observable packagings = [];
 
-    categories = [{
-        category_id: -1,
-        category_name: "Odaberi kategoriju"
-    },
-    {
-        category_id: 1,
-        category_name: "test1"
-    }, {
-        category_id: 2,
-        category_name: "test2"
-    }, {
-        category_id: 3,
-        category_name: "test3"
-    }, {
-        category_id: 4,
-        category_name: "test4"
-    }
-    ];
-
-    subcategories = [{
-        subcategory_id: -1,
-        subcategory_name: "Odaberi potkategoriju"
-    },
-    {
-        subcategory_id: 1,
-        subcategory_name: "Rekviziti"
-    }, {
-        subcategory_id: 2,
-        subcategory_name: "Sokovi"
-    }, {
-        subcategory_id: 3,
-        subcategory_name: "Cigarete"
-    }, {
-        subcategory_id: 4,
-        subcategory_name: "Pićence"
-    }
-    ];
-
-    packagings = [{
-        packaging_id: -1,
-        packaging_name: "Odaberi ambalažu"
-    },
-    {
-        packaging_id: 1,
-        packaging_name: "test1"
-    }, {
-        packaging_id: 2,
-        packaging_name: "test2"
-    }, {
-        packaging_id: 3,
-        packaging_name: "test3"
-    }, {
-        packaging_id: 4,
-        packaging_name: "test4"
-    }
-    ];
+    @observable filteredSubcategories = [];
 
     @action
-    onDeleteClick() {
-        //this.isLoaderVisible = true; //prikaži loader        
-        /*
-        this.deleteResult = await (this.dataStore.delete(this.itemToDeleteId));
-        if (this.deleteResult) {
-            this.isDeleting = false;
-            toaster.notify('Deletion successful!', {
-                duration: 2000
-            })
-            this.onFind();
-        } else {
-            toaster.notify('Deletion failed!', {
-                duration: 2000
-            })
+    showLoader() {
+        this.isLoaderVisible = true;
+    }
+
+    @action
+    async hideLoader() {
+        await this.delay(500);
+        this.isLoaderVisible = false;
+    }
+
+    @action
+    delay(delayInMs) {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve(2);
+            }, delayInMs);
+        });
+    }
+
+    @action
+    async processData(response) {
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
         }
-    */
-        //this.isLoaderVisible = false; //sakrij loader
-        console.log(this.clickedProduct)
+        else {
+            toast.success(response.status, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+            this.onFind();
+        }
     }
 
     @action
-    onEditClick() {
-        //EDIT DATA
-        console.log(this.clickedProduct)
+    async onDeleteClick() {
+        await this.showLoader();
+        let response = await (this.dataStore.delete(this.clickedProduct.id));
+        this.processData(response);
+        this.hideLoader();
     }
 
     @action
-    onCreateClick() {
-        //CREATE DATA
-        console.log(this.clickedProduct)
+    async onEditClick() {
+        await this.showLoader();
+        let response = await (this.dataStore.update(this.clickedProduct));
+        this.processData(response);
+        this.hideLoader();
+    }
+
+    @action
+    async onCreateClick() {
+        await this.showLoader();
+        let response = await (this.dataStore.create(this.clickedProduct));
+        this.processData(response);
+        this.hideLoader();
     }
 
     @action
     async onFind() {
-        //FIND Product
+        await this.showLoader();
+        let response = await (this.dataStore.get())
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+            this.allData = [{ id: "", name: "Nema podataka", category_id: "", category_name: "", subcategory_id: "", subcategory_name: "", packaging_id: "", packaging_name: "" }];
+        }
+        else {
+            if (response.products.length > 0) {
+                this.allData = response.products;
+            }
+            else {
+                this.allData = [{ id: "", name: "Nema podataka", category_id: "", category_name: "", subcategory_id: "", subcategory_name: "", packaging_id: "", packaging_name: "" }];
+            }
+        }
+        this.setPagination();
+        this.hideLoader();
     };
 
     @action
+    async findCategories() {
+        let response = await (this.categoryDataStore.get())
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+        }
+        else {
+            if (response.categories.length > 0) {
+                this.categories = response.categories.map((category) => {
+                    return { category_id: category.id, category_name: category.name }
+                });
+            }
+        }
+    }
+
+    @action
+    async findSubcategories() {
+        let response = await (this.subcategoryDataStore.get())
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+        }
+        else {
+            if (response.subcategories.length > 0) {
+                this.subcategories = response.subcategories.map((subcategory) => {
+                    return {
+                        subcategory_id: subcategory.id,
+                        subcategory_name: subcategory.name,
+                        category_id: subcategory.category_id,
+                        category_name: subcategory.category_name
+                    }
+                });
+            }
+        }
+    }
+
+    @action
+    async findPackagings() {
+        let response = await (this.packagingDataStore.get())
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+        }
+        else {
+            if (response.packagings.length > 0) {
+                this.packagings = response.packagings.map((packaging) => {
+                    return { packaging_id: packaging.id, packaging_name: packaging.name }
+                });
+            }
+        }
+    }
+
+    @action
     onProductClicked(data, isCreate) {
+        this.errorMessage = {
+            name: null,
+            category: null
+        };
+
         if (isCreate) {
             this.clickedProduct = {
                 id: "",
                 name: "",
                 category_id: "",
-                category_name: "Odaberi kategoriju",
+                category_name: "",
                 subcategory_id: "",
-                subcategory_name: "Odaberi potkategoriju",
+                subcategory_name: "",
                 packaging_id: "",
-                packaging_name: "Odaberi ambalažu"
+                packaging_name: ""
             };
+            this.filteredSubcategories = [];
+            this.isSubmitDisabled = true;
         }
         else {
             this.clickedProduct = {
@@ -196,10 +277,9 @@ class ProductViewStore {
                 packaging_id: data.packaging_id,
                 packaging_name: data.packaging_name
             };
+            this.filteredSubcategories = this.subcategories.filter(subcategory => subcategory.category_id === data.category_id);
+            this.checkFields();
         }
-
-        console.log({...this.clickedProduct});
-        this.checkFields();
     }
 
     @action
@@ -212,19 +292,14 @@ class ProductViewStore {
             this.totalPages = this.totalPages + 1;
         }
         this.previousEnabled = this.page > 1;
-        this.nextEnabled = Math.floor(this.allData.length / this.pageSize) > this.page;
+        this.nextEnabled = this.page < this.totalPages;
 
-        this.loadPageData()
+        this.loadPageData();
     }
 
     @action
     loadPageData() {
-        if (this.allData.length === 0) {
-            this.rows = [{ id: -1, name: "Nema podataka" }];
-        }
-        else {
-            this.rows = this.allData.slice((this.page - 1) * this.pageSize, this.page * this.pageSize)
-        }
+        this.rows = this.allData.slice((this.page - 1) * this.pageSize, this.page * this.pageSize);
     }
 
     @action
@@ -244,10 +319,11 @@ class ProductViewStore {
 
     @action
     onChangePageSize(pageSize) {
-        this.pageSize = pageSize;
-        this.setPagination();
+        if (this.pageSize != pageSize) {
+            this.pageSize = pageSize;
+            this.setPagination(1);
+        }
     }
-
 
     @action
     onNameChange(value) {
@@ -259,6 +335,14 @@ class ProductViewStore {
     onCategoryChange(value) {
         this.clickedProduct.category_id = value.category_id;
         this.clickedProduct.category_name = value.category_name;
+        this.filteredSubcategories = this.subcategories.filter(subcategory => subcategory.category_id === value.category_id);
+
+        let subcategory = this.subcategories.find(subcategory => subcategory.subcategory_id === this.clickedProduct.subcategory_id);
+        if (subcategory && subcategory.category_id !== value.category_id) {
+            this.clickedProduct.subcategory_id = "";
+            this.clickedProduct.subcategory_name = "";
+        }
+
         this.checkFields();
     }
 
@@ -276,13 +360,34 @@ class ProductViewStore {
 
     @action
     checkFields() {
-        console.log("Category ID: " + this.clickedProduct.category_id);
-        if (this.clickedProduct.name.length > 2 && this.clickedProduct.category_id != -1 && this.clickedProduct.category_id.length != 0) {
+        this.errorMessage = {
+            name: null,
+            category: null
+        };
+        if (this.productNameExist()) {
+            this.errorMessage.name = "Proizvod s istim nazivom već postoji!";
+        }
+        if (this.clickedProduct.name.length < 2) {
+            this.errorMessage.name = "Neispravna duljina naziva proizvoda!";
+        }
+        if (this.clickedProduct.category_id.toString() == "") {
+            this.errorMessage.category = "Odaberite kategoriju!";
+        }
+        if (this.errorMessage.name == null && this.errorMessage.category == null) {
             this.isSubmitDisabled = false;
         }
         else {
             this.isSubmitDisabled = true;
         }
+    }
+
+    @action
+    productNameExist() {
+        if (this.clickedProduct.name.length > 0) {
+            let filteredProducts = this.allData.filter(product => product.id !== this.clickedProduct.id);
+            return filteredProducts.findIndex(clickedProduct => clickedProduct.name.toLowerCase() == this.clickedProduct.name.toLowerCase()) !== -1;
+        }
+        return false;
     }
 
 }

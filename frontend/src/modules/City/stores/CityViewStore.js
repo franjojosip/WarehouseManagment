@@ -19,6 +19,7 @@ class CityViewStore {
         this.onCityClicked = this.onCityClicked.bind(this);
         this.onNameChange = this.onNameChange.bind(this);
         this.onZipCodeChange = this.onZipCodeChange.bind(this);
+
         this.delay = this.delay.bind(this);
         this.showLoader = this.showLoader.bind(this);
         this.hideLoader = this.hideLoader.bind(this);
@@ -57,18 +58,27 @@ class CityViewStore {
     @observable allData = [];
 
     @action
-    async showLoader() {
+    showLoader() {
         this.isLoaderVisible = true;
-        await this.delay(500);
     }
 
     @action
-    hideLoader() {
+    async hideLoader() {
+        await this.delay(500);
         this.isLoaderVisible = false;
     }
 
     @action
-    processData(response) {
+    delay(delayInMs) {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve(2);
+            }, delayInMs);
+        });
+    }
+
+    @action
+    async processData(response) {
         if (response.error) {
             toast.error(response.error, {
                 position: "bottom-right",
@@ -129,7 +139,7 @@ class CityViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
-            this.allData = [{ id: "", name: "Neuspješno učitavanje podataka", zip_code: "" }];
+            this.allData = [{ id: "", name: "Nema podataka", zip_code: "" }];
         }
         else {
             if (response.cities.length > 0) {
@@ -144,16 +154,11 @@ class CityViewStore {
     };
 
     @action
-    delay(delayInMs) {
-        return new Promise(resolve => {
-            setTimeout(() => {
-                resolve(2);
-            }, delayInMs);
-        });
-    }
-
-    @action
     onCityClicked(data, isCreate) {
+        this.errorMessage = {
+            name: null,
+            zip_code: null
+        };
         if (isCreate) {
             this.clickedCity = {
                 id: "",
@@ -182,7 +187,7 @@ class CityViewStore {
         this.previousEnabled = this.page > 1;
         this.nextEnabled = this.page < this.totalPages;
 
-        this.loadPageData()
+        this.loadPageData();
     }
 
     @action
@@ -207,8 +212,10 @@ class CityViewStore {
 
     @action
     onChangePageSize(pageSize) {
-        this.pageSize = pageSize;
-        this.setPagination();
+        if (this.pageSize != pageSize) {
+            this.pageSize = pageSize;
+            this.setPagination(1);
+        }
     }
 
 

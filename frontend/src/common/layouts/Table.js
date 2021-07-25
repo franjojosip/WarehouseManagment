@@ -15,7 +15,7 @@ export default function Table({ title, hideAddButton, columns, tableRows, page, 
           <div className="row">
             <div className="col-9">
               <div className="dropdown mb-3">
-                <span>Broj Podataka:</span>
+                <span>Broj podataka po stranici:</span>
                 <button className="btn btn-light dropdown-toggle" type="button" id="dropdownMenuPageSize" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   {pageSize}
                 </button>

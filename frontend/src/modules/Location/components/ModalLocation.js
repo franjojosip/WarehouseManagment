@@ -27,15 +27,6 @@ export default function ModalLocation({ modalTarget, errorMessage, cities, onSub
     submitText = "Obriši";
     isDisabled = true;
   }
-  const config = {
-    rules: [
-      {
-        type: 'object',
-        required: true,
-        message: "Unesite vrijednost u polje",
-      },
-    ],
-  };
 
   return (
     <div className="modal fade" id={modalTarget} tabIndex="-1" aria-labelledby="modalTarget" aria-hidden="true">
@@ -55,8 +46,6 @@ export default function ModalLocation({ modalTarget, errorMessage, cities, onSub
                 type="text"
                 value={name}
                 minLength="5"
-                required
-                {...config}
                 placeholder="Unesite naziv lokacije"
                 onChange={(e) => onNameChange(e.target.value)}
                 disabled={isDisabled}

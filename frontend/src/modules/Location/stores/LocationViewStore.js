@@ -20,10 +20,12 @@ class LocationViewStore {
         this.onLocationClicked = this.onLocationClicked.bind(this);
         this.onNameChange = this.onNameChange.bind(this);
         this.onCityChange = this.onCityChange.bind(this);
+
         this.delay = this.delay.bind(this);
         this.showLoader = this.showLoader.bind(this);
         this.hideLoader = this.hideLoader.bind(this);
         this.processData = this.processData.bind(this);
+
         this.findCities = this.findCities.bind(this);
         this.locationNameExist = this.locationNameExist.bind(this);
 
@@ -33,6 +35,7 @@ class LocationViewStore {
     }
 
     @observable isLoaderVisible = false;
+    @observable isSubmitDisabled = true;
 
     @observable clickedLocation = {
         id: "",
@@ -40,17 +43,11 @@ class LocationViewStore {
         city_id: "",
         city_name: "Odaberi grad"
     };
-    @observable clickedCategory = {
-        city_id: "",
-        city_name: "Odaberi grad"
-    }
+
     @observable errorMessage = {
         name: null,
         city: null
     };
-
-    @observable isSubmitDisabled = true;
-
 
     @observable page = 1;
     @observable pageSize = 5;
@@ -62,23 +59,31 @@ class LocationViewStore {
     title = "Lokacije";
     columns = ['Naziv ulice', 'Naziv grada', 'Izmjena', 'Brisanje'];
 
-    //TESTNI PODATCI
     @observable allData = [];
     @observable cities = [];
 
     @action
-    async showLoader() {
+    showLoader() {
         this.isLoaderVisible = true;
-        await this.delay(500);
     }
 
     @action
-    hideLoader() {
+    async hideLoader() {
+        await this.delay(500);
         this.isLoaderVisible = false;
     }
 
     @action
-    processData(response) {
+    delay(delayInMs) {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve(2);
+            }, delayInMs);
+        });
+    }
+
+    @action
+    async processData(response) {
         if (response.error) {
             toast.error(response.error, {
                 position: "bottom-right",
@@ -100,15 +105,6 @@ class LocationViewStore {
             });
             this.onFind();
         }
-    }
-
-    @action
-    delay(delayInMs) {
-        return new Promise(resolve => {
-            setTimeout(() => {
-                resolve(2);
-            }, delayInMs);
-        });
     }
 
     @action
@@ -148,7 +144,7 @@ class LocationViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
-            this.allData = [{ id: "", name: "Neuspješno učitavanje podataka", city_id: "", city_name: "" }];
+            this.allData = [{ id: "", name: "Nema podataka", city_id: "", city_name: "" }];
         }
         else {
             if (response.locations.length > 0) {
@@ -186,6 +182,10 @@ class LocationViewStore {
 
     @action
     onLocationClicked(data, isCreate) {
+        this.errorMessage = {
+            name: null,
+            city: null
+        };
         if (isCreate) {
             this.clickedLocation = {
                 id: "",
@@ -201,7 +201,6 @@ class LocationViewStore {
                 city_id: data.city_id,
                 city_name: data.city_name
             };
-            this.checkFields();
         }
     }
 
@@ -217,7 +216,7 @@ class LocationViewStore {
         this.previousEnabled = this.page > 1;
         this.nextEnabled = this.page < this.totalPages;
 
-        this.loadPageData()
+        this.loadPageData();
     }
 
     @action
@@ -242,8 +241,10 @@ class LocationViewStore {
 
     @action
     onChangePageSize(pageSize) {
-        this.pageSize = pageSize;
-        this.setPagination();
+        if (this.pageSize != pageSize) {
+            this.pageSize = pageSize;
+            this.setPagination(1);
+        }
     }
 
 

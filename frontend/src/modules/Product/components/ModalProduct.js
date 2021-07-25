@@ -4,7 +4,7 @@ import { Form, Button, Dropdown, DropdownButton } from 'react-bootstrap';
 import "../../../common/styles/Modal.css";
 
 
-export default function ModalProduct({ modalTarget, categories, subcategories, packagings, onSubmit, name, category_name, subcategory_name, packaging_name, onNameChange, onCategoryChange, onSubcategoryChange, onPackagingChange, isSubmitDisabled }) {
+export default function ModalProduct({ modalTarget, errorMessage, categories, subcategories, packagings, onSubmit, name, category_name, subcategory_name, packaging_name, onNameChange, onCategoryChange, onSubcategoryChange, onPackagingChange, isSubmitDisabled }) {
 
   let submitClassName = "";
   let modalTitle = "";
@@ -27,15 +27,6 @@ export default function ModalProduct({ modalTarget, categories, subcategories, p
     submitText = "Obriši";
     isDisabled = true;
   }
-  const config = {
-    rules: [
-      {
-        type: 'object',
-        required: true,
-        message: "Unesite vrijednost u polje",
-      },
-    ],
-  };
 
   return (
     <div className="modal fade" id={modalTarget} tabIndex="-1" aria-labelledby="modalTarget" aria-hidden="true">
@@ -55,12 +46,18 @@ export default function ModalProduct({ modalTarget, categories, subcategories, p
                 type="text"
                 value={name}
                 minLength="2"
-                required
-                {...config}
                 placeholder="Unesite naziv proizvoda"
                 onChange={(e) => onNameChange(e.target.value)}
                 disabled={isDisabled}
               />
+              <div hidden={isDisabled || !isSubmitDisabled}>
+                <p style={{ color: "red" }}>
+                  {errorMessage.name ?
+                    errorMessage.name
+                    : null
+                  }
+                </p>
+              </div>
             </Form.Group>
             <Form.Group size="md" controlId="category_name">
               <Form.Label>Naziv Kategorije *</Form.Label>
@@ -72,12 +69,20 @@ export default function ModalProduct({ modalTarget, categories, subcategories, p
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="formDropdown" variant="secondary" title={category_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                  <DropdownButton id="customDropdown" variant="secondary" title={category_name ? category_name : "Odaberi kategoriju"} style={{ marginBottom: 10 }} disabled={isDisabled}>
                     {categories.map((category) => {
                       return <Dropdown.Item key={"category-" + category.category_id} onSelect={() => onCategoryChange(category)}>{category.category_name}</Dropdown.Item>;
                     })}
                   </DropdownButton>
               }
+              <div hidden={isDisabled || !isSubmitDisabled}>
+                <p style={{ color: "red" }}>
+                  {errorMessage.category ?
+                    errorMessage.category
+                    : null
+                  }
+                </p>
+              </div>
             </Form.Group>
             <Form.Group size="md" controlId="subcategory_name">
               <Form.Label>Naziv Potkategorije</Form.Label>
@@ -89,7 +94,7 @@ export default function ModalProduct({ modalTarget, categories, subcategories, p
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="formDropdown" variant="secondary" title={subcategory_name ? subcategory_name : "Odaberi potkategoriju"} style={{ marginBottom: 10 }} disabled={isDisabled}>
+                  <DropdownButton id="customDropdown" variant="secondary" title={subcategory_name ? subcategory_name : "Odaberi potkategoriju"} style={{ marginBottom: 10 }} disabled={isDisabled || subcategories.length == 0}>
                     {subcategories.map((subcategory) => {
                       return <Dropdown.Item key={"subcategory-" + subcategory.subcategory_id} onSelect={() => onSubcategoryChange(subcategory)}>{subcategory.subcategory_name}</Dropdown.Item>;
                     })}
@@ -107,21 +112,16 @@ export default function ModalProduct({ modalTarget, categories, subcategories, p
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="formDropdown" variant="secondary" title={packaging_name ? packaging_name : "Odaberi ambalažu"} style={{ marginBottom: 10 }} disabled={isDisabled}>
+                  <DropdownButton id="customDropdown" variant="secondary" title={packaging_name ? packaging_name : "Odaberi ambalažu"} style={{ marginBottom: 10 }} disabled={isDisabled}>
                     {packagings.map((packaging) => {
                       return <Dropdown.Item key={"packaging-" + packaging.packaging_id} onSelect={() => onPackagingChange(packaging)}>{packaging.packaging_name}</Dropdown.Item>;
                     })}
                   </DropdownButton>
               }
             </Form.Group>
-            <div hidden={isDisabled || !isSubmitDisabled}>
-              <p style={{ color: "red" }}>
-                Provjerite sva polja !!!
-              </p>
-            </div>
             <div className="modal-footer" style={{ padding: 0 }}>
               <Button className="btn btn-primary" data-dismiss="modal">Odustani</Button>
-              <Button type="submit" disabled={isSubmitDisabled} className={submitClassName} onClick={(e) => { e.preventDefault(); onSubmit() }}>{submitText}</Button>
+              <Button type="submit" data-dismiss="modal" disabled={isSubmitDisabled && !isDisabled} className={submitClassName} onClick={(e) => { e.preventDefault(); onSubmit() }}>{submitText}</Button>
             </div>
           </Form>
         </div>

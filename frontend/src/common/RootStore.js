@@ -13,6 +13,7 @@ import StockModuleStore from "../modules/Stock/stores/StockModuleStore";
 import StocktakingModuleStore from "../modules/Stocktaking/stores/StocktakingModuleStore";
 import EntryModuleStore from "../modules/Entry/stores/EntryModuleStore";
 import NotificationModuleStore from "../modules/Notification/stores/NotificationModuleStore";
+import RoleModuleStore from "../modules/Role/stores/RoleModuleStore";
 
 
 const notFound = new RouterState('notFound');
@@ -23,6 +24,7 @@ export class RootStore {
         this.routerStore = new RouterStore(this, routes, notFound);
         
         this.authenticationModuleStore = new AuthenticationModuleStore(this);
+        this.roleModuleStore = new RoleModuleStore(this);
         this.cityModuleStore = new CityModuleStore(this);
         this.packagingModuleStore = new PackagingModuleStore(this);
         this.categoryModuleStore = new CategoryModuleStore(this);

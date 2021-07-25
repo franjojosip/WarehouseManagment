@@ -1,8 +1,10 @@
 import { action, observable } from "mobx";
+import { toast } from 'react-toastify';
 
 class SubcategoryViewStore {
     constructor(rootStore) {
-        this.dataStore = rootStore.packagingModuleStore.packagingDataStore;
+        this.dataStore = rootStore.subcategoryModuleStore.subcategoryDataStore;
+        this.categoryDataStore = rootStore.categoryModuleStore.categoryDataStore;
         this.routerStore = rootStore.routerStore;
 
         this.onFind = this.onFind.bind(this);
@@ -19,10 +21,21 @@ class SubcategoryViewStore {
         this.onNameChange = this.onNameChange.bind(this);
         this.onCategoryChange = this.onCategoryChange.bind(this);
 
+        this.delay = this.delay.bind(this);
+        this.showLoader = this.showLoader.bind(this);
+        this.hideLoader = this.hideLoader.bind(this);
+        this.processData = this.processData.bind(this);
+        
+        this.findCategories = this.findCategories.bind(this);
+        this.subcategoryNameExist = this.subcategoryNameExist.bind(this);
+
         this.setPagination();
+        this.findCategories();
+        this.onFind();
     }
 
     @observable isLoaderVisible = false;
+    @observable isSubmitDisabled = true;
 
     @observable clickedSubcategory = {
         id: "",
@@ -30,13 +43,16 @@ class SubcategoryViewStore {
         category_id: "",
         category_name: "Odaberi kategoriju"
     };
+
     @observable clickedCategory = {
         category_id: "",
         category_name: "Odaberi kategoriju"
     }
-    
-    @observable isSubmitDisabled = true;
 
+    @observable errorMessage = {
+        name: null,
+        category: null
+    };
 
     @observable page = 1;
     @observable pageSize = 5;
@@ -48,75 +64,133 @@ class SubcategoryViewStore {
     title = "Potkategorije";
     columns = ['Naziv potkategorije', 'Naziv kategorije', 'Izmjena', 'Brisanje'];
 
-    //TESTNI PODATCI
-    allData = [
-        { id: 1, name: "Piće", category_id: 1, category_name: "test1" },
-        { id: 2, name: "Rekviziti", category_id: 2, category_name: "test2" },
-        { id: 3, name: "Sokovi", category_id: 3, category_name: "test3" },
-        { id: 4, name: "Cigarete", category_id: 2, category_name: "test2" },
-        { id: 5, name: "Koverta", category_id: 3, category_name: "test3" },
-        { id: 6, name: "Tst2", category_id: 1, category_name: "test1" },
-        { id: 7, name: "Test3", category_id: 4, category_name: "test4" },
-        { id: 8, name: "Test4", category_id: 4, category_name: "test4" },
-        { id: 9, name: "Tst5", category_id: 2, category_name: "test2" },
-        { id: 10, name: "Test6", category_id: 2, category_name: "test2" }
-    ];
-
-    categories = [{
-        category_id: 1,
-        category_name: "test1"
-    }, {
-        category_id: 2,
-        category_name: "test2"
-    }, {
-        category_id: 3,
-        category_name: "test3"
-    }, {
-        category_id: 4,
-        category_name: "test4"
-    }
-    ];
+    @observable allData = [];
+    @observable categories = [];
 
     @action
-    onDeleteClick() {
-        //this.isLoaderVisible = true; //prikaži loader        
-        /*
-        this.deleteResult = await (this.dataStore.delete(this.itemToDeleteId));
-        if (this.deleteResult) {
-            this.isDeleting = false;
-            toaster.notify('Deletion successful!', {
-                duration: 2000
-            })
-            this.onFind();
-        } else {
-            toaster.notify('Deletion failed!', {
-                duration: 2000
-            })
+    showLoader() {
+        this.isLoaderVisible = true;
+    }
+
+    @action
+    async hideLoader() {
+        await this.delay(500);
+        this.isLoaderVisible = false;
+    }
+
+    @action
+    delay(delayInMs) {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve(2);
+            }, delayInMs);
+        });
+    }
+
+    @action
+    async processData(response) {
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
         }
-    */
-        //this.isLoaderVisible = false; //sakrij loader
-        console.log(this.clickedSubcategory)
+        else {
+            toast.success(response.status, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+            this.onFind();
+        }
     }
 
     @action
-    onEditClick() {
-        //EDIT DATA
-        console.log(this.clickedSubcategory)
+    async onDeleteClick() {
+        await this.showLoader();
+        let response = await (this.dataStore.delete(this.clickedSubcategory.id));
+        this.processData(response);
+        this.hideLoader();
     }
 
     @action
-    onCreateClick() {
-        //CREATE DATA
-        console.log(this.clickedSubcategory)
+    async onEditClick() {
+        await this.showLoader();
+        let response = await (this.dataStore.update(this.clickedSubcategory));
+        this.processData(response);
+        this.hideLoader();
+    }
+
+    @action
+    async onCreateClick() {
+        await this.showLoader();
+        let response = await (this.dataStore.create(this.clickedSubcategory));
+        this.processData(response);
+        this.hideLoader();
     }
 
     @action
     async onFind() {
-        //FIND Subcategory
+        await this.showLoader();
+        let response = await (this.dataStore.get())
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+            this.allData = [{ id: "", name: "Nema podataka", category_id: "", category_name: "" }];
+        }
+        else {
+            if (response.subcategories.length > 0) {
+                this.allData = response.subcategories;
+            }
+            else {
+                this.allData = [{ id: "", name: "Nema podataka", category_id: "", category_name: "" }];
+            }
+        }
+        this.setPagination();
+        this.hideLoader();
     };
 
     @action
+    async findCategories() {
+        let response = await (this.categoryDataStore.get())
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+        }
+        else {
+            if (response.categories.length > 0) {
+                this.categories = response.categories.map((category) => {
+                    return { category_id: category.id, category_name: category.name }
+                });
+            }
+        }
+    }
+
+    @action
     onSubcategoryClicked(data, isCreate) {
+        this.errorMessage = {
+            name: null,
+            category: null
+        };
         if (isCreate) {
             this.clickedSubcategory = {
                 id: "",
@@ -133,13 +207,11 @@ class SubcategoryViewStore {
                 category_name: data.category_name
             };
         }
-
-        this.checkFields();
     }
 
     @action
     setPagination(page) {
-        if (page) {
+        if (page != null) {
             this.page = page;
         }
         this.totalPages = Math.floor(this.allData.length / this.pageSize);
@@ -147,19 +219,14 @@ class SubcategoryViewStore {
             this.totalPages = this.totalPages + 1;
         }
         this.previousEnabled = this.page > 1;
-        this.nextEnabled = Math.floor(this.allData.length / this.pageSize) > this.page;
+        this.nextEnabled = this.page < this.totalPages;
 
         this.loadPageData()
     }
 
     @action
     loadPageData() {
-        if (this.allData.length === 0) {
-            this.rows = [{ id: -1, name: "Nema podataka" }];
-        }
-        else {
-            this.rows = this.allData.slice((this.page - 1) * this.pageSize, this.page * this.pageSize)
-        }
+        this.rows = this.allData.slice((this.page - 1) * this.pageSize, this.page * this.pageSize)
     }
 
     @action
@@ -179,8 +246,10 @@ class SubcategoryViewStore {
 
     @action
     onChangePageSize(pageSize) {
-        this.pageSize = pageSize;
-        this.setPagination();
+        if (this.pageSize != pageSize) {
+            this.pageSize = pageSize;
+            this.setPagination(1);
+        }
     }
 
 
@@ -199,12 +268,34 @@ class SubcategoryViewStore {
 
     @action
     checkFields() {
-        if (this.clickedSubcategory.name.length > 2 && this.clickedSubcategory.category_id != null) {
+        this.errorMessage = {
+            name: null,
+            category: null
+        };
+        if (this.subcategoryNameExist()) {
+            this.errorMessage.name = "Potkategorija s istim nazivom već postoji!";
+        }
+        if (this.clickedSubcategory.name.length < 2) {
+            this.errorMessage.name = "Neispravna duljina naziva potkategorije!";
+        }
+        if (this.clickedSubcategory.category_id.toString() == "") {
+            this.errorMessage.category = "Odaberite kategoriju!";
+        }
+        if (this.errorMessage.name == null && this.errorMessage.category == null) {
             this.isSubmitDisabled = false;
         }
         else {
             this.isSubmitDisabled = true;
         }
+    }
+
+    @action
+    subcategoryNameExist() {
+        if (this.clickedSubcategory.name.length > 0) {
+            let filteredSubcategories = this.allData.filter(subcategory => subcategory.id !== this.clickedSubcategory.id);
+            return filteredSubcategories.findIndex(clickedSubcategory => clickedSubcategory.name.toLowerCase() == this.clickedSubcategory.name.toLowerCase()) !== -1;
+        }
+        return false;
     }
 
 }

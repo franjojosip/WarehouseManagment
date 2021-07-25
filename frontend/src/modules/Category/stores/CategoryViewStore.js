@@ -1,8 +1,9 @@
 import { action, observable } from "mobx";
+import { toast } from 'react-toastify';
 
 class CategoryViewStore {
     constructor(rootStore) {
-        this.dataStore = rootStore.packagingModuleStore.packagingDataStore;
+        this.dataStore = rootStore.categoryModuleStore.categoryDataStore;
         this.routerStore = rootStore.routerStore;
 
         this.onFind = this.onFind.bind(this);
@@ -18,16 +19,28 @@ class CategoryViewStore {
         this.onCategoryClicked = this.onCategoryClicked.bind(this);
         this.onNameChange = this.onNameChange.bind(this);
 
+        this.delay = this.delay.bind(this);
+        this.showLoader = this.showLoader.bind(this);
+        this.hideLoader = this.hideLoader.bind(this);
+        this.processData = this.processData.bind(this);
+
+        this.categoryNameExist = this.categoryNameExist.bind(this);
+
         this.setPagination();
+        this.onFind();
     }
 
     @observable isLoaderVisible = false;
+    @observable isSubmitDisabled = true;
 
     @observable clickedCategory = {
         id: "",
         name: ""
     };
-    @observable isSubmitDisabled = true;
+
+    @observable errorMessage = {
+        name: null
+    };
 
 
     @observable page = 1;
@@ -40,60 +53,109 @@ class CategoryViewStore {
     title = "Kategorije";
     columns = ['Naziv kategorije', 'Izmjena', 'Brisanje'];
 
-    //TESTNI PODATCI
-    allData = [
-        { id: 1, name: "Piće" },
-        { id: 2, name: "Rekviziti" },
-        { id: 3, name: "Sokovi" },
-        { id: 4, name: "Cigarete" },
-        { id: 5, name: "Koverta" },
-        { id: 6, name: "Tst2" },
-        { id: 7, name: "Test3" },
-        { id: 8, name: "Test4" },
-        { id: 9, name: "Tst5" },
-        { id: 10, name: "Test6" }
-    ];
+    @observable allData = [];
 
     @action
-    onDeleteClick() {
-        //this.isLoaderVisible = true; //prikaži loader        
-        /*
-        this.deleteResult = await (this.dataStore.delete(this.itemToDeleteId));
-        if (this.deleteResult) {
-            this.isDeleting = false;
-            toaster.notify('Deletion successful!', {
-                duration: 2000
-            })
-            this.onFind();
-        } else {
-            toaster.notify('Deletion failed!', {
-                duration: 2000
-            })
+    async showLoader() {
+        this.isLoaderVisible = true;
+        await this.delay(500);
+    }
+
+    @action
+    hideLoader() {
+        this.isLoaderVisible = false;
+    }
+
+    @action
+    delay(delayInMs) {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve(2);
+            }, delayInMs);
+        });
+    }
+
+    @action
+    async processData(response) {
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
         }
-    */
-        //this.isLoaderVisible = false; //sakrij loader
-        console.log(this.clickedCategory)
+        else {
+            toast.success(response.status, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+            this.onFind();
+        }
     }
 
     @action
-    onEditClick() {
-        //EDIT DATA
-        console.log(this.clickedCategory)
+    async onDeleteClick() {
+        await this.showLoader();
+        let response = await (this.dataStore.delete(this.clickedCategory.id));
+        this.processData(response);
+        this.hideLoader();
     }
 
     @action
-    onCreateClick() {
-        //CREATE DATA
-        console.log(this.clickedCategory)
+    async onEditClick() {
+        await this.showLoader();
+        let response = await (this.dataStore.update(this.clickedCategory));
+        this.processData(response);
+        this.hideLoader();
+    }
+
+    @action
+    async onCreateClick() {
+        await this.showLoader();
+        let response = await (this.dataStore.create(this.clickedCategory));
+        this.processData(response);
+        this.hideLoader();
     }
 
     @action
     async onFind() {
-        //FIND Category
+        await this.showLoader();
+        let response = await (this.dataStore.get())
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+            this.allData = [{ id: "", name: "Nema podataka" }];
+        }
+        else {
+            if (response.categories.length > 0) {
+                this.allData = response.categories;
+            }
+            else {
+                this.allData = [{ id: "", name: "Nema podataka" }];
+            }
+        }
+        this.setPagination();
+        this.hideLoader();
     };
 
     @action
     onCategoryClicked(data, isCreate) {
+        this.errorMessage = {
+            name: null
+        };
         if (isCreate) {
             this.clickedCategory = {
                 id: "",
@@ -106,13 +168,11 @@ class CategoryViewStore {
                 name: data.name
             };
         }
-
-        this.checkFields();
     }
 
     @action
     setPagination(page) {
-        if (page) {
+        if (page != null) {
             this.page = page;
         }
         this.totalPages = Math.floor(this.allData.length / this.pageSize);
@@ -120,19 +180,14 @@ class CategoryViewStore {
             this.totalPages = this.totalPages + 1;
         }
         this.previousEnabled = this.page > 1;
-        this.nextEnabled = Math.floor(this.allData.length / this.pageSize) > this.page;
+        this.nextEnabled = this.page < this.totalPages;
 
-        this.loadPageData()
+        this.loadPageData();
     }
 
     @action
     loadPageData() {
-        if (this.allData.length === 0) {
-            this.rows = [{ id: -1, name: "Nema podataka"}];
-        }
-        else {
-            this.rows = this.allData.slice((this.page - 1) * this.pageSize, this.page * this.pageSize)
-        }
+        this.rows = this.allData.slice((this.page - 1) * this.pageSize, this.page * this.pageSize)
     }
 
     @action
@@ -152,8 +207,10 @@ class CategoryViewStore {
 
     @action
     onChangePageSize(pageSize) {
-        this.pageSize = pageSize;
-        this.setPagination();
+        if (this.pageSize != pageSize) {
+            this.pageSize = pageSize;
+            this.setPagination(1);
+        }
     }
 
 
@@ -165,12 +222,32 @@ class CategoryViewStore {
 
     @action
     checkFields() {
-        if (this.clickedCategory.name.length > 2) {
+        this.errorMessage = {
+            name: null
+        };
+
+        if (this.clickedCategory.name.length < 3) {
+            this.errorMessage.name = "Neispravna duljina naziva kategorije!";
+        }
+        if (this.categoryNameExist()) {
+            this.errorMessage.name = "Kategorija s istim nazivom već postoji!";
+        }
+        
+        if (this.errorMessage.name == null) {
             this.isSubmitDisabled = false;
         }
         else {
             this.isSubmitDisabled = true;
         }
+    }
+
+    @action
+    categoryNameExist() {
+        if (this.clickedCategory.name.length > 0) {
+            let filteredCategories = this.allData.filter(category => category.id !== this.clickedCategory.id);
+            return filteredCategories.findIndex(category => category.name.toLowerCase() == this.clickedCategory.name.toLowerCase()) !== -1;
+        }
+        return false;
     }
 
 }

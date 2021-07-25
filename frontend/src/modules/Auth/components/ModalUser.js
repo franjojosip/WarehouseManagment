@@ -4,7 +4,7 @@ import { Form, Button, Dropdown, DropdownButton } from 'react-bootstrap';
 import "../../../common/styles/Modal.css";
 
 
-export default function ModalUser({ modalTarget, roles, onSubmit, fname, lname, email, phone, password, role_name, onRoleChange, onFirstNameChange, onLastNameChange, onEmailChange, onPhoneChange, onPasswordChange, isSubmitDisabled }) {
+export default function ModalUser({ modalTarget, roles, onSubmit, fname, lname, email, phone, password, role_name, onRoleChange, onFirstNameChange, onLastNameChange, onEmailChange, onPhoneChange, onPasswordChange, isSubmitDisabled, errorMessage }) {
 
   let submitClassName = "";
   let modalTitle = "";
@@ -29,15 +29,6 @@ export default function ModalUser({ modalTarget, roles, onSubmit, fname, lname, 
     submitText = "Obriši";
     isDisabled = true;
   }
-  const config = {
-    rules: [
-      {
-        type: 'object',
-        required: true,
-        message: "Unesite vrijednost u polje",
-      },
-    ],
-  };
 
   return (
     <div className="modal fade" id={modalTarget} tabIndex="-1" aria-labelledby="modalTarget" aria-hidden="true">
@@ -56,13 +47,19 @@ export default function ModalUser({ modalTarget, roles, onSubmit, fname, lname, 
                 autoFocus
                 type="text"
                 value={fname}
-                minLength="4"
-                required
-                {...config}
+                minLength="2"
                 placeholder="Unesite ime"
                 onChange={(e) => onFirstNameChange(e.target.value)}
                 disabled={isDisabled}
               />
+              <div hidden={isDisabled || !isSubmitDisabled}>
+                <p style={{ color: "red" }}>
+                  {errorMessage.fname ?
+                    errorMessage.fname
+                    : null
+                  }
+                </p>
+              </div>
             </Form.Group>
             <Form.Group size="md" controlId="lname">
               <Form.Label>Prezime *</Form.Label>
@@ -70,13 +67,19 @@ export default function ModalUser({ modalTarget, roles, onSubmit, fname, lname, 
                 autoFocus
                 type="text"
                 value={lname}
-                minLength="4"
-                required
-                {...config}
+                minLength="2"
                 placeholder="Unesite prezime"
                 onChange={(e) => onLastNameChange(e.target.value)}
                 disabled={isDisabled}
               />
+              <div hidden={isDisabled || !isSubmitDisabled}>
+                <p style={{ color: "red" }}>
+                  {errorMessage.lname ?
+                    errorMessage.lname
+                    : null
+                  }
+                </p>
+              </div>
             </Form.Group>
             <Form.Group size="md" controlId="email">
               <Form.Label>Email *</Form.Label>
@@ -85,12 +88,18 @@ export default function ModalUser({ modalTarget, roles, onSubmit, fname, lname, 
                 type="email"
                 value={email}
                 minLength="4"
-                required
-                {...config}
                 placeholder="Unesite email"
                 onChange={(e) => onEmailChange(e.target.value)}
                 disabled={isDisabled}
               />
+              <div hidden={isDisabled || !isSubmitDisabled}>
+                <p style={{ color: "red" }}>
+                  {errorMessage.email ?
+                    errorMessage.email
+                    : null
+                  }
+                </p>
+              </div>
             </Form.Group>
             <Form.Group size="md" controlId="phone">
               <Form.Label>Broj mobitela *</Form.Label>
@@ -100,36 +109,42 @@ export default function ModalUser({ modalTarget, roles, onSubmit, fname, lname, 
                 value={phone}
                 minLength="6"
                 maxLength="10"
-                required
-                {...config}
                 placeholder="Unesite broj mobitela"
                 onChange={(e) => onPhoneChange(e.target.value)}
                 disabled={isDisabled}
               />
+              <div hidden={isDisabled || !isSubmitDisabled}>
+                <p style={{ color: "red" }}>
+                  {errorMessage.phone ?
+                    errorMessage.phone
+                    : null
+                  }
+                </p>
+              </div>
             </Form.Group>
-            <Form.Group size="md" controlId="password">
-              <Form.Label>Lozinka *</Form.Label>
-              {
-                isDisabled ?
-                  <Form.Control
-                    type="password"
-                    value={password}
-                    disabled={isDisabled}
-                  />
-                  :
+            {
+              isCreate ?
+                <Form.Group size="md" controlId="password">
+                  <Form.Label>Lozinka *</Form.Label>
                   <Form.Control
                     autoFocus
                     type="text"
                     value={password}
-                    minLength="4"
-                    required
-                    {...config}
+                    minLength="6"
                     placeholder="Unesite lozinku"
                     onChange={(e) => onPasswordChange(e.target.value)}
                   />
-              }
-
-            </Form.Group>
+                  <div hidden={isDisabled || !isSubmitDisabled}>
+                    <p style={{ color: "red" }}>
+                      {errorMessage.password ?
+                        errorMessage.password
+                        : null
+                      }
+                    </p>
+                  </div>
+                </Form.Group>
+                : null
+            }
             <Form.Group size="md" controlId="role_name">
               <Form.Label>Uloga *</Form.Label>
               {
@@ -140,21 +155,24 @@ export default function ModalUser({ modalTarget, roles, onSubmit, fname, lname, 
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="customDropdown" variant="secondary" title={role_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                  <DropdownButton id="customDropdown" variant="secondary" title={role_name ? role_name : "Odaberi ulogu"} style={{ marginBottom: 10 }} disabled={isDisabled} required>
                     {roles.map((role) => {
                       return <Dropdown.Item key={role.role_id} onSelect={() => onRoleChange(role)}>{role.role_name}</Dropdown.Item>;
                     })}
                   </DropdownButton>
               }
+              <div hidden={isDisabled || !isSubmitDisabled}>
+                <p style={{ color: "red" }}>
+                  {errorMessage.role ?
+                    errorMessage.role
+                    : null
+                  }
+                </p>
+              </div>
             </Form.Group>
-            <div hidden={isDisabled || !isSubmitDisabled}>
-              <p style={{ color: "red" }}>
-                Provjerite sva polja !!!
-              </p>
-            </div>
             <div className="modal-footer" style={{ padding: 0 }}>
               <Button className="btn btn-primary" data-dismiss="modal">Odustani</Button>
-              <Button type="submit" disabled={isSubmitDisabled} className={submitClassName} onClick={(e) => { e.preventDefault(); onSubmit() }}>{submitText}</Button>
+              <Button type="submit" data-dismiss="modal" disabled={isSubmitDisabled && !isDisabled} className={submitClassName} onClick={(e) => { e.preventDefault(); onSubmit() }}>{submitText}</Button>
             </div>
           </Form>
         </div>
