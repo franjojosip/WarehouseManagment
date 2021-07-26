@@ -125,31 +125,31 @@ class ProductViewStore {
 
     @action
     async onDeleteClick() {
-        await this.showLoader();
+        this.showLoader();
         let response = await (this.dataStore.delete(this.clickedProduct.id));
         this.processData(response);
-        this.hideLoader();
+        await this.hideLoader();
     }
 
     @action
     async onEditClick() {
-        await this.showLoader();
+        this.showLoader();
         let response = await (this.dataStore.update(this.clickedProduct));
         this.processData(response);
-        this.hideLoader();
+        await this.hideLoader();
     }
 
     @action
     async onCreateClick() {
-        await this.showLoader();
+        this.showLoader();
         let response = await (this.dataStore.create(this.clickedProduct));
         this.processData(response);
-        this.hideLoader();
+        await this.hideLoader();
     }
 
     @action
     async onFind() {
-        await this.showLoader();
+        this.showLoader();
         let response = await (this.dataStore.get())
         if (response.error) {
             toast.error(response.error, {
@@ -171,7 +171,7 @@ class ProductViewStore {
             }
         }
         this.setPagination();
-        this.hideLoader();
+        await this.hideLoader();
     };
 
     @action
@@ -273,9 +273,9 @@ class ProductViewStore {
                 category_id: data.category_id,
                 category_name: data.category_name,
                 subcategory_id: data.subcategory_id,
-                subcategory_name: data.subcategory_name,
+                subcategory_name: data.subcategory_name ? data.subcategory_name : "",
                 packaging_id: data.packaging_id,
-                packaging_name: data.packaging_name
+                packaging_name: data.packaging_name ? data.packaging_name : ""
             };
             this.filteredSubcategories = this.subcategories.filter(subcategory => subcategory.category_id === data.category_id);
             this.checkFields();

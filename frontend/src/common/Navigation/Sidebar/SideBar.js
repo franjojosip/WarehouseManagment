@@ -14,7 +14,7 @@ class SideBar extends React.Component {
         const { selectedRoute, onNavigate } = this.props.viewStore;
 
         let textStyle = {
-            color: "white",
+            color: "black",
             textAlign: "center",
             marginTop: 10
         };
@@ -31,7 +31,7 @@ class SideBar extends React.Component {
                 <SideNav.Nav defaultSelected={selectedRoute}>
                     <NavItem eventKey="home">
                         <NavIcon>
-                            <i className="fa fa-fw fa-home" style={{ color: "white", fontSize: '1.75em' }} />
+                            <i className="fa fa-fw fa-home" style={{ fontSize: '1.75em' }} />
                         </NavIcon>
                         <NavText className="dropdown-toggle" style={textStyle}>
                             Naslovnica
@@ -39,7 +39,7 @@ class SideBar extends React.Component {
                     </NavItem>
                     <NavItem eventKey="warehouses">
                         <NavIcon>
-                            <i className="fa fa-fw fa-warehouse" style={{ color: "white", fontSize: '1.75em' }} />
+                            <i className="fa fa-fw fa-warehouse" style={{ fontSize: '1.75em' }} />
                         </NavIcon>
                         <NavText style={textStyle}>
                             Skladište
@@ -54,10 +54,15 @@ class SideBar extends React.Component {
                                 Stanje Skladišta
                             </NavText>
                         </NavItem>
+                        <NavItem eventKey="entry">
+                            <NavText style={textStyle}>
+                                Spremanje u skladište
+                            </NavText>
+                        </NavItem>
                     </NavItem>
                     <NavItem eventKey="products">
                         <NavIcon>
-                            <i className="fa fa-fw fa-boxes" style={{ color: "white", fontSize: '1.75em' }} />
+                            <i className="fa fa-fw fa-boxes" style={{ fontSize: '1.75em' }} />
                         </NavIcon>
                         <NavText style={textStyle}>
                             Proizvodi
@@ -85,7 +90,7 @@ class SideBar extends React.Component {
                     </NavItem>
                     <NavItem eventKey="cities">
                         <NavIcon>
-                            <i className="fa fa-fw fa-city" style={{ color: "white", fontSize: '1.75em' }} />
+                            <i className="fa fa-fw fa-city" style={{ fontSize: '1.75em' }} />
                         </NavIcon>
                         <NavText style={textStyle}>
                             Gradovi
@@ -103,7 +108,7 @@ class SideBar extends React.Component {
                     </NavItem>
                     <NavItem eventKey="user">
                         <NavIcon>
-                            <i className="fa fa-fw fa-users" style={{ color: "white", fontSize: '1.75em' }} />
+                            <i className="fa fa-fw fa-users" style={{ fontSize: '1.75em' }} />
                         </NavIcon>
                         <NavText style={textStyle}>
                             Korisnici
@@ -111,7 +116,7 @@ class SideBar extends React.Component {
                     </NavItem>
                     <NavItem eventKey="reciept">
                         <NavIcon>
-                            <i className="fa fa-fw fa-receipt" style={{ color: "white", fontSize: '1.75em' }} />
+                            <i className="fa fa-fw fa-receipt" style={{ fontSize: '1.75em' }} />
                         </NavIcon>
                         <NavText style={textStyle}>
                             Preuzimanja
@@ -119,7 +124,7 @@ class SideBar extends React.Component {
                     </NavItem>
                     <NavItem eventKey="stocktaking">
                         <NavIcon>
-                            <i className="fa fa-fw fa-cubes" style={{ color: "white", fontSize: '1.75em' }} />
+                            <i className="fa fa-fw fa-cubes" style={{ fontSize: '1.75em' }} />
                         </NavIcon>
                         <NavText style={textStyle}>
                             Inventura
@@ -127,7 +132,7 @@ class SideBar extends React.Component {
                     </NavItem>
                     <NavItem eventKey="notifications">
                         <NavIcon>
-                            <i className="fa fa-fw fa-bell" style={{ color: "white", fontSize: '1.75em' }} />
+                            <i className="fa fa-fw fa-bell" style={{ fontSize: '1.75em' }} />
                         </NavIcon>
                         <NavText style={textStyle}>
                             Obavijesti

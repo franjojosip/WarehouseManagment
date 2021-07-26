@@ -1,11 +1,11 @@
+import Multiselect from "multiselect-react-dropdown";
 import React from "react";
 import { Form, Button, Dropdown, DropdownButton } from 'react-bootstrap';
-import Multiselect from 'multiselect-react-dropdown';
 
 import "../../../common/styles/Modal.css";
 
 
-export default function ModalWarehouse({ modalTarget, users, cities, selectedUsers, locations, onSubmit, name, city_name, location_name, onNameChange, onCityChange, onLocationChange, isSubmitDisabled, onSelect, onRemove }) {
+export default function ModalWarehouse({ modalTarget, errorMessage, users, cities, selectedUsers, locations, onSubmit, name, city_name, location_name, onNameChange, onCityChange, onLocationChange, isSubmitDisabled, onSelect, onRemove }) {
 
   let submitClassName = "";
   let modalTitle = "";
@@ -28,15 +28,6 @@ export default function ModalWarehouse({ modalTarget, users, cities, selectedUse
     submitText = "Obriši";
     isDisabled = true;
   }
-  const config = {
-    rules: [
-      {
-        type: 'object',
-        required: true,
-        message: "Unesite vrijednost u polje",
-      },
-    ],
-  };
 
   let warehouseUsers = selectedUsers.map((user) => { return { name: user.name, id: user.id } });
 
@@ -50,6 +41,7 @@ export default function ModalWarehouse({ modalTarget, users, cities, selectedUse
       textWeight: "500"
     }
   };
+
 
   return (
     <div className="modal fade" id={modalTarget} tabIndex="-1" aria-labelledby="modalTarget" aria-hidden="true">
@@ -69,12 +61,18 @@ export default function ModalWarehouse({ modalTarget, users, cities, selectedUse
                 type="text"
                 value={name}
                 minLength="5"
-                required
-                {...config}
                 placeholder="Unesite naziv skladišta"
                 onChange={(e) => onNameChange(e.target.value)}
                 disabled={isDisabled}
               />
+              <div hidden={isDisabled || !isSubmitDisabled}>
+                <p style={{ color: "red" }}>
+                  {errorMessage.name ?
+                    errorMessage.name
+                    : null
+                  }
+                </p>
+              </div>
             </Form.Group>
             <Form.Group size="md" controlId="city_name">
               <Form.Label>Naziv Grada *</Form.Label>
@@ -86,12 +84,20 @@ export default function ModalWarehouse({ modalTarget, users, cities, selectedUse
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="customDropdown" variant="secondary" title={city_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                  <DropdownButton id="customDropdown" variant="secondary" title={city_name ? city_name : "Odaberi grad"} style={{ marginBottom: 10 }} disabled={isDisabled} required>
                     {cities.map((city) => {
                       return <Dropdown.Item key={city.city_id} onSelect={() => onCityChange(city)}>{city.city_name}</Dropdown.Item>;
                     })}
                   </DropdownButton>
               }
+              <div hidden={isDisabled || !isSubmitDisabled}>
+                <p style={{ color: "red" }}>
+                  {errorMessage.city ?
+                    errorMessage.city
+                    : null
+                  }
+                </p>
+              </div>
             </Form.Group>
             <Form.Group size="md" controlId="location_name">
               <Form.Label>Naziv Lokacije *</Form.Label>
@@ -103,35 +109,46 @@ export default function ModalWarehouse({ modalTarget, users, cities, selectedUse
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="customDropdown" variant="secondary" title={location_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                  <DropdownButton id="customDropdown" variant="secondary" title={location_name ? location_name : "Odaberi lokaciju"} style={{ marginBottom: 10 }} disabled={isDisabled || locations.length == 0} required>
                     {locations.map((location) => {
                       return <Dropdown.Item key={location.location_id} onSelect={() => onLocationChange(location)}>{location.location_name}</Dropdown.Item>;
                     })}
                   </DropdownButton>
               }
+              <div hidden={isDisabled || !isSubmitDisabled}>
+                <p style={{ color: "red" }}>
+                  {errorMessage.location ?
+                    errorMessage.location
+                    : null
+                  }
+                </p>
+              </div>
             </Form.Group>
             <Form.Group size="md" controlId="workers">
               <Form.Label>Popis radnika</Form.Label>
-              <Multiselect
-                options={users}
-                selectedValues={warehouseUsers}
-                onSelect={onSelect}
-                onRemove={onRemove}
-                placeholder="Odaberite radnike"
-                displayValue="name"
-                closeIcon="circle2"
-                style={multiSelectDropdownStyle}
-                disable={isDisabled}
-              />
+              {
+                isDisabled ?
+                  <Form.Control
+                    type="text"
+                    value={warehouseUsers.map(user => user.name).join(", ")}
+                    disabled={true}
+                  />
+                  :
+                  <Multiselect
+                    options={users}
+                    selectedValues={warehouseUsers}
+                    onSelect={onSelect}
+                    onRemove={onRemove}
+                    placeholder="Odaberite radnike"
+                    displayValue="name"
+                    closeIcon="circle2"
+                    style={multiSelectDropdownStyle}
+                  />
+              }
             </Form.Group>
-            <div hidden={isDisabled || !isSubmitDisabled}>
-              <p style={{ color: "red" }}>
-                Provjerite sva polja !!!
-              </p>
-            </div>
             <div className="modal-footer" style={{ padding: 0 }}>
               <Button className="btn btn-primary" data-dismiss="modal">Odustani</Button>
-              <Button type="submit" disabled={isSubmitDisabled} className={submitClassName} onClick={(e) => { e.preventDefault(); onSubmit() }}>{submitText}</Button>
+              <Button type="submit" data-dismiss="modal" disabled={isSubmitDisabled && !isDisabled} className={submitClassName} onClick={(e) => { e.preventDefault(); onSubmit() }}>{submitText}</Button>
             </div>
           </Form>
         </div>

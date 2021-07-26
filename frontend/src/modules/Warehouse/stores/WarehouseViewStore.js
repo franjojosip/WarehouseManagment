@@ -1,8 +1,12 @@
 import { action, observable } from "mobx";
+import { toast } from 'react-toastify';
 
 class WarehouseViewStore {
     constructor(rootStore) {
-        this.dataStore = rootStore.packagingModuleStore.packagingDataStore;
+        this.dataStore = rootStore.warehouseModuleStore.warehouseDataStore;
+        this.cityDataStore = rootStore.cityModuleStore.cityDataStore;
+        this.locationDataStore = rootStore.locationModuleStore.locationDataStore;
+        this.authDataStore = rootStore.authenticationModuleStore.authenticationDataStore;
         this.routerStore = rootStore.routerStore;
 
         this.onFind = this.onFind.bind(this);
@@ -20,12 +24,33 @@ class WarehouseViewStore {
         this.onCityChange = this.onCityChange.bind(this);
         this.onLocationChange = this.onLocationChange.bind(this);
         this.onUserSelect = this.onUserSelect.bind(this);
-        this.onUserRemove = this.onUserRemove.bind(this);
+        this.onUserRemove = this.onUserRemove.bind(this);        
+
+        this.onMultiSelect = this.onMultiSelect.bind(this);
+
+        this.delay = this.delay.bind(this);
+        this.showLoader = this.showLoader.bind(this);
+        this.hideLoader = this.hideLoader.bind(this);
+        this.processData = this.processData.bind(this);
+
+        this.findCities = this.findCities.bind(this);
+        this.findLocations = this.findLocations.bind(this);
+        this.findUsers = this.findUsers.bind(this);
+        this.warehouseNameExist = this.warehouseNameExist.bind(this);
 
         this.setPagination();
+        this.findCities();
+        this.findLocations();
+        this.findUsers();
+        this.onFind();
     }
 
+    onMultiSelect(event){
+        this.clickedWarehouse.users = event.value;
+    }
+    
     @observable isLoaderVisible = false;
+    @observable isSubmitDisabled = true;
 
     @observable clickedWarehouse = {
         id: "",
@@ -37,8 +62,11 @@ class WarehouseViewStore {
         users: []
     };
 
-    @observable isSubmitDisabled = true;
-
+    @observable errorMessage = {
+        name: null,
+        city: null,
+        location: null
+    };
 
     @observable page = 1;
     @observable pageSize = 5;
@@ -48,106 +76,191 @@ class WarehouseViewStore {
     @observable rows = [];
 
     title = "Skladišta";
-    columns = ['Naziv skladišta', 'Naziv lokacije', 'Radnici', 'Izmjena', 'Brisanje'];
+    columns = ['Naziv skladišta', 'Naziv lokacije', 'Naziv grada', 'Radnici', 'Izmjena', 'Brisanje'];
 
-    //TESTNI PODATCI
-    allData = [
-        { id: 1, name: "MARTINA DIVALTA 120", location_id: 1, location_name: "Lokacija11", city_id: 1, city_name: "city1", users: [{ name: 'KORISNIK 1', id: 1 }, { name: 'KORISNIK 2️', id: 2 }] },
-        { id: 2, name: "Testna ulica 11", location_id: 2, location_name: "Lokacija12", city_id: 1, city_name: "city1",users: [{ name: 'KORISNIK 1', id: 1 }, { name: 'KORISNIK 2️', id: 2 }] },
-        { id: 3, name: "Sokovi", location_id: 3, location_name: "Lokacija13", city_id: 1, city_name: "city1",users: [{ name: 'KORISNIK 1', id: 1 }, { name: 'KORISNIK 2️', id: 2 }] },
-        { id: 4, name: "Cigarete", location_id: 2, location_name: "Lokacija14", city_id: 1, city_name: "city1",users: [{ name: 'KORISNIK 1', id: 1 }, { name: 'KORISNIK 2️', id: 2 }] },
-        { id: 5, name: "Koverta", location_id: 3, location_name: "Lokacija15", city_id: 1, city_name: "city1",users: [{ name: 'KORISNIK 1', id: 1 }, { name: 'KORISNIK 2️', id: 2 }] },
-        { id: 6, name: "Tst2", location_id: 1, location_name: "Lokacija16", city_id: 1, city_name: "city1",users: [{ name: 'KORISNIK 1', id: 1 }, { name: 'KORISNIK 2️', id: 2 }] },
-        { id: 7, name: "Test3", location_id: 4, location_name: "Lokacija17", city_id: 1, city_name: "city1",users: [{ name: 'KORISNIK 1', id: 1 }, { name: 'KORISNIK 2️', id: 2 }] },
-        { id: 8, name: "Test4", location_id: 4, location_name: "Lokacija19", city_id: 1, city_name: "city1",users: [{ name: 'KORISNIK 1', id: 1 }, { name: 'KORISNIK 2️', id: 2 }] },
-        { id: 9, name: "Tst5", location_id: 2, location_name: "Lokacija112", city_id: 1, city_name: "city1",users: [{ name: 'KORISNIK 1', id: 1 }, { name: 'KORISNIK 2️', id: 2 }] },
-        { id: 10, name: "Test6", location_id: 2, location_name: "Lokacija1124", city_id: 1, city_name: "city1",users: [{ name: 'KORISNIK 1', id: 1 }, { name: 'KORISNIK 2️', id: 2 }] }
-    ];
+    allData = [];
 
-    cities = [{
-        city_id: 1,
-        city_name: "city1"
-    }, {
-        city_id: 2,
-        city_name: "city2"
-    }, {
-        city_id: 3,
-        city_name: "city3"
-    }, {
-        city_id: 4,
-        city_name: "city4"
-    }
-    ];
-    
+    @observable cities = [];
+    @observable locations = []
+    @observable users = [];
+    @observable dropdownUserList = [];
+
     @observable filteredLocations = [];
 
-    locations = [{
-        location_id: 1,
-        location_name: "Lokacija1",
-        city_id: 1,
-        city_name: "city1"
-    }, {
-        location_id: 2,
-        location_name: "Lokacija12",
-        city_id: 2,
-        city_name: "city2"
-    }, {
-        location_id: 3,
-        location_name: "Lokacija13",
-        city_id: 1,
-        city_name: "city1"
-    }, {
-        location_id: 4,
-        location_name: "Lokacija14",
-        city_id: 2,
-        city_name: "city2"
+    @action
+    showLoader() {
+        this.isLoaderVisible = true;
     }
-    ];
-
-    users = [{ name: 'Martin Matić ', id: 1 }, { name: 'KORISNIK 2️', id: 2 },
-    { name: 'KORISNIK 3', id: 3 }, { name: 'KORISNIK 4', id: 4 },
-    { name: 'KORISNIK 5', id: 5 }, { name: 'KORISNIK 6', id: 6 }];
 
     @action
-    onDeleteClick() {
-        //this.isLoaderVisible = true; //prikaži loader        
-        /*
-        this.deleteResult = await (this.dataStore.delete(this.itemToDeleteId));
-        if (this.deleteResult) {
-            this.isDeleting = false;
-            toaster.notify('Deletion successful!', {
-                duration: 2000
-            })
-            this.onFind();
-        } else {
-            toaster.notify('Deletion failed!', {
-                duration: 2000
-            })
+    async hideLoader() {
+        await this.delay(500);
+        this.isLoaderVisible = false;
+    }
+
+    @action
+    delay(delayInMs) {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve(2);
+            }, delayInMs);
+        });
+    }
+
+    @action
+    async processData(response) {
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
         }
-    */
-        //this.isLoaderVisible = false; //sakrij loader
-        console.log(this.clickedWarehouse)
+        else {
+            toast.success(response.status, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+            this.onFind();
+        }
     }
 
     @action
-    onEditClick() {
-        //EDIT DATA
-        console.log(this.clickedWarehouse)
+    async onDeleteClick() {
+        this.showLoader();
+        let response = await (this.dataStore.delete(this.clickedWarehouse.id));
+        this.processData(response);
+        await this.hideLoader();
     }
 
     @action
-    onCreateClick() {
-        //CREATE DATA
-        console.log(this.clickedWarehouse)
+    async onEditClick() {
+        this.showLoader();
+        let response = await (this.dataStore.update(this.clickedWarehouse));
+        this.processData(response);
+        await this.hideLoader();
+    }
+
+    @action
+    async onCreateClick() {
+        this.showLoader();
+        let response = await (this.dataStore.create(this.clickedWarehouse));
+        this.processData(response);
+        await this.hideLoader();
     }
 
     @action
     async onFind() {
-        //FIND Warehouse
+        this.showLoader();
+        let response = await (this.dataStore.get())
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+            this.allData = [{ id: "", name: "Nema podataka", city_id: "", city_name: "", location_id: "", location_name: "", users: [] }];
+        }
+        else {
+            if (response.warehouses.length > 0) {
+                this.allData = response.warehouses;
+            }
+            else {
+                this.allData = [{ id: "", name: "Nema podataka", city_id: "", city_name: "", location_id: "", location_name: "", users: [] }];
+            }
+        }
+        this.setPagination();
+        await this.hideLoader();
     };
 
     @action
+    async findCities() {
+        let response = await (this.cityDataStore.get())
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+        }
+        else {
+            if (response.cities.length > 0) {
+                this.cities = response.cities.map((city) => {
+                    return { city_id: city.id, city_name: city.name }
+                });
+            }
+        }
+    }
+
+    @action
+    async findLocations() {
+        let response = await (this.locationDataStore.get())
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+        }
+        else {
+            if (response.locations.length > 0) {
+                this.locations = response.locations.map((location) => {
+                    return {
+                        location_id: location.id,
+                        location_name: location.name,
+                        city_id: location.city_id,
+                        city_name: location.city_name
+                    }
+                });
+            }
+        }
+    }
+
+    @action
+    async findUsers() {
+        let response = await (this.authDataStore.get())
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+        }
+        else {
+            if (response.users.length > 0) {
+                this.users = response.users.map((user) => {
+                    return { id: user.id, name: user.fname + " " + user.lname }
+                });
+            }
+        }
+    }
+
+    @action
     onWarehouseClicked(data, isCreate) {
+        this.errorMessage = {
+            name: null,
+            city: null,
+            location: null
+        };
         if (isCreate) {
             this.clickedWarehouse = {
                 id: "",
@@ -155,9 +268,11 @@ class WarehouseViewStore {
                 location_id: "",
                 location_name: "Odaberi lokaciju",
                 city_id: "",
-                city_name: "Odaberi lokaciju",
+                city_name: "Odaberi grad",
                 users: []
             };
+            this.filteredLocations = [];
+            this.isSubmitDisabled = true;
         }
         else {
             this.clickedWarehouse = {
@@ -167,16 +282,16 @@ class WarehouseViewStore {
                 location_name: data.location_name,
                 city_id: data.city_id,
                 city_name: data.city_name,
-                users: data.users
+                users: data.users ? data.users : []
             };
+            this.filteredLocations = this.locations.filter(location => location.city_id === data.city_id);
+            this.checkFields();
         }
-
-        this.checkFields();
     }
 
     @action
     setPagination(page) {
-        if (page) {
+        if (page != null) {
             this.page = page;
         }
         this.totalPages = Math.floor(this.allData.length / this.pageSize);
@@ -184,19 +299,14 @@ class WarehouseViewStore {
             this.totalPages = this.totalPages + 1;
         }
         this.previousEnabled = this.page > 1;
-        this.nextEnabled = Math.floor(this.allData.length / this.pageSize) > this.page;
+        this.nextEnabled = this.page < this.totalPages;
 
-        this.loadPageData()
+        this.loadPageData();
     }
 
     @action
     loadPageData() {
-        if (this.allData.length === 0) {
-            this.rows = [{ id: -1, name: "Nema podataka" }];
-        }
-        else {
-            this.rows = this.allData.slice((this.page - 1) * this.pageSize, this.page * this.pageSize)
-        }
+        this.rows = this.allData.slice((this.page - 1) * this.pageSize, this.page * this.pageSize);
     }
 
     @action
@@ -216,10 +326,11 @@ class WarehouseViewStore {
 
     @action
     onChangePageSize(pageSize) {
-        this.pageSize = pageSize;
-        this.setPagination();
+        if (this.pageSize != pageSize) {
+            this.pageSize = pageSize;
+            this.setPagination(1);
+        }
     }
-
 
     @action
     onNameChange(value) {
@@ -232,9 +343,11 @@ class WarehouseViewStore {
         this.clickedWarehouse.city_id = value.city_id;
         this.clickedWarehouse.city_name = value.city_name;
         this.filteredLocations = this.locations.filter(element => element.city_id == this.clickedWarehouse.city_id);
-        if(this.filteredLocations.length === 0){
-            this.clickedWarehouse.location_id = -1;
-            this.clickedWarehouse.location_name = "Odaberi Lokaciju";
+
+        let location = this.locations.find(location => location.location_id == this.clickedWarehouse.location_id);
+        if (this.filteredLocations.length === 0 || location && location.city_id != this.clickedWarehouse.city_id) {
+            this.clickedWarehouse.location_id = "";
+            this.clickedWarehouse.location_name = "";
         }
         this.checkFields();
     }
@@ -249,12 +362,39 @@ class WarehouseViewStore {
 
     @action
     checkFields() {
-        if (this.clickedWarehouse.name.length > 2  && this.clickedWarehouse.city_id != null && this.clickedWarehouse.location_id != null) {
+        this.errorMessage = {
+            name: null,
+            city: null,
+            location: null
+        };
+
+        if (this.warehouseNameExist()) {
+            this.errorMessage.name = "Skladište s istim nazivom već postoji!";
+        }
+        if (this.clickedWarehouse.name.length < 5) {
+            this.errorMessage.name = "Neispravna duljina naziva skladišta!";
+        }
+        if (this.clickedWarehouse.city_id.toString() == "") {
+            this.errorMessage.city = "Odaberite grad!";
+        }
+        if (this.clickedWarehouse.location_id.toString() == "") {
+            this.errorMessage.location = "Odaberite lokaciju!";
+        }
+        if (this.errorMessage.name == null && this.errorMessage.city == null && this.errorMessage.location == null) {
             this.isSubmitDisabled = false;
         }
         else {
             this.isSubmitDisabled = true;
         }
+    }
+
+    @action
+    warehouseNameExist() {
+        if (this.clickedWarehouse.name.length > 0) {
+            let filteredWarehouses = this.allData.filter(product => product.id !== this.clickedWarehouse.id);
+            return filteredWarehouses.findIndex(warehouse => warehouse.name.toLowerCase() == this.clickedWarehouse.name.toLowerCase()) !== -1;
+        }
+        return false;
     }
 
     @action

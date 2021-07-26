@@ -102,31 +102,31 @@ class CategoryViewStore {
 
     @action
     async onDeleteClick() {
-        await this.showLoader();
+        this.showLoader();
         let response = await (this.dataStore.delete(this.clickedCategory.id));
         this.processData(response);
-        this.hideLoader();
+        await this.hideLoader();
     }
 
     @action
     async onEditClick() {
-        await this.showLoader();
+        this.showLoader();
         let response = await (this.dataStore.update(this.clickedCategory));
         this.processData(response);
-        this.hideLoader();
+        await this.hideLoader();
     }
 
     @action
     async onCreateClick() {
-        await this.showLoader();
+        this.showLoader();
         let response = await (this.dataStore.create(this.clickedCategory));
         this.processData(response);
-        this.hideLoader();
+        await this.hideLoader();
     }
 
     @action
     async onFind() {
-        await this.showLoader();
+        this.showLoader();
         let response = await (this.dataStore.get())
         if (response.error) {
             toast.error(response.error, {
@@ -148,7 +148,7 @@ class CategoryViewStore {
             }
         }
         this.setPagination();
-        this.hideLoader();
+        await this.hideLoader();
     };
 
     @action

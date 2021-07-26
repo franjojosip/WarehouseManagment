@@ -4,7 +4,7 @@ import { Form, Button, Dropdown, DropdownButton } from 'react-bootstrap';
 import "../../../common/styles/Modal.css";
 
 
-export default function ModalStock({ modalTarget, cities, locations, warehouses, products, onSubmit, city_name, location_name, warehouse_name, product_name, quantity, min_quantity, onCityChange, onLocationChange, onWarehouseChange, onProductChange, onQuantityChange, onMinimumQuantityChange, isSubmitDisabled }) {
+export default function ModalStock({ modalTarget, errorMessage, cities, locations, warehouses, products, onSubmit, city_name, location_name, warehouse_name, product_name, quantity, min_quantity, onCityChange, onLocationChange, onWarehouseChange, onProductChange, onQuantityChange, onMinimumQuantityChange, isSubmitDisabled }) {
 
   let submitClassName = "";
   let modalTitle = "";
@@ -66,14 +66,21 @@ export default function ModalStock({ modalTarget, cities, locations, warehouses,
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="customDropdown" variant="secondary" title={city_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                  <DropdownButton id="customDropdown" variant="secondary" title={city_name ? city_name : "Odaberi grad"} style={{ marginBottom: 10 }} disabled={isDisabled} required>
                     {cities.map((city) => {
                       return <Dropdown.Item key={city.city_id} onSelect={() => onCityChange(city)}>{city.city_name}</Dropdown.Item>;
                     })}
                   </DropdownButton>
               }
+              <div hidden={isDisabled || !isSubmitDisabled}>
+                <p style={{ color: "red" }}>
+                  {errorMessage.city ?
+                    errorMessage.city
+                    : null
+                  }
+                </p>
+              </div>
             </Form.Group>
-
             <Form.Group size="md" controlId="location_name">
               <Form.Label>Lokacija *</Form.Label>
               {
@@ -84,12 +91,20 @@ export default function ModalStock({ modalTarget, cities, locations, warehouses,
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="customDropdown" variant="secondary" title={location_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                  <DropdownButton id="customDropdown" variant="secondary" title={location_name ? location_name : "Odaberi lokaciju"} style={{ marginBottom: 10 }} disabled={isDisabled || locations.length == 0} required>
                     {locations.map((location) => {
                       return <Dropdown.Item key={location.location_id} onSelect={() => onLocationChange(location)}>{location.location_name}</Dropdown.Item>;
                     })}
                   </DropdownButton>
               }
+              <div hidden={isDisabled || !isSubmitDisabled}>
+                <p style={{ color: "red" }}>
+                  {errorMessage.location ?
+                    errorMessage.location
+                    : null
+                  }
+                </p>
+              </div>
             </Form.Group>
             <Form.Group size="md" controlId="warehouse_name">
               <Form.Label>Skladište *</Form.Label>
@@ -101,12 +116,20 @@ export default function ModalStock({ modalTarget, cities, locations, warehouses,
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="customDropdown" variant="secondary" title={warehouse_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                  <DropdownButton id="customDropdown" variant="secondary" title={warehouse_name ? warehouse_name : "Odaberi skladište"} style={{ marginBottom: 10 }} disabled={isDisabled || warehouses.length == 0} required>
                     {warehouses.map((warehouse) => {
                       return <Dropdown.Item key={warehouse.warehouse_id} onSelect={() => onWarehouseChange(warehouse)}>{warehouse.warehouse_name}</Dropdown.Item>;
                     })}
                   </DropdownButton>
               }
+              <div hidden={isDisabled || !isSubmitDisabled}>
+                <p style={{ color: "red" }}>
+                  {errorMessage.warehouse ?
+                    errorMessage.warehouse
+                    : null
+                  }
+                </p>
+              </div>
             </Form.Group>
             <Form.Group size="md" controlId="product_name">
               <Form.Label>Naziv proizvoda *</Form.Label>
@@ -124,6 +147,14 @@ export default function ModalStock({ modalTarget, cities, locations, warehouses,
                     })}
                   </DropdownButton>
               }
+              <div hidden={isDisabled || !isSubmitDisabled}>
+                <p style={{ color: "red" }}>
+                  {errorMessage.product ?
+                    errorMessage.product
+                    : null
+                  }
+                </p>
+              </div>
             </Form.Group>
             <Form.Group size="md" controlId="quantity">
               <Form.Label>Količina *</Form.Label>
@@ -148,6 +179,14 @@ export default function ModalStock({ modalTarget, cities, locations, warehouses,
                     disabled={isDisabled}
                   />
               }
+              <div hidden={isDisabled || !isSubmitDisabled}>
+                <p style={{ color: "red" }}>
+                  {errorMessage.quantity ?
+                    errorMessage.quantity
+                    : null
+                  }
+                </p>
+              </div>
             </Form.Group>
             <Form.Group size="md" controlId="product_name">
               <Form.Label>Minimalna Količina *</Form.Label>
@@ -168,19 +207,22 @@ export default function ModalStock({ modalTarget, cities, locations, warehouses,
                     onChange={(e) => {
                       onMinimumQuantityChange(e.target.value);
                     }}
-                    placeholder="Unesite minimalnu količinu (minimalno 1)"
+                    placeholder="Unesite minimalnu količinu (1)"
                     disabled={isDisabled}
                   />
               }
+              <div hidden={isDisabled || !isSubmitDisabled}>
+                <p style={{ color: "red" }}>
+                  {errorMessage.min_quantity ?
+                    errorMessage.min_quantity
+                    : null
+                  }
+                </p>
+              </div>
             </Form.Group>
-            <div hidden={isDisabled || !isSubmitDisabled}>
-              <p style={{ color: "red" }}>
-                Provjerite sva polja !!!
-              </p>
-            </div>
             <div className="modal-footer" style={{ padding: 0 }}>
               <Button className="btn btn-primary" data-dismiss="modal">Odustani</Button>
-              <Button type="submit" disabled={isSubmitDisabled} className={submitClassName} onClick={(e) => { e.preventDefault(); onSubmit() }}>{submitText}</Button>
+              <Button type="submit" data-dismiss="modal" disabled={isSubmitDisabled && !isDisabled} className={submitClassName} onClick={(e) => { e.preventDefault(); onSubmit() }}>{submitText}</Button>
             </div>
           </Form>
         </div>

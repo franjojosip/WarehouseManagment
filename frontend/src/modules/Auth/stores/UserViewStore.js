@@ -125,31 +125,31 @@ class UserViewStore {
 
     @action
     async onDeleteClick() {
-        await this.showLoader();
+        this.showLoader();
         let response = await (this.dataStore.delete(this.clickedUser.id));
         this.processData(response);
-        this.hideLoader();
+        await this.hideLoader();
     }
 
     @action
     async onEditClick() {
-        await this.showLoader();
+        this.showLoader();
         let response = await (this.dataStore.update(this.clickedUser));
         this.processData(response);
-        this.hideLoader();
+        await this.hideLoader();
     }
 
     @action
     async onCreateClick() {
-        await this.showLoader();
+        this.showLoader();
         let response = await (this.dataStore.create(this.clickedUser));
         this.processData(response);
-        this.hideLoader();
+        await this.hideLoader();
     }
 
     @action
     async onFind() {
-        await this.showLoader();
+        this.showLoader();
         let response = await (this.dataStore.get())
         if (response.error) {
             toast.error(response.error, {
@@ -171,7 +171,7 @@ class UserViewStore {
             }
         }
         this.setPagination();
-        this.hideLoader();
+        await this.hideLoader();
     };
 
     @action
@@ -230,7 +230,6 @@ class UserViewStore {
                 role_id: data.role_id,
                 role_name: data.role_name
             };
-            console.log(data);
         }
     }
 

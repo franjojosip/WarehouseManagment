@@ -84,41 +84,49 @@ export default function ModalProduct({ modalTarget, errorMessage, categories, su
                 </p>
               </div>
             </Form.Group>
-            <Form.Group size="md" controlId="subcategory_name">
-              <Form.Label>Naziv Potkategorije</Form.Label>
-              {
-                isDisabled ?
-                  <Form.Control
-                    type="text"
-                    value={subcategory_name}
-                    disabled={isDisabled}
-                  />
-                  :
-                  <DropdownButton id="customDropdown" variant="secondary" title={subcategory_name ? subcategory_name : "Odaberi potkategoriju"} style={{ marginBottom: 10 }} disabled={isDisabled || subcategories.length == 0}>
-                    {subcategories.map((subcategory) => {
-                      return <Dropdown.Item key={"subcategory-" + subcategory.subcategory_id} onSelect={() => onSubcategoryChange(subcategory)}>{subcategory.subcategory_name}</Dropdown.Item>;
-                    })}
-                  </DropdownButton>
+            {subcategory_name == "" && isDisabled ?
+              null
+              :
+              <Form.Group size="md" controlId="subcategory_name">
+                <Form.Label>Naziv Potkategorije</Form.Label>
+                {
+                  isDisabled ?
+                    <Form.Control
+                      type="text"
+                      value={subcategory_name}
+                      disabled={isDisabled}
+                    />
+                    :
+                    <DropdownButton id="customDropdown" variant="secondary" title={subcategory_name ? subcategory_name : "Odaberi potkategoriju"} style={{ marginBottom: 10 }} disabled={isDisabled || subcategories.length == 0}>
+                      {subcategories.map((subcategory) => {
+                        return <Dropdown.Item key={"subcategory-" + subcategory.subcategory_id} onSelect={() => onSubcategoryChange(subcategory)}>{subcategory.subcategory_name}</Dropdown.Item>;
+                      })}
+                    </DropdownButton>
 
-              }
-            </Form.Group>
-            <Form.Group size="md" controlId="packaging_name">
-              <Form.Label>Naziv Ambalaže</Form.Label>
-              {
-                isDisabled ?
-                  <Form.Control
-                    type="text"
-                    value={packaging_name}
-                    disabled={isDisabled}
-                  />
-                  :
-                  <DropdownButton id="customDropdown" variant="secondary" title={packaging_name ? packaging_name : "Odaberi ambalažu"} style={{ marginBottom: 10 }} disabled={isDisabled}>
-                    {packagings.map((packaging) => {
-                      return <Dropdown.Item key={"packaging-" + packaging.packaging_id} onSelect={() => onPackagingChange(packaging)}>{packaging.packaging_name}</Dropdown.Item>;
-                    })}
-                  </DropdownButton>
-              }
-            </Form.Group>
+                }
+              </Form.Group>
+            }
+            {packaging_name == "" && isDisabled ?
+              null
+              :
+              <Form.Group size="md" controlId="packaging_name">
+                <Form.Label>Naziv Ambalaže</Form.Label>
+                {
+                  isDisabled ?
+                    <Form.Control
+                      type="text"
+                      value={packaging_name}
+                      disabled={isDisabled}
+                    />
+                    :
+                    <DropdownButton id="customDropdown" variant="secondary" title={packaging_name ? packaging_name : "Odaberi ambalažu"} style={{ marginBottom: 10 }} disabled={isDisabled}>
+                      {packagings.map((packaging) => {
+                        return <Dropdown.Item key={"packaging-" + packaging.packaging_id} onSelect={() => onPackagingChange(packaging)}>{packaging.packaging_name}</Dropdown.Item>;
+                      })}
+                    </DropdownButton>
+                }
+              </Form.Group>
+            }
             <div className="modal-footer" style={{ padding: 0 }}>
               <Button className="btn btn-primary" data-dismiss="modal">Odustani</Button>
               <Button type="submit" data-dismiss="modal" disabled={isSubmitDisabled && !isDisabled} className={submitClassName} onClick={(e) => { e.preventDefault(); onSubmit() }}>{submitText}</Button>
