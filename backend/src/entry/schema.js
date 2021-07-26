@@ -23,6 +23,10 @@ let entry = new Schema(
       type: Number,
       required: true,
     },
+    isSubmited: {
+      type: Boolean,
+      default: false
+    },
   },
   {
     timestamps: true

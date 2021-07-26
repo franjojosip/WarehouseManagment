@@ -2,7 +2,7 @@ const Subcategory = require("../schema");
 
 async function list(req, res) {
   try {
-    let subcategories = await Subcategory.find({}).populate("category_id", {name: 1});
+    let subcategories = await Subcategory.find({}).populate("category_id", { name: 1 });
     subcategories = subcategories.map((subcategory) => {
       return {
         id: subcategory.id,
@@ -27,11 +27,11 @@ function compare(a, b) {
   return 0;
 }
 
-function deepCompare(a, b){
-  if (a.category_name[0] ==  b.category_name[0] && a.name[0] < b.name[0]) {
+function deepCompare(a, b) {
+  if (a.category_name[0] == b.category_name[0] && a.name[0] < b.name[0]) {
     return -1;
   }
-  if (a.category_name[0] ==  b.category_name[0] && a.name[0] > b.name[0]) {
+  if (a.category_name[0] == b.category_name[0] && a.name[0] > b.name[0]) {
     return 1;
   }
   return 0;

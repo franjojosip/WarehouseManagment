@@ -5,7 +5,7 @@ const Joi = require("joi");
 const serializer = Joi.object({
   name: Joi.string().required(),
   location_id: Joi.string().length(24).required(),
-  users: Joi.array().min(1).required(),
+  users: Joi.array(),
 });
 
 async function add(req, res) {
@@ -20,11 +20,13 @@ async function add(req, res) {
   }
 
   let isUserIDWrong = false;
-  users.forEach((user_id) => {
-    if (user_id.length != 24) {
-      isUserIDWrong = true;
-    }
-  });
+  if( result.value.users.length > 0){
+    result.value.users.forEach((user_id) => {
+      if (user_id.length != 24) {
+        isUserIDWrong = true;
+      }
+    });
+  }
   if (isUserIDWrong) {
     return res.status(400).json({ error: "Provjerite korisnike!" });
   }
@@ -32,7 +34,7 @@ async function add(req, res) {
   const newWarehouse = new Warehouse();
   newWarehouse.name = result.value.name;
   newWarehouse.location_id = result.value.location_id;
-  newWarehouse.users = result.value.users;
+  newWarehouse.user_ids = result.value.users;
 
   try {
     await newWarehouse.save();

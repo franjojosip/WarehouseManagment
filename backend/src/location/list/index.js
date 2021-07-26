@@ -2,7 +2,7 @@ const Location = require("../schema");
 
 async function list(req, res) {
   try {
-    let locations = await Location.find({}).populate("city_id", { name: 1 });
+    let locations = await Location.find({}).populate("city_id", { name: 1 }).sort({ city_name: 'asc'});
     locations = locations.map((location) => {
       return {
         id: location.id,
