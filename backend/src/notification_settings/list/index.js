@@ -1,8 +1,8 @@
-const NotificationType = require("../schema");
+const NotificationSetting = require("../schema");
 
 async function list(req, res) {
   try {
-    let types = await NotificationType.find({});
+    let types = await NotificationSetting.find({});
     types = types.map((type) => {
       return {
         id: type.id,

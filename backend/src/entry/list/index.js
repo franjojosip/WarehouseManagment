@@ -10,7 +10,6 @@ async function list(req, res) {
 
     entries = entries.map((entry) => {
 
-      console.log(entry);
       let product = products.find(product => product.id == entry.product_id.id);
       let location = locations.find(location => location.id == entry.warehouse_id.location_id);
 

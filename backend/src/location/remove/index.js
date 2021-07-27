@@ -2,7 +2,7 @@ const Location = require("../schema");
 const Entry = require("../../entry/schema");
 const Warehouse = require("../../warehouse/schema");
 const Stock = require("../../stock/schema");
-const Stocktaking = require("../../Stocktaking/schema");
+const Stocktaking = require("../../stocktaking/schema");
 
 async function remove(req, res) {
   try {

@@ -9,15 +9,20 @@ let notification_log = new Schema(
       ref: "notification",
       required: true,
     },
-    product_ids: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "product",
-      },
-    ],
-    user_id: {
-      type: Schema.Types.ObjectId,
-      ref: "user",
+    subject: {
+      type: String,
+      required: true
+    },
+    title: {
+      type: String,
+      required: true
+    },
+    email: {
+      type: String,
+      required: true,
+    },
+    html: {
+      type: String,
       required: true,
     },
   },

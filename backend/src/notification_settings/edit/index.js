@@ -1,4 +1,4 @@
-const NotificationType = require("../schema");
+const NotificationSetting = require("../schema");
 const Joi = require("joi");
 
 const serializer = Joi.object({
@@ -12,9 +12,9 @@ async function edit(req, res) {
       return res.status(400).json({ error: "Poslani su neispravni podatci!" });
     }
 
-    const type = await NotificationType.findById(req.params.id);
+    const type = await NotificationSetting.findById(req.params.id);
 
-    const typeExists = await NotificationType.findOne({ name: result.value.name });
+    const typeExists = await NotificationSetting.findOne({ name: result.value.name });
     if (typeExists) {
       return res.status(400).json({ error: "Tip notifikacije se već koristi!" });
     }
