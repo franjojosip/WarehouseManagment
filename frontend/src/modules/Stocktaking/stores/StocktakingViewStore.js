@@ -30,6 +30,7 @@ class StocktakingViewStore {
         this.onQuantityChange = this.onQuantityChange.bind(this);
         this.onClickedRow = this.onClickedRow.bind(this);
         this.groupData = this.groupData.bind(this);
+        this.checkProductExistInStocktaking = this.checkProductExistInStocktaking.bind(this);
 
         this.delay = this.delay.bind(this);
         this.showLoader = this.showLoader.bind(this);
@@ -50,6 +51,8 @@ class StocktakingViewStore {
 
     @observable isLoaderVisible = false;
     @observable isSubmitDisabled = true;
+    @observable clickedStocktakingProductId = "";
+    @observable clickedStocktakingDate = "";
 
     @observable clickedStocktaking = {
         id: "",
@@ -221,7 +224,7 @@ class StocktakingViewStore {
         }
         else {
             if (response.stocktakings.length > 0) {
-                response.stocktakings.forEach(item => item.date_created = moment(new Date(item.date_created)).format('YYYY/MM/DD'))
+                response.stocktakings.forEach(item => item.date_created = moment(new Date(item.date_created)).format('YYYY/MM'))
                 this.allData = response.stocktakings;
                 this.groupData();
             }
@@ -374,6 +377,8 @@ class StocktakingViewStore {
             min_quantity: null
         };
         if (isCreate) {
+            this.clickedStocktakingProductId = "";
+            this.clickedStocktakingDate = moment().format('YYYY/MM');
             this.clickedStocktaking = {
                 id: "",
                 city_id: "",
@@ -398,6 +403,9 @@ class StocktakingViewStore {
             this.filteredWarehouses = [];
         }
         else {
+            this.clickedStocktakingProductId = data.product_id;
+            this.clickedStocktakingDate = data.date_created;
+
             this.clickedStocktaking = {
                 id: data.id,
                 city_id: data.city_id,
@@ -555,6 +563,9 @@ class StocktakingViewStore {
             product: null,
             quantity: null
         };
+        if (this.checkProductExistInStocktaking()) {
+            this.errorMessage.product = "Odabrani proizvod i skladište su već zapisani u inventuri!";
+        }
         if (this.clickedStocktaking.city_id.toString() == "") {
             this.errorMessage.city = "Odaberite grad!";
         }
@@ -581,6 +592,24 @@ class StocktakingViewStore {
         else {
             this.isSubmitDisabled = true;
         }
+    }
+
+    @action
+    checkProductExistInStocktaking() {
+        let itemExistInStocktaking = null;
+
+        if (this.clickedStocktaking.product_id != "" && this.clickedStocktaking.warehouse_id != "") {
+            if (this.clickedStocktakingProductId != "" && this.clickedStocktaking.product_id != this.clickedStocktakingProductId || this.clickedStocktakingProductId == "") {
+                itemExistInStocktaking = this.allData.find(data =>
+                    data.product_id == this.clickedStocktaking.product_id
+                    && data.warehouse_id == this.clickedStocktaking.warehouse_id
+                    && data.date_created == this.clickedStocktakingDate);
+            }
+        }
+        if (itemExistInStocktaking) {
+            return true;
+        }
+        return false;
     }
 
     @action
