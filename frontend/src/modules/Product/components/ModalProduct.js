@@ -4,7 +4,7 @@ import { Form, Button, Dropdown, DropdownButton } from 'react-bootstrap';
 import "../../../common/styles/Modal.css";
 
 
-export default function ModalProduct({ modalTarget, errorMessage, categories, subcategories, packagings, onSubmit, name, category_name, subcategory_name, packaging_name, onNameChange, onCategoryChange, onSubcategoryChange, onPackagingChange, isSubmitDisabled }) {
+export default function ModalProduct({ modalTarget, errorMessage, categories, subcategories, packagings, onPackagingChange, onSubmit, name, category_name, subcategory_name, packaging_name, onNameChange, onCategoryChange, onSubcategoryChange, isSubmitDisabled }) {
 
   let submitClassName = "";
   let modalTitle = "";
@@ -106,27 +106,31 @@ export default function ModalProduct({ modalTarget, errorMessage, categories, su
                 }
               </Form.Group>
             }
-            {packaging_name == "" && isDisabled ?
-              null
-              :
-              <Form.Group size="md" controlId="packaging_name">
-                <Form.Label>Naziv Ambalaže</Form.Label>
-                {
-                  isDisabled ?
-                    <Form.Control
-                      type="text"
-                      value={packaging_name}
-                      disabled={isDisabled}
-                    />
-                    :
-                    <DropdownButton id="customDropdown" variant="secondary" title={packaging_name ? packaging_name : "Odaberi ambalažu"} style={{ marginBottom: 10 }} disabled={isDisabled}>
-                      {packagings.map((packaging) => {
-                        return <Dropdown.Item key={"packaging-" + packaging.packaging_id} onSelect={() => onPackagingChange(packaging)}>{packaging.packaging_name}</Dropdown.Item>;
-                      })}
-                    </DropdownButton>
-                }
-              </Form.Group>
-            }
+            <Form.Group size="md" controlId="packaging_name">
+              <Form.Label>Naziv Ambalaže *</Form.Label>
+              {
+                isDisabled ?
+                  <Form.Control
+                    type="text"
+                    value={packaging_name}
+                    disabled={isDisabled}
+                  />
+                  :
+                  <DropdownButton id="customDropdown" variant="secondary" title={packaging_name ? packaging_name : "Odaberi ambalažu"} style={{ marginBottom: 10 }} disabled={isDisabled}>
+                    {packagings.map((packaging) => {
+                      return <Dropdown.Item key={"packaging-" + packaging.packaging_id} onSelect={() => onPackagingChange(packaging)}>{packaging.packaging_name}</Dropdown.Item>;
+                    })}
+                  </DropdownButton>
+              }
+              <div hidden={isDisabled || !isSubmitDisabled}>
+                <p style={{ color: "red" }}>
+                  {errorMessage.packaging ?
+                    errorMessage.packaging
+                    : null
+                  }
+                </p>
+              </div>
+            </Form.Group>
             <div className="modal-footer" style={{ padding: 0 }}>
               <Button className="btn btn-primary" data-dismiss="modal">Odustani</Button>
               <Button type="submit" data-dismiss="modal" disabled={isSubmitDisabled && !isDisabled} className={submitClassName} onClick={(e) => { e.preventDefault(); onSubmit() }}>{submitText}</Button>

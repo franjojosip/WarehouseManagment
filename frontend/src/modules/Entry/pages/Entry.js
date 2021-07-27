@@ -6,8 +6,8 @@ import CollapsibleTable from '../../../common/layouts/CollapsibleTable';
 import ModalEntry from '../components/ModalEntry';
 import ModalEntrySubmit from '../components/ModalEntrySubmit';
 import Loading from '../../../common/layouts/Loading';
-import { ToastContainer } from 'react-toastify';
 import Button from "react-bootstrap/Button";
+import { ToastContainer } from 'react-toastify';
 
 import "../styles/Entry.css";
 
@@ -75,7 +75,7 @@ class Entry extends React.Component {
                                                             <td>{item.quantity}</td>
                                                             <td>
                                                                 {
-                                                                    item.isSubmited ?
+                                                                    item.isSubmitted ?
                                                                         null
                                                                         :
                                                                         <span className="table-edit">
@@ -87,7 +87,7 @@ class Entry extends React.Component {
                                                             </td>
                                                             <td>
                                                                 {
-                                                                    item.isSubmited ?
+                                                                    item.isSubmitted ?
                                                                         null
                                                                         :
                                                                         <span className="table-remove">
@@ -99,8 +99,8 @@ class Entry extends React.Component {
                                                             </td>
                                                             <td>
                                                                 {
-                                                                    item.isSubmited ?
-                                                                        "POTVRĐENO"
+                                                                    item.isSubmitted ?
+                                                                    <i className="fa fa-fw fa-check" style={{ fontSize: '1.4em' }} />
                                                                         :
                                                                         <span className="table-submit">
                                                                             <button type="button" onClick={() => onEntryClicked(item, false)} data-toggle="modal" data-target="#modalTargetSubmit" className="btn btn-info btn-rounded btn-sm my-0">

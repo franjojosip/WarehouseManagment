@@ -1,14 +1,22 @@
 import { action, observable } from "mobx";
+import { toast } from 'react-toastify';
+import moment from "moment";
 
 class RecieptViewStore {
     constructor(rootStore) {
         this.dataStore = rootStore.recieptModuleStore.recieptDataStore;
+        this.cityDataStore = rootStore.cityModuleStore.cityDataStore;
+        this.locationDataStore = rootStore.locationModuleStore.locationDataStore;
+        this.warehouseDataStore = rootStore.warehouseModuleStore.warehouseDataStore;
+        this.productDataStore = rootStore.productModuleStore.productDataStore;
+        this.packagingDataStore = rootStore.packagingModuleStore.packagingDataStore;
         this.routerStore = rootStore.routerStore;
 
         this.onFind = this.onFind.bind(this);
         this.onCreateClick = this.onCreateClick.bind(this);
         this.onEditClick = this.onEditClick.bind(this);
         this.onDeleteClick = this.onDeleteClick.bind(this);
+        this.onSubmitClick = this.onSubmitClick.bind(this);
         this.onChangePageSize = this.onChangePageSize.bind(this);
         this.onPreviousPageClick = this.onPreviousPageClick.bind(this);
         this.onNextPageClick = this.onNextPageClick.bind(this);
@@ -17,34 +25,62 @@ class RecieptViewStore {
         this.loadPageData = this.loadPageData.bind(this);
         this.onRecieptClicked = this.onRecieptClicked.bind(this);
         this.onWarehouseChange = this.onWarehouseChange.bind(this);
+        this.onCityChange = this.onCityChange.bind(this);
+        this.onLocationChange = this.onLocationChange.bind(this);
         this.onProductChange = this.onProductChange.bind(this);
+        this.onPackagingChange = this.onPackagingChange.bind(this);
         this.onQuantityChange = this.onQuantityChange.bind(this);
         this.onClickedRow = this.onClickedRow.bind(this);
         this.groupData = this.groupData.bind(this);
 
-        this.groupData();
-        this.setPagination();
+        this.delay = this.delay.bind(this);
+        this.showLoader = this.showLoader.bind(this);
+        this.hideLoader = this.hideLoader.bind(this);
+        this.processData = this.processData.bind(this);
+
+        this.findCities = this.findCities.bind(this);
+        this.findLocations = this.findLocations.bind(this);
+        this.findWarehouses = this.findWarehouses.bind(this);
+        this.findProducts = this.findProducts.bind(this);
+
+        this.findCities();
+        this.findLocations();
+        this.findWarehouses();
+        this.findProducts();
+        this.onFind();
     }
 
     @observable isLoaderVisible = false;
+    @observable isSubmitDisabled = true;
 
     @observable clickedReciept = {
         id: "",
-        name: "",
+        city_id: "",
+        city_name: "Odaberi grad",
+        location_id: "",
+        location_name: "Odaberi lokaciju",
         warehouse_id: "",
         warehouse_name: "Odaberi skladište",
         product_id: "",
         product_name: "Odaberi proizvod",
+        category_id: "",
+        category_name: "",
+        subcategory_id: "",
+        subcategory_name: "",
         packaging_id: "",
-        packaging_name: "Ambalaaža",
-        user_id: "1",
-        user_name: "Martin Matić",
+        packaging_name: "",
         quantity: "",
-        date_created: "23.02.2021."
+        date_created: "",
+        isSubmitted: false
     };
 
-    @observable isSubmitDisabled = true;
-
+    @observable errorMessage = {
+        city: null,
+        location: null,
+        warehouse: null,
+        product: null,
+        quantity: null
+    };
 
     @observable page = 1;
     @observable pageSize = 5;
@@ -58,228 +94,335 @@ class RecieptViewStore {
     @observable paginatedData = [];
 
     title = "Preuzimanja";
-    parentColumns = ['Naziv skladišta', 'Korisnik', 'Datum kreiranja'];
-    childColumns = ['Naziv proizvoda', 'Naziv ambalaže', 'Količina', 'Izmjena', 'Brisanje'];
+    parentColumns = ['Naziv skladišta', 'Lokacija', 'Grad', 'Datum kreiranja'];
+    childColumns = ['Naziv proizvoda', 'Kategorija', 'Potkategorija', 'Ambalaža', 'Količina', 'Izmijeni', 'Obriši', 'Potvrda'];
 
-    //TESTNI PODATCI
-    allData = [
-        {
-            id: 1,
-            warehouse_id: 1,
-            warehouse_name: "skladiste1",
-            product_id: 1,
-            product_name: "proizvod1",
-            packaging_id: 1,
-            packaging_name: "ambalaza1",
-            user_id: 1,
-            user_name: "Martin Matić",
-            quantity: 4,
-            date_created: "23.02.2021."
-        },
-        {
-            id: 2,
-            warehouse_id: 1,
-            warehouse_name: "skladiste1",
-            product_id: 2,
-            product_name: "proizvod2",
-            packaging_id: 1,
-            packaging_name: "ambalaza1",
-            user_id: 1,
-            user_name: "Martin Matić",
-            quantity: 14,
-            date_created: "23.02.2021."
-        },
-        {
-            id: 3,
-            warehouse_id: 1,
-            warehouse_name: "skladiste1",
-            product_id: 3,
-            product_name: "proizvod3",
-            packaging_id: 1,
-            packaging_name: "ambalaza1",
-            user_id: 1,
-            user_name: "Martin Matić",
-            quantity: 2,
-            date_created: "24.02.2021."
-        },
+    @observable allData = [];
+    @observable warehouses = [];
+    @observable cities = [];
+    @observable locations = [];
+    @observable products = [];
 
-
-        {
-            id: 4,
-            warehouse_id: 1,
-            warehouse_name: "skladiste1",
-            product_id: 1,
-            product_name: "proizvod1",
-            packaging_id: 1,
-            packaging_name: "ambalaza1",
-            user_id: 1,
-            user_name: "Martin Matić",
-            quantity: 4,
-            date_created: "23.02.2021."
-        },
-        {
-            id: 5,
-            warehouse_id: 1,
-            warehouse_name: "skladiste1",
-            product_id: 2,
-            product_name: "proizvod2",
-            packaging_id: 1,
-            packaging_name: "ambalaza1",
-            user_id: 1,
-            user_name: "Martin Matić",
-            quantity: 14,
-            date_created: "23.02.2021."
-        },
-        {
-            id: 6,
-            warehouse_id: 1,
-            warehouse_name: "skladiste1",
-            product_id: 3,
-            product_name: "proizvod3",
-            packaging_id: 1,
-            packaging_name: "ambalaza1",
-            user_id: 1,
-            user_name: "Martin Matić",
-            quantity: 2,
-            date_created: "24.02.2021."
-        },
-        {
-            id: 7,
-            warehouse_id: 1,
-            warehouse_name: "skladiste1",
-            product_id: 3,
-            product_name: "proizvod3",
-            packaging_id: 1,
-            packaging_name: "ambalaza1",
-            user_id: 2,
-            user_name: "Stamko Matić",
-            quantity: 2,
-            date_created: "24.02.2021."
-        },
-        {
-            id: 8,
-            warehouse_id: 1,
-            warehouse_name: "skladiste1",
-            product_id: 5,
-            product_name: "proizvod5",
-            packaging_id: 1,
-            packaging_name: "ambalaza1",
-            user_id: 2,
-            user_name: "Stamko Matić",
-            quantity: 2,
-            date_created: "24.02.2021."
-        },
-        {
-            id: 8,
-            warehouse_id: 2,
-            warehouse_name: "skladiste2",
-            product_id: 5,
-            product_name: "proizvod5",
-            packaging_id: 1,
-            packaging_name: "ambalaza1",
-            user_id: 2,
-            user_name: "Stamko Matić",
-            quantity: 2,
-            date_created: "24.02.2021."
-        },
-
-    ];
-
-    warehouses = [{
-        warehouse_id: 1,
-        warehouse_name: "skladiste1"
-    }, {
-        warehouse_id: 3,
-        warehouse_name: "skladiste2"
-    }, {
-        warehouse_id: 3,
-        warehouse_name: "skladiste3"
-    }
-    ];
-
-    products = [{
-        product_id: 1,
-        product_name: "proizvod1"
-    }, {
-        product_id: 2,
-        product_name: "proizvod2"
-    }, {
-        product_id: 3,
-        product_name: "proizvod3"
-    }
-    ];
+    @observable filteredLocations = [];
+    @observable filteredWarehouses = [];
 
     @action
-    onDeleteClick() {
-        //this.isLoaderVisible = true; //prikaži loader        
-        /*
-        this.deleteResult = await (this.dataStore.delete(this.itemToDeleteId));
-        if (this.deleteResult) {
-            this.isDeleting = false;
-            toaster.notify('Deletion successful!', {
-                duration: 2000
-            })
-            this.onFind();
-        } else {
-            toaster.notify('Deletion failed!', {
-                duration: 2000
-            })
+    showLoader() {
+        this.isLoaderVisible = true;
+    }
+
+    @action
+    async hideLoader() {
+        await this.delay(500);
+        this.isLoaderVisible = false;
+    }
+
+    @action
+    delay(delayInMs) {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve(2);
+            }, delayInMs);
+        });
+    }
+
+    @action
+    async processData(response) {
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
         }
-    */
-        //this.isLoaderVisible = false; //sakrij loader
-        console.log(this.clickedReciept)
+        else {
+            toast.success(response.status, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+            this.onFind();
+        }
     }
 
     @action
-    onEditClick() {
-        //EDIT DATA
-        console.log(this.clickedReciept)
+    async onDeleteClick() {
+        this.showLoader();
+        let response = await (this.dataStore.delete(this.clickedReciept.id));
+        this.processData(response);
+        await this.hideLoader();
     }
 
     @action
-    onCreateClick() {
-        //CREATE DATA
-        console.log(this.clickedReciept)
+    async onEditClick() {
+        this.showLoader();
+        let response = await (this.dataStore.update(this.clickedReciept));
+        this.processData(response);
+        await this.hideLoader();
     }
+
+    @action
+    async onCreateClick() {
+        this.showLoader();
+        let response = await (this.dataStore.create(this.clickedReciept));
+        this.processData(response);
+        await this.hideLoader();
+    }
+
+    @action
+    async onSubmitClick() {
+        this.showLoader();
+        let response = await (this.dataStore.submit(this.clickedReciept.id));
+        this.processData(response);
+        await this.hideLoader();
+    }
+
+
 
     @action
     async onFind() {
-        //FIND Reciept
+        this.showLoader();
+        let response = await (this.dataStore.get())
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+            this.allData = [
+                {
+                    id: "",
+                    city_id: "",
+                    city_name: "",
+                    location_id: "",
+                    location_name: "",
+                    warehouse_id: "",
+                    warehouse_name: "",
+                    product_id: "",
+                    product_name: "",
+                    category_id: "",
+                    category_name: "",
+                    subcategory_id: "",
+                    subcategory_name: "",
+                    packaging_id: "",
+                    packaging_name: "",
+                    quantity: "",
+                    date_created: "",
+                    isSubmitted: false
+                }];
+
+        }
+        else {
+            if (response.reciepts.length > 0) {
+                response.reciepts.forEach(item => item.date_created = moment(new Date(item.date_created)).format('YYYY/MM/DD'))
+                this.allData = response.reciepts;
+                this.groupData();
+            }
+            else {
+                this.allData = [
+                    {
+                        id: "",
+                        city_id: "",
+                        city_name: "",
+                        location_id: "",
+                        location_name: "",
+                        warehouse_id: "",
+                        warehouse_name: "",
+                        product_id: "",
+                        product_name: "",
+                        category_id: "",
+                        category_name: "",
+                        subcategory_id: "",
+                        subcategory_name: "",
+                        packaging_id: "",
+                        packaging_name: "",
+                        quantity: "",
+                        date_created: "",
+                        isSubmitted: false
+                    }];
+            }
+        }
+        this.setPagination();
+        await this.hideLoader();
     };
 
     @action
-    onRecieptClicked(clickedData, isCreate) {
-        if (isCreate) {
-            this.clickedReciept = {
-                warehouse_id: -1,
-                warehouse_name: "Odaberi skladište",
-                product_id: -1,
-                product_name: "Odaberi proizvod",
-                packaging_id: "",
-                packaging_name: "",
-                user_id: "",
-                user_name: "",
-                quantity: ""
-            };
+    async findCities() {
+        let response = await (this.cityDataStore.get())
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
         }
         else {
-            let data = clickedData.data[0];
+            if (response.cities.length > 0) {
+                this.cities = response.cities.map((city) => {
+                    return { city_id: city.id, city_name: city.name }
+                });
+            }
+        }
+    }
+
+    @action
+    async findLocations() {
+        let response = await (this.locationDataStore.get())
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+        }
+        else {
+            if (response.locations.length > 0) {
+                this.locations = response.locations.map((location) => {
+                    return {
+                        location_id: location.id,
+                        location_name: location.name,
+                        city_id: location.city_id,
+                        city_name: location.city_name
+                    }
+                });
+            }
+        }
+    }
+
+    @action
+    async findWarehouses() {
+        let response = await (this.warehouseDataStore.get())
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+        }
+        else {
+            if (response.warehouses.length > 0) {
+                this.warehouses = response.warehouses.map((warehouse) => {
+                    return {
+                        warehouse_id: warehouse.id,
+                        warehouse_name: warehouse.name,
+                        location_id: warehouse.location_id,
+                        location_name: warehouse.location_name,
+                        city_id: warehouse.city_id,
+                        city_name: warehouse.city_name
+                    }
+                });
+            }
+        }
+    }
+
+    @action
+    async findProducts() {
+        let response = await (this.productDataStore.get())
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+        }
+        else {
+            if (response.products.length > 0) {
+                this.products = response.products.map((product) => {
+                    return {
+                        product_id: product.id,
+                        product_name: product.name,
+                        packaging_id: product.packaging_id,
+                        packaging_name: product.packaging_name,
+                        category_id: product.category_id,
+                        category_name: product.category_name,
+                        subcategory_id: product.subcategory_id,
+                        subcategory_name: product.subcategory_name
+                    }
+                });
+            }
+        }
+    }
+
+    @action
+    onRecieptClicked(data, isCreate) {
+        this.errorMessage = {
+            city: null,
+            location: null,
+            warehouse: null,
+            product: null,
+            quantity: null,
+            min_quantity: null
+        };
+        if (isCreate) {
+            this.clickedReciept = {
+                id: "",
+                city_id: "",
+                city_name: "Odaberi grad",
+                location_id: "",
+                location_name: "Odaberi lokaciju",
+                warehouse_id: "",
+                warehouse_name: "Odaberi skladište",
+                product_id: "",
+                product_name: "Odaberi proizvod",
+                category_id: "",
+                category_name: "",
+                subcategory_id: "",
+                subcategory_name: "",
+                packaging_id: "",
+                packaging_name: "",
+                quantity: 0,
+                date_created: "",
+                isSubmitted: false
+            };
+            this.filteredLocations = [];
+            this.filteredWarehouses = [];
+        }
+        else {
             this.clickedReciept = {
                 id: data.id,
+                city_id: data.city_id,
+                city_name: data.city_name,
+                location_id: data.location_id,
+                location_name: data.location_name,
                 warehouse_id: data.warehouse_id,
                 warehouse_name: data.warehouse_name,
                 product_id: data.product_id,
                 product_name: data.product_name,
+                category_id: data.category_id,
+                category_name: data.category_name,
+                subcategory_id: data.subcategory_id,
+                subcategory_name: data.subcategory_name,
                 packaging_id: data.packaging_id,
                 packaging_name: data.packaging_name,
-                user_id: data.user_id,
-                user_name: data.user_name,
                 quantity: data.quantity,
-                date_created: data.date_created
+                date_created: data.date_created,
+                isSubmitted: false
             };
+            this.filteredLocations = this.locations.filter(location => location.city_id === data.city_id);
+            this.filteredWarehouses = this.warehouses.filter(warehouse => warehouse.city_id === data.city_id);
+            this.checkFields();
         }
-
-        this.checkFields();
     }
 
     @action
@@ -288,23 +431,18 @@ class RecieptViewStore {
             this.page = page;
         }
         this.totalPages = Math.floor(this.grouppedData.length / this.pageSize);
-        if (this.grouppedData.length % this.pageSize > 0 || this.grouppedData.length === 0) {
+        if (this.grouppedData.length % this.pageSize > 0) {
             this.totalPages = this.totalPages + 1;
         }
         this.previousEnabled = this.page > 1;
-        this.nextEnabled = Math.floor(this.grouppedData.length / this.pageSize) > this.page;
+        this.nextEnabled = this.page < this.totalPages;
 
-        this.loadPageData()
+        this.loadPageData();
     }
 
     @action
     loadPageData() {
-        if (this.grouppedData.length === 0) {
-            this.paginatedData = [];
-        }
-        else {
-            this.paginatedData = this.grouppedData.slice((this.page - 1) * this.pageSize, this.page * this.pageSize)
-        }
+        this.paginatedData = this.grouppedData.slice((this.page - 1) * this.pageSize, this.page * this.pageSize);
     }
 
     @action
@@ -324,8 +462,10 @@ class RecieptViewStore {
 
     @action
     onChangePageSize(pageSize) {
-        this.pageSize = pageSize;
-        this.setPagination();
+        if (this.pageSize != pageSize) {
+            this.pageSize = pageSize;
+            this.setPagination(1);
+        }
     }
 
 
@@ -336,10 +476,75 @@ class RecieptViewStore {
         this.checkFields();
     }
 
+
+    @action
+    onCityChange(value) {
+        this.clickedReciept.city_id = value.city_id;
+        this.clickedReciept.city_name = value.city_name;
+
+        this.filteredLocations = this.locations.filter((element) => element.city_id == this.clickedReciept.city_id);
+        this.filteredWarehouses = [];
+
+        if (this.filteredLocations.findIndex(location => location.location_id == this.clickedReciept.location_id) == -1) {
+            this.clickedReciept.location_id = "";
+            this.clickedReciept.location_name = "Odaberi lokaciju";
+            this.clickedReciept.warehouse_id = "";
+            this.clickedReciept.warehouse_name = "Odaberi skladište";
+        }
+
+        this.checkFields();
+    }
+
+
+    @action
+    onLocationChange(value) {
+        this.clickedReciept.location_id = value.location_id;
+        this.clickedReciept.location_name = value.location_name;
+
+        this.filteredWarehouses = this.warehouses.filter((element) => element.location_id == value.location_id);
+        this.clickedReciept.warehouse_id = "";
+        this.clickedReciept.warehouse_name = "Odaberi skladište";
+        this.checkFields();
+    }
+
     @action
     onProductChange(value) {
         this.clickedReciept.product_id = value.product_id;
         this.clickedReciept.product_name = value.product_name;
+
+        if (value.category_id != "") {
+            this.clickedReciept.category_id = value.category_id;
+            this.clickedReciept.category_name = value.category_name;
+        }
+        else {
+            this.clickedReciept.category_id = "";
+            this.clickedReciept.category_name = "";
+        }
+
+        if (value.subcategory_id != "") {
+            this.clickedReciept.subcategory_id = value.subcategory_id;
+            this.clickedReciept.subcategory_name = value.subcategory_name;
+        }
+        else {
+            this.clickedReciept.subcategory_id = "";
+            this.clickedReciept.subcategory_name = "";
+        }
+
+        if (value.packaging_id != "") {
+            this.clickedReciept.packaging_id = value.packaging_id;
+            this.clickedReciept.packaging_name = value.packaging_name;
+        }
+        else {
+            this.clickedReciept.packaging_id = "";
+            this.clickedReciept.packaging_name = "";
+        }
+        this.checkFields();
+    }
+
+    @action
+    onPackagingChange(value) {
+        this.clickedReciept.packaging_id = value.packaging_id;
+        this.clickedReciept.packaging_name = value.packaging_name;
         this.checkFields();
     }
 
@@ -351,9 +556,34 @@ class RecieptViewStore {
 
     @action
     checkFields() {
-        if (this.clickedReciept.warehouse_id != -1
-            && this.clickedReciept.product_id != -1
-            && this.clickedReciept.quantity > 0) {
+        this.errorMessage = {
+            city: null,
+            location: null,
+            warehouse: null,
+            product: null,
+            quantity: null
+        };
+        if (this.clickedReciept.city_id.toString() == "") {
+            this.errorMessage.city = "Odaberite grad!";
+        }
+        if (this.clickedReciept.location_id.toString() == "") {
+            this.errorMessage.location = "Odaberite lokaciju!";
+        }
+        if (this.clickedReciept.warehouse_id.toString() == "") {
+            this.errorMessage.warehouse = "Odaberite skladište!";
+        }
+        if (this.clickedReciept.product_id.toString() == "") {
+            this.errorMessage.product = "Odaberite proizvod!";
+        }
+        if (this.clickedReciept.quantity < 1) {
+            this.errorMessage.quantity = "Minimalna količina: 1";
+        }
+
+        if (this.errorMessage.city == null
+            && this.errorMessage.location == null
+            && this.errorMessage.warehouse == null
+            && this.errorMessage.product == null
+            && this.errorMessage.quantity == null) {
             this.isSubmitDisabled = false;
         }
         else {

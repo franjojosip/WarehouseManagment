@@ -56,7 +56,7 @@ class SideBar extends React.Component {
                         </NavItem>
                         <NavItem eventKey="entry">
                             <NavText style={textStyle}>
-                                Spremanje u skladište
+                                Unos u skladište
                             </NavText>
                         </NavItem>
                     </NavItem>

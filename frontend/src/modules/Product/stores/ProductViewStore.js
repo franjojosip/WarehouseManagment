@@ -1,3 +1,4 @@
+import { ThumbUpSharp } from "@material-ui/icons";
 import { action, observable } from "mobx";
 import { toast } from 'react-toastify';
 
@@ -33,7 +34,7 @@ class ProductViewStore {
         this.findCategories = this.findCategories.bind(this);
         this.findSubcategories = this.findSubcategories.bind(this);
         this.findPackagings = this.findPackagings.bind(this);
-        this.productNameExist = this.productNameExist.bind(this);
+        this.productExist = this.productExist.bind(this);
 
         this.setPagination();
         this.findCategories();
@@ -58,7 +59,8 @@ class ProductViewStore {
 
     @observable errorMessage = {
         name: null,
-        category: null
+        category: null,
+        packaging: null
     };
 
     @observable page = 1;
@@ -249,7 +251,8 @@ class ProductViewStore {
     onProductClicked(data, isCreate) {
         this.errorMessage = {
             name: null,
-            category: null
+            category: null,
+            packaging: null
         };
 
         if (isCreate) {
@@ -356,16 +359,18 @@ class ProductViewStore {
     onPackagingChange(value) {
         this.clickedProduct.packaging_id = value.packaging_id;
         this.clickedProduct.packaging_name = value.packaging_name;
+        this.checkFields();
     }
 
     @action
     checkFields() {
         this.errorMessage = {
             name: null,
-            category: null
+            category: null,
+            packaging: null
         };
-        if (this.productNameExist()) {
-            this.errorMessage.name = "Proizvod s istim nazivom već postoji!";
+        if (this.productExist()) {
+            this.errorMessage.name = "Proizvod s istim nazivom, kategorijom i ambalažom već postoji!";
         }
         if (this.clickedProduct.name.length < 2) {
             this.errorMessage.name = "Neispravna duljina naziva proizvoda!";
@@ -373,7 +378,10 @@ class ProductViewStore {
         if (this.clickedProduct.category_id.toString() == "") {
             this.errorMessage.category = "Odaberite kategoriju!";
         }
-        if (this.errorMessage.name == null && this.errorMessage.category == null) {
+        if (this.clickedProduct.packaging_id.toString() == "") {
+            this.errorMessage.packaging = "Odaberite ambalažu!";
+        }
+        if (this.errorMessage.name == null && this.errorMessage.category == null && this.errorMessage.packaging == null) {
             this.isSubmitDisabled = false;
         }
         else {
@@ -382,10 +390,13 @@ class ProductViewStore {
     }
 
     @action
-    productNameExist() {
-        if (this.clickedProduct.name.length > 0) {
+    productExist() {
+        if (this.clickedProduct.name.length > 0 && this.clickedProduct.category_id.toString() != "" && this.clickedProduct.packaging_id.toString() != "") {
             let filteredProducts = this.allData.filter(product => product.id !== this.clickedProduct.id);
-            return filteredProducts.findIndex(clickedProduct => clickedProduct.name.toLowerCase() == this.clickedProduct.name.toLowerCase()) !== -1;
+            return filteredProducts.findIndex(product =>
+                product.name.toLowerCase() == this.clickedProduct.name.toLowerCase()
+                && product.packaging_id.toLowerCase() == this.clickedProduct.packaging_id.toLowerCase()
+                && product.category_id.toLowerCase() == this.clickedProduct.category_id.toLowerCase()) !== -1;
         }
         return false;
     }

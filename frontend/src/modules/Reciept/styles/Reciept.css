@@ -28,3 +28,8 @@ button.dropdown-item {
 .hiddenRow{
     padding: 15 15 15 15    ;
 }
+
+.Toastify__toast-body{
+    text-align: center;
+    white-space: pre-line;
+}

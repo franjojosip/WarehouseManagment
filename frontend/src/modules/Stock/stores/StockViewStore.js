@@ -197,12 +197,12 @@ class StockViewStore {
         else {
             if (response.stocks.length > 0) {
                 this.allData = response.stocks;
+                this.groupData();
             }
             else {
                 this.allData = [{ id: "", name: "Nema podataka", city_id: "", city_name: "", location_id: "", location_name: "", warehouse_id: "", warehouse_name: "", product_id: "", product_name: "", subcategory_id: "", subcategory_name: "", packaging_id: "", packaging_name: "", quantity: 0, min_quantity: 1 }];
             }
         }
-        this.groupData();
         this.setPagination();
         await this.hideLoader();
     };

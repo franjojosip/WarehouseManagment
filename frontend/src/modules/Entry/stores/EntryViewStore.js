@@ -71,7 +71,7 @@ class EntryViewStore {
         packaging_name: "",
         quantity: "",
         date_created: "",
-        isSubmited: false
+        isSubmitted: false
     };
 
     @observable errorMessage = {
@@ -105,7 +105,6 @@ class EntryViewStore {
 
     @observable filteredLocations = [];
     @observable filteredWarehouses = [];
-
 
     @action
     showLoader() {
@@ -216,7 +215,7 @@ class EntryViewStore {
                     packaging_name: "",
                     quantity: "",
                     date_created: "",
-                    isSubmited: false
+                    isSubmitted: false
                 }];
 
         }
@@ -246,7 +245,7 @@ class EntryViewStore {
                         packaging_name: "",
                         quantity: "",
                         date_created: "",
-                        isSubmited: false
+                        isSubmitted: false
                     }];
             }
         }
@@ -391,7 +390,7 @@ class EntryViewStore {
                 packaging_name: "",
                 quantity: 0,
                 date_created: "",
-                isSubmited: false
+                isSubmitted: false
             };
             this.filteredLocations = [];
             this.filteredWarehouses = [];
@@ -415,7 +414,7 @@ class EntryViewStore {
                 packaging_name: data.packaging_name,
                 quantity: data.quantity,
                 date_created: data.date_created,
-                isSubmited: false
+                isSubmitted: false
             };
             this.filteredLocations = this.locations.filter(location => location.city_id === data.city_id);
             this.filteredWarehouses = this.warehouses.filter(warehouse => warehouse.city_id === data.city_id);
@@ -425,7 +424,7 @@ class EntryViewStore {
 
     @action
     setPagination(page) {
-        if (page != null) {
+        if (page) {
             this.page = page;
         }
         this.totalPages = Math.floor(this.grouppedData.length / this.pageSize);
@@ -549,7 +548,6 @@ class EntryViewStore {
         this.clickedEntry.quantity = value;
         this.checkFields();
     }
-
     
     @action
     checkFields() {
