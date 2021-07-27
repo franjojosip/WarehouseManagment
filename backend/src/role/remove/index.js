@@ -2,10 +2,10 @@ const Role = require("../schema");
 const User = require("../../users/schema");
 
 async function remove(req, res) {
-  if (req.body.password == null || req.body.password != process.env.SUPER_ADMIN_PASSWORD) {
-    return res.status(403).json({ error: "Neispravna lozinka!" });
-  }
   try {
+    if (req.body.password == null || req.body.password != process.env.SUPER_ADMIN_PASSWORD) {
+      return res.status(403).json({ error: "Neispravna lozinka!" });
+    }
     const savedRole = await Role.findById(req.params.id);
     if (savedRole) {
       const users = User.find({ role_id: savedRole._id });

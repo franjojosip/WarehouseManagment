@@ -7,16 +7,16 @@ const serializer = Joi.object({
 });
 
 async function edit(req, res) {
-  const result = serializer.validate(req.body);
-  if (result.error) {
-    return res.status(400).json({ error: "Poslani su neispravni podatci!" });
-  }
-
-  if (result.value.password != process.env.SUPER_ADMIN_PASSWORD) {
-    return res.status(403).json({error: "Nemate prava pristupa!"});
-  }
-
   try {
+    const result = serializer.validate(req.body);
+    if (result.error) {
+      return res.status(400).json({ error: "Poslani su neispravni podatci!" });
+    }
+
+    if (result.value.password != process.env.SUPER_ADMIN_PASSWORD) {
+      return res.status(403).json({ error: "Nemate prava pristupa!" });
+    }
+
     let value = await Role.findByIdAndUpdate(req.params.id, {
       name: result.value.name,
     });

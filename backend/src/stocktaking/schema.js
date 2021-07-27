@@ -9,14 +9,28 @@ let stocktaking = new Schema(
       ref: "warehouse",
       required: true,
     },
+    product_id: {
+      type: Schema.Types.ObjectId,
+      ref: "product",
+      required: true,
+    },
     user_id: {
       type: Schema.Types.ObjectId,
       ref: "user",
       required: true,
     },
-    product_ids: [{
-      type: Schema.Types.ObjectId,
-    }]
+    counted_quantity: {
+      type: Number,
+      required: true,
+    },
+    real_quantity: {
+      type: Number,
+      required: true,
+    },
+    isSubmitted: {
+      type: Boolean,
+      default: false
+    }
   },
   {
     timestamps: true

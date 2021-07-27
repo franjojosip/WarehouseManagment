@@ -10,20 +10,20 @@ const serializer = Joi.object({
 });
 
 async function edit(req, res) {
-  const result = serializer.validate(req.body);
-  if (result.error) {
-    return res.status(400).json({ error: "Poslani su neispravni podatci!" });
-  }
-
-  const user = await User.findById(req.params.id);
-  if(user.email.toLowerCase() != result.value.email.toLowerCase()){
-    const userExist = await User.findOne({email: result.value.email});
-    if(userExist){
-      return res.status(400).json({ error: "Email je već u upotrebi!" });
-    }
-  }
-
   try {
+    const result = serializer.validate(req.body);
+    if (result.error) {
+      return res.status(400).json({ error: "Poslani su neispravni podatci!" });
+    }
+
+    const user = await User.findById(req.params.id);
+    if (user.email.toLowerCase() != result.value.email.toLowerCase()) {
+      const userExist = await User.findOne({ email: result.value.email });
+      if (userExist) {
+        return res.status(400).json({ error: "Email je već u upotrebi!" });
+      }
+    }
+
     await User.findByIdAndUpdate(req.params.id, {
       fname: result.value.fname,
       lname: result.value.lname,

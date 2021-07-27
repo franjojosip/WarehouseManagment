@@ -9,29 +9,29 @@ const serializer = Joi.object({
 });
 
 async function edit(req, res) {
-  const result = serializer.validate(req.body);
-  if (result.error) {
-    return res.status(400).json({ error: "Poslani su neispravni podatci!" });
-  }
-
-  const locationExists = await Location.findById(result.value.location_id);
-  if (!locationExists) {
-    return res.status(400).json({ error: "Lokacija nije pronađena!" });
-  }
-
-  let isUserIDWrong = false;
-  if (result.value.users.length > 0) {
-    result.value.users.forEach((user_id) => {
-      if (user_id.length != 24) {
-        isUserIDWrong = true;
-      }
-    });
-  }
-  if (isUserIDWrong) {
-    return res.status(400).json({ error: "Provjerite korisnike!" });
-  }
-
   try {
+    const result = serializer.validate(req.body);
+    if (result.error) {
+      return res.status(400).json({ error: "Poslani su neispravni podatci!" });
+    }
+
+    const locationExists = await Location.findById(result.value.location_id);
+    if (!locationExists) {
+      return res.status(400).json({ error: "Lokacija nije pronađena!" });
+    }
+
+    let isUserIDWrong = false;
+    if (result.value.users.length > 0) {
+      result.value.users.forEach((user_id) => {
+        if (user_id.length != 24) {
+          isUserIDWrong = true;
+        }
+      });
+    }
+    if (isUserIDWrong) {
+      return res.status(400).json({ error: "Provjerite korisnike!" });
+    }
+
     await Warehouse.findByIdAndUpdate(req.params.id, {
       name: result.value.name,
       location_id: result.value.location_id,

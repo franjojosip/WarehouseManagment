@@ -7,20 +7,20 @@ const serializer = Joi.object({
 });
 
 async function add(req, res) {
-  const result = serializer.validate(req.body);
-  if (result.error) {
-    return res.status(400).json({ error: "Poslani su neispravni podatci!" });
-  }
-
-  const zipCodeExists = await City.findOne({ zip_code: result.value.zip_code });
-  if (zipCodeExists) {
-    return res.status(400).json({ error: "Poštanski broj se već koristi!" });
-  }
-  const newCity = new City();
-  newCity.name = result.value.name;
-  newCity.zip_code = result.value.zip_code;
-
   try {
+    const result = serializer.validate(req.body);
+    if (result.error) {
+      return res.status(400).json({ error: "Poslani su neispravni podatci!" });
+    }
+
+    const zipCodeExists = await City.findOne({ zip_code: result.value.zip_code });
+    if (zipCodeExists) {
+      return res.status(400).json({ error: "Poštanski broj se već koristi!" });
+    }
+    const newCity = new City();
+    newCity.name = result.value.name;
+    newCity.zip_code = result.value.zip_code;
+
     await newCity.save();
     return res.status(200).json({ status: "Uspješno dodan grad!" });
   } catch (err) {

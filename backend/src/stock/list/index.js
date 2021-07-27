@@ -17,7 +17,6 @@ async function list(req, res) {
       if (stock.product_id.packaging_id) {
         packaging = packagings.find(packaging => packaging.id == stock.product_id.packaging_id);
       }
-      console.log(product.subcategory_id);
       return {
         id: stock.id,
         city_id: location.city_id.id,

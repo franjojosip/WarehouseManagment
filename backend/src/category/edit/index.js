@@ -6,12 +6,12 @@ const serializer = Joi.object({
 });
 
 async function edit(req, res) {
-  const result = serializer.validate(req.body);
-  if (result.error) {
-    return res.status(400).json({ error: "Poslani su neispravni podatci!" });
-  }
-
   try {
+    const result = serializer.validate(req.body);
+    if (result.error) {
+      return res.status(400).json({ error: "Poslani su neispravni podatci!" });
+    }
+
     await Category.findByIdAndUpdate(req.params.id, {
       name: result.value.name,
     });

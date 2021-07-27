@@ -8,29 +8,29 @@ const serializer = Joi.object({
 });
 
 async function edit(req, res) {
-  const result = serializer.validate(req.body);
-  if (result.error) {
-    return res.status(400).json({ error: "Poslani su neispravni podatci!" });
-  }
-
-  const notification = await Notification.findById(req.params.id);
-
-  if(notification.name != result.value.name){
-    const notificationExists = await Notification.findOne({name: result.value.name});
-    if(notificationExists && notificationExists.notification_type_id == result.value.notification_type_id){
-      return res.status(400).json({ error: "Naziv notifikacije se već koristi!" });
-    }
-  }
-
-  const notificationTypeExists = await NotificationType.findById(result.value.notification_type_id);
-  if (!notificationTypeExists) {
-    return res.status(400).json({ error: "Tip notifikacije nije pronađen!" });
-  }
-
-  notification.name = result.value.name;
-  notification.notification_type_id = result.value.notification_type_id;
-
   try {
+    const result = serializer.validate(req.body);
+    if (result.error) {
+      return res.status(400).json({ error: "Poslani su neispravni podatci!" });
+    }
+
+    const notification = await Notification.findById(req.params.id);
+
+    if (notification.name != result.value.name) {
+      const notificationExists = await Notification.findOne({ name: result.value.name });
+      if (notificationExists && notificationExists.notification_type_id == result.value.notification_type_id) {
+        return res.status(400).json({ error: "Naziv notifikacije se već koristi!" });
+      }
+    }
+
+    const notificationTypeExists = await NotificationType.findById(result.value.notification_type_id);
+    if (!notificationTypeExists) {
+      return res.status(400).json({ error: "Tip notifikacije nije pronađen!" });
+    }
+
+    notification.name = result.value.name;
+    notification.notification_type_id = result.value.notification_type_id;
+
     await notification.save();
     return res.status(200).json({ status: "Uspješna izmjena notifikacije!" });
   } catch (err) {

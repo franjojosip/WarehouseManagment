@@ -6,19 +6,19 @@ const serializer = Joi.object({
 });
 
 async function add(req, res) {
-  const result = serializer.validate(req.body);
-  if (result.error) {
-    return res.status(400).json({ error: "Poslani su neispravni podatci!" });
-  }
-
-  const savedPackaging = await Packaging.findOne({ name: result.value.name });
-  if (savedPackaging) {
-    return res.status(400).json({ error: "Ambalaža s istim imenom se već koristi!" });
-  }
-  const newPackaging = new Packaging();
-  newPackaging.name = result.value.name;
-
   try {
+    const result = serializer.validate(req.body);
+    if (result.error) {
+      return res.status(400).json({ error: "Poslani su neispravni podatci!" });
+    }
+
+    const savedPackaging = await Packaging.findOne({ name: result.value.name });
+    if (savedPackaging) {
+      return res.status(400).json({ error: "Ambalaža s istim imenom se već koristi!" });
+    }
+    const newPackaging = new Packaging();
+    newPackaging.name = result.value.name;
+
     await newPackaging.save();
     return res.status(200).json({ status: "Uspješno dodana ambalaža!" });
   } catch (err) {

@@ -11,27 +11,26 @@ const serializer = Joi.object({
 });
 
 async function edit(req, res) {
-  const result = serializer.validate(req.body);
-  if (result.error) {
-    return res.status(400).json({ error: "Poslani su neispravni podatci!" });
-  }
-
-  const stockExists = await Stock.findById(req.params.id);
-  if (!stockExists) {
-    return res.status(400).json({ error: "Unos na stanje nije pronađen!" });
-  }
-
-  const warehouseExists = await Warehouse.findById(result.value.warehouse_id);
-  if (!warehouseExists) {
-    return res.status(400).json({ error: "Skladište nije pronađeno!" });
-  }
-
-  const productExists = await Product.findById(result.value.product_id);
-  if (!productExists) {
-    return res.status(400).json({ error: "Proizvod nije pronađen" });
-  }
-
   try {
+    const result = serializer.validate(req.body);
+    if (result.error) {
+      return res.status(400).json({ error: "Poslani su neispravni podatci!" });
+    }
+
+    const stockExists = await Stock.findById(req.params.id);
+    if (!stockExists) {
+      return res.status(400).json({ error: "Unos na stanje nije pronađen!" });
+    }
+
+    const warehouseExists = await Warehouse.findById(result.value.warehouse_id);
+    if (!warehouseExists) {
+      return res.status(400).json({ error: "Skladište nije pronađeno!" });
+    }
+
+    const productExists = await Product.findById(result.value.product_id);
+    if (!productExists) {
+      return res.status(400).json({ error: "Proizvod nije pronađen" });
+    }
     await Stock.findByIdAndUpdate(req.params.id, {
       warehouse_id: result.value.warehouse_id,
       product_id: result.value.product_id,

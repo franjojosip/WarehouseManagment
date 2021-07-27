@@ -23,7 +23,7 @@ let entry = new Schema(
       type: Number,
       required: true,
     },
-    isSubmited: {
+    isSubmitted: {
       type: Boolean,
       default: false
     },

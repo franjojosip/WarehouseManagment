@@ -23,6 +23,10 @@ let reciept = new Schema(
       type: Number,
       required: true,
     },
+    isSubmitted: {
+      type: Boolean,
+      default: false
+    }
   },
   {
     timestamps: true

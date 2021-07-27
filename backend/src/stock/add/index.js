@@ -11,28 +11,28 @@ const serializer = Joi.object({
 });
 
 async function add(req, res) {
-  const result = serializer.validate(req.body);
-  if (result.error) {
-    return res.status(400).json({ error: "Poslani su neispravni podatci!" });
-  }
-
-  const warehouseExists = await Warehouse.findById(result.value.warehouse_id);
-  if (!warehouseExists) {
-    return res.status(400).json({ error: "Skladište nije pronađeno!" });
-  }
-
-  const productExists = await Product.findById(result.value.product_id);
-  if (!productExists) {
-    return res.status(400).json({ error: "Proizvod nije pronađen!" });
-  }
-
-  const newStock = new Stock();
-  newStock.warehouse_id = result.value.warehouse_id;
-  newStock.product_id = result.value.product_id;
-  newStock.quantity = result.value.quantity;
-  newStock.minimum_quantity = result.value.minimum_quantity;
-
   try {
+    const result = serializer.validate(req.body);
+    if (result.error) {
+      return res.status(400).json({ error: "Poslani su neispravni podatci!" });
+    }
+
+    const warehouseExists = await Warehouse.findById(result.value.warehouse_id);
+    if (!warehouseExists) {
+      return res.status(400).json({ error: "Skladište nije pronađeno!" });
+    }
+
+    const productExists = await Product.findById(result.value.product_id);
+    if (!productExists) {
+      return res.status(400).json({ error: "Proizvod nije pronađen!" });
+    }
+
+    const newStock = new Stock();
+    newStock.warehouse_id = result.value.warehouse_id;
+    newStock.product_id = result.value.product_id;
+    newStock.quantity = result.value.quantity;
+    newStock.minimum_quantity = result.value.minimum_quantity;
+
     await newStock.save();
     return res.status(200).json({ status: "Uspješno kreirano stanje u skladištu!" });
   } catch (err) {

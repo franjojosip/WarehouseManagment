@@ -12,33 +12,33 @@ const serializer = Joi.object({
 });
 
 async function add(req, res) {
-  const result = serializer.validate(req.body);
-  if (result.error) {
-    return res.status(400).json({ error: "Poslani su neispravni podatci!" });
-  }
-
-  const warehouseExists = await Warehouse.findById(result.value.warehouse_id);
-  if (!warehouseExists) {
-    return res.status(400).json({ error: "Skladište nije pronađeno!" });
-  }
-
-  const productExists = await Product.findById(result.value.product_id);
-  if (!productExists) {
-    return res.status(400).json({ error: "Proizvod nije pronađen!" });
-  }
-
-  const userExists = await User.findById(result.value.user_id);
-  if (!userExists) {
-    return res.status(400).json({ error: "Korisnik nije pronađen!" });
-  }
-
-  const newEntry = new Entry();
-  newEntry.warehouse_id = result.value.warehouse_id;
-  newEntry.product_id = result.value.product_id;
-  newEntry.user_id = result.value.user_id;
-  newEntry.quantity = result.value.quantity;
-
   try {
+    const result = serializer.validate(req.body);
+    if (result.error) {
+      return res.status(400).json({ error: "Poslani su neispravni podatci!" });
+    }
+
+    const warehouseExists = await Warehouse.findById(result.value.warehouse_id);
+    if (!warehouseExists) {
+      return res.status(400).json({ error: "Skladište nije pronađeno!" });
+    }
+
+    const productExists = await Product.findById(result.value.product_id);
+    if (!productExists) {
+      return res.status(400).json({ error: "Proizvod nije pronađen!" });
+    }
+
+    const userExists = await User.findById(result.value.user_id);
+    if (!userExists) {
+      return res.status(400).json({ error: "Korisnik nije pronađen!" });
+    }
+
+    const newEntry = new Entry();
+    newEntry.warehouse_id = result.value.warehouse_id;
+    newEntry.product_id = result.value.product_id;
+    newEntry.user_id = result.value.user_id;
+    newEntry.quantity = result.value.quantity;
+
     await newEntry.save();
     return res.status(200).json({ status: "Uspješno zapisan unos!" });
   } catch (err) {

@@ -32,7 +32,7 @@ async function list(req, res) {
         user_id: entry.user_id.id,
         quantity: entry.quantity,
         date_created: entry.createdAt,
-        isSubmited: entry.isSubmited
+        isSubmitted: entry.isSubmitted
       };
     });
     return res.status(200).json({ entries });

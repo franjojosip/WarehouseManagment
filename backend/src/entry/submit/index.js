@@ -9,7 +9,7 @@ async function submit(req, res) {
     if (submittedEntry && currentStock) {
       let oldQuantity = currentStock.quantity;
       
-      submittedEntry.isSubmited = true;
+      submittedEntry.isSubmitted = true;
       currentStock.quantity = oldQuantity + submittedEntry.quantity;
 
       await submittedEntry.save();

@@ -12,25 +12,25 @@ const serializer = Joi.object({
 });
 
 async function edit(req, res) {
-  const result = serializer.validate(req.body);
-  if (result.error) {
-    return res.status(400).json({ error: "Poslani su neispravni podatci!" });
-  }
-
-  const warehouseExists = await Warehouse.findById(result.value.warehouse_id);
-  if (!warehouseExists) {
-    return res.status(400).json({ error: "Skladište nije pronađeno!" });
-  }
-  const productExists = await Product.findById(result.value.product_id);
-  if (!productExists) {
-    return res.status(400).json({ error: "Proizvod nije pronađen!" });
-  }
-  const userExists = await User.findById(result.value.user_id);
-  if (!userExists) {
-    return res.status(400).json({ error: "Korisnik nije pronađen!" });
-  }
-
   try {
+    const result = serializer.validate(req.body);
+    if (result.error) {
+      return res.status(400).json({ error: "Poslani su neispravni podatci!" });
+    }
+
+    const warehouseExists = await Warehouse.findById(result.value.warehouse_id);
+    if (!warehouseExists) {
+      return res.status(400).json({ error: "Skladište nije pronađeno!" });
+    }
+    const productExists = await Product.findById(result.value.product_id);
+    if (!productExists) {
+      return res.status(400).json({ error: "Proizvod nije pronađen!" });
+    }
+    const userExists = await User.findById(result.value.user_id);
+    if (!userExists) {
+      return res.status(400).json({ error: "Korisnik nije pronađen!" });
+    }
+
     await Reciept.findByIdAndUpdate(req.params.id, {
       warehouse_id: result.value.warehouse_id,
       product_id: result.value.product_id,
