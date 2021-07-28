@@ -4,7 +4,6 @@ import Layout from "../../../common/layouts/Layout"
 import ProductViewStore from '../stores/ProductViewStore'
 import Table from '../../../common/layouts/Table';
 import ModalProduct from '../components/ModalProduct';
-import Loading from '../../../common/layouts/Loading';
 import { ToastContainer } from 'react-toastify';
 
 import "../styles/Product.css";
@@ -54,8 +53,7 @@ class Product extends React.Component {
         });
 
         return (
-            <Layout>
-                <Loading visible={isLoaderVisible} />
+            <Layout isLoaderVisible={isLoaderVisible}>
                 <ModalProduct modalTarget="modalTargetAdd" errorMessage={errorMessage} categories={categories} subcategories={filteredSubcategories} packagings={packagings} onSubmit={onCreateClick} name={clickedProduct.name} category_name={clickedProduct.category_name} subcategory_name={clickedProduct.subcategory_name} packaging_name={clickedProduct.packaging_name} onNameChange={onNameChange} onCategoryChange={onCategoryChange} onSubcategoryChange={onSubcategoryChange} onPackagingChange={onPackagingChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalProduct modalTarget="modalTargetEdit" errorMessage={errorMessage} categories={categories} subcategories={filteredSubcategories} packagings={packagings} onSubmit={onEditClick} name={clickedProduct.name} category_name={clickedProduct.category_name} subcategory_name={clickedProduct.subcategory_name} packaging_name={clickedProduct.packaging_name} onNameChange={onNameChange} onCategoryChange={onCategoryChange} onSubcategoryChange={onSubcategoryChange} onPackagingChange={onPackagingChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalProduct modalTarget="modalTargetDelete" errorMessage={errorMessage} categories={categories} subcategories={filteredSubcategories} packagings={packagings} onSubmit={onDeleteClick} name={clickedProduct.name} category_name={clickedProduct.category_name} subcategory_name={clickedProduct.subcategory_name} packaging_name={clickedProduct.packaging_name} onNameChange={onNameChange} onCategoryChange={onCategoryChange} onSubcategoryChange={onSubcategoryChange} onPackagingChange={onPackagingChange} isSubmitDisabled={isSubmitDisabled} />

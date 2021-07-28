@@ -4,7 +4,6 @@ import Layout from "../../../common/layouts/Layout"
 import SubcategoryViewStore from '../stores/SubcategoryViewStore'
 import Table from '../../../common/layouts/Table';
 import ModalSubcategory from '../components/ModalSubcategory';
-import Loading from '../../../common/layouts/Loading';
 import { ToastContainer } from 'react-toastify';
 
 import "../styles/Subcategory.css";
@@ -52,8 +51,7 @@ class Subcategory extends React.Component {
         });
 
         return (
-            <Layout>
-                <Loading visible={isLoaderVisible} />
+            <Layout isLoaderVisible={isLoaderVisible}>
                 <ModalSubcategory modalTarget="modalTargetAdd" errorMessage={errorMessage} categories={categories} onSubmit={onCreateClick} name={clickedSubcategory.name} category_name={clickedSubcategory.category_name} onNameChange={onNameChange} onCategoryChange={onCategoryChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalSubcategory modalTarget="modalTargetEdit" errorMessage={errorMessage} categories={categories} onSubmit={onEditClick} name={clickedSubcategory.name} category_name={clickedSubcategory.category_name} onNameChange={onNameChange} onCategoryChange={onCategoryChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalSubcategory modalTarget="modalTargetDelete" errorMessage={errorMessage} categories={categories} onSubmit={onDeleteClick} name={clickedSubcategory.name} category_name={clickedSubcategory.category_name} onNameChange={onNameChange} onCategoryChange={onCategoryChange} isSubmitDisabled={isSubmitDisabled} />

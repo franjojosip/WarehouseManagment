@@ -7,6 +7,38 @@ export default class AuthenticationDataStore extends React.Component {
         this.httpClient = new HttpClient("users");
     }
 
+    login = async (credentials) => {
+        const headers = new Headers();
+        headers.append("Content-Type", "application/json");
+
+        const options = {
+            method: "POST",
+            headers,
+            body: JSON.stringify(credentials)
+        }
+        const request = new Request(this.httpClient.webApiUrl + "/login", options);
+        let response = await (fetch(request));
+        let data = await response.json();
+        return data;
+    }
+
+    logout = async (refreshToken) => {
+        const headers = new Headers();
+        headers.append("Content-Type", "application/json");
+
+        const options = {
+            method: "POST",
+            headers,
+            body: JSON.stringify({
+                refreshToken
+            })
+        }
+        const request = new Request(this.httpClient.webApiUrl + "/logout", options);
+        let response = await (fetch(request));
+        let data = await response.json();
+        return data;
+    }
+
     create = async (user) => {
         const headers = new Headers();
         headers.append("Content-Type", "application/json");

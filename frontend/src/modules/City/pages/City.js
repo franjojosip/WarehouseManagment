@@ -4,7 +4,6 @@ import Layout from "../../../common/layouts/Layout"
 import CityViewStore from '../stores/CityViewStore'
 import Table from '../../../common/layouts/Table';
 import ModalCity from '../components/ModalCity';
-import Loading from '../../../common/layouts/Loading';
 import { ToastContainer } from 'react-toastify';
 
 import "../styles/City.css";
@@ -51,8 +50,7 @@ class City extends React.Component {
             </tr>);
         });
         return (
-            <Layout>
-                <Loading visible={isLoaderVisible} />
+            <Layout isLoaderVisible={isLoaderVisible}>
                 <ModalCity modalTarget="modalTargetAdd" onSubmit={onCreateClick} errorMessage={errorMessage} name={clickedCity.name} zip_code={clickedCity.zip_code} onNameChange={onNameChange} onZipCodeChange={onZipCodeChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalCity modalTarget="modalTargetEdit" onSubmit={onEditClick} errorMessage={errorMessage} name={clickedCity.name} zip_code={clickedCity.zip_code} onNameChange={onNameChange} onZipCodeChange={onZipCodeChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalCity modalTarget="modalTargetDelete" onSubmit={onDeleteClick} errorMessage={errorMessage} name={clickedCity.name} zip_code={clickedCity.zip_code} onNameChange={onNameChange} onZipCodeChange={onZipCodeChange} isSubmitDisabled={isSubmitDisabled} />

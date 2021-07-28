@@ -4,7 +4,7 @@ import { Form, Button, Dropdown, DropdownButton } from 'react-bootstrap';
 import '../styles/Login.css';
 
 
-export default function LoginForm({ email, password, onEmailChange, onPasswordChange, onForgotPasswordClick, onSubmit, isSubmitDisabled }) {
+export default function LoginForm({ errorMessage, email, password, onEmailChange, onPasswordChange, onForgotPasswordClick, onSubmit, isSubmitDisabled }) {
 
   const config = {
     rules: [
@@ -32,6 +32,14 @@ export default function LoginForm({ email, password, onEmailChange, onPasswordCh
             placeholder="Unesite email"
             onChange={(e) => onEmailChange(e.target.value)}
           />
+          <div hidden={!isSubmitDisabled}>
+            <p style={{ color: "red", paddingTop:5 }}>
+              {errorMessage.email ?
+                errorMessage.email
+                : null
+              }
+            </p>
+          </div>
         </Form.Group>
         <Form.Group size="md" controlId="password">
           <Form.Label>Lozinka *</Form.Label>
@@ -45,12 +53,23 @@ export default function LoginForm({ email, password, onEmailChange, onPasswordCh
             placeholder="Unesite lozinku"
             onChange={(e) => onPasswordChange(e.target.value)}
           />
+          <div hidden={!isSubmitDisabled}>
+            <p style={{ color: "red", paddingTop:5 }}>
+              {errorMessage.password ?
+                errorMessage.password
+                : null
+              }
+            </p>
+          </div>
         </Form.Group>
-        <div hidden={!isSubmitDisabled}>
-          <p style={{ color: "red", textAlign:"right"}}>
-            Provjerite sva polja !!!
-          </p>
-        </div>
+          <div hidden={errorMessage.credentials == null}>
+            <p style={{ color: "red" }}>
+              {errorMessage.credentials ?
+                errorMessage.credentials
+                : null
+              }
+            </p>
+          </div>
         <a href="/forgotpassword">Zaboravljena lozinka?</a>
         <div className="modal-footer" style={{ padding: 0 }}>
           <Button type="submit" disabled={isSubmitDisabled} className="btn btn-success" onClick={(e) => { e.preventDefault(); onSubmit() }}>Prijavi se</Button>

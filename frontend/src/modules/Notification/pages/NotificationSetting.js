@@ -4,7 +4,6 @@ import Layout from "../../../common/layouts/Layout"
 import NotificationSettingViewStore from '../stores/NotificationSettingViewStore'
 import Table from '../../../common/layouts/Table';
 import ModalNotificationSetting from '../components/ModalNotificationSetting';
-import Loading from '../../../common/layouts/Loading';
 
 import "../styles/Notification.css";
 
@@ -42,8 +41,7 @@ class NotificationSetting extends React.Component {
             </tr>);
         });
         return (
-            <Layout>
-                <Loading visible={isLoaderVisible} />
+            <Layout isLoaderVisible={isLoaderVisible}>
                 <ModalNotificationSetting modalTarget="modalTargetAdd" days={days} notification_types={notification_types} day_of_week_name={clickedNotificationSetting.day_of_week_name} time={clickedNotificationSetting.time} email={clickedNotificationSetting.email} notification_type_name={clickedNotificationSetting.notification_type_name} onDayOfWeekChange={onDayOfWeekChange} onTimeChange={onTimeChange} onNotificationTypeChange={onNotificationTypeChange} onSubmit={onCreateClick} isSubmitDisabled={isSubmitDisabled} />
                 <ModalNotificationSetting modalTarget="modalTargetEdit" days={days} notification_types={notification_types} day_of_week_name={clickedNotificationSetting.day_of_week_name} time={clickedNotificationSetting.time} email={clickedNotificationSetting.email} notification_type_name={clickedNotificationSetting.notification_type_name} onDayOfWeekChange={onDayOfWeekChange} onTimeChange={onTimeChange} onNotificationTypeChange={onNotificationTypeChange} onSubmit={onEditClick} isSubmitDisabled={isSubmitDisabled} />
                 <ModalNotificationSetting modalTarget="modalTargetDelete" days={days} notification_types={notification_types} day_of_week_name={clickedNotificationSetting.day_of_week_name} time={clickedNotificationSetting.time} email={clickedNotificationSetting.email} notification_type_name={clickedNotificationSetting.notification_type_name} onDayOfWeekChange={onDayOfWeekChange} onTimeChange={onTimeChange} onNotificationTypeChange={onNotificationTypeChange} onSubmit={onDeleteClick} isSubmitDisabled={isSubmitDisabled} />

@@ -14,15 +14,15 @@ import StocktakingModuleStore from "../modules/Stocktaking/stores/StocktakingMod
 import EntryModuleStore from "../modules/Entry/stores/EntryModuleStore";
 import NotificationModuleStore from "../modules/Notification/stores/NotificationModuleStore";
 import RoleModuleStore from "../modules/Role/stores/RoleModuleStore";
-
+import HomeModuleStore from "../modules/Home/stores/HomeModuleStore";
 
 const notFound = new RouterState('notFound');
 
 export class RootStore {
-    
+
     constructor() {
         this.routerStore = new RouterStore(this, routes, notFound);
-        
+
         this.authenticationModuleStore = new AuthenticationModuleStore(this);
         this.roleModuleStore = new RoleModuleStore(this);
         this.cityModuleStore = new CityModuleStore(this);
@@ -37,5 +37,6 @@ export class RootStore {
         this.stocktakingModuleStore = new StocktakingModuleStore(this);
         this.entryModuleStore = new EntryModuleStore(this);
         this.notificationModuleStore = new NotificationModuleStore(this);
+        this.homeModuleStore = new HomeModuleStore(this);
     }
 }

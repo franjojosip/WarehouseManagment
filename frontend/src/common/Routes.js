@@ -1,11 +1,36 @@
+import { isUserLoggedIn, isUserAdmin } from './LocalStorage';
+
+
+import { RouterState } from 'mobx-state-router';
+
+
+const checkUserAuthenticated = (fromState, toState, routerStore) => {
+    if (isUserLoggedIn()) {
+        if (!isUserAdmin() && (toState.routeName == "notificationlog" || toState.routeName == "notificationsettings")){
+            return Promise.reject(new RouterState('home'));
+        }
+        else if (toState.routeName == "login") {
+            return Promise.reject(new RouterState('home'));
+        }
+        else{
+            return Promise.resolve();
+        }
+    }
+    else {
+        return Promise.reject(new RouterState('login'));
+    }
+};
+
 export const routes = [
     {
         name: 'home',
-        pattern: '/'
+        pattern: '/',
+        beforeEnter: checkUserAuthenticated
     },
     {
         name: 'login',
-        pattern: '/login'
+        pattern: '/login',
+        beforeEnter: checkUserAuthenticated
     },
     {
         name: 'notFound',
@@ -13,35 +38,43 @@ export const routes = [
     },
     {
         name: 'city',
-        pattern: '/city'
+        pattern: '/city',
+        beforeEnter: checkUserAuthenticated
     },
     {
         name: 'packaging',
-        pattern: '/packaging'
+        pattern: '/packaging',
+        beforeEnter: checkUserAuthenticated
     },
     {
         name: 'category',
-        pattern: '/category'
+        pattern: '/category',
+        beforeEnter: checkUserAuthenticated
     },
     {
         name: 'subcategory',
-        pattern: '/subcategory'
+        pattern: '/subcategory',
+        beforeEnter: checkUserAuthenticated
     },
     {
         name: 'product',
-        pattern: '/product'
+        pattern: '/product',
+        beforeEnter: checkUserAuthenticated
     },
     {
         name: 'location',
-        pattern: '/location'
+        pattern: '/location',
+        beforeEnter: checkUserAuthenticated
     },
     {
         name: 'warehouse',
-        pattern: '/warehouse'
+        pattern: '/warehouse',
+        beforeEnter: checkUserAuthenticated
     },
     {
         name: 'user',
-        pattern: '/user'
+        pattern: '/user',
+        beforeEnter: checkUserAuthenticated
     },
     {
         name: 'forgotpassword',
@@ -49,26 +82,32 @@ export const routes = [
     },
     {
         name: 'reciept',
-        pattern: '/reciept'
+        pattern: '/reciept',
+        beforeEnter: checkUserAuthenticated
     },
     {
         name: 'stock',
-        pattern: '/stock'
+        pattern: '/stock',
+        beforeEnter: checkUserAuthenticated
     },
     {
         name: 'stocktaking',
-        pattern: '/stocktaking'
+        pattern: '/stocktaking',
+        beforeEnter: checkUserAuthenticated
     },
     {
         name: 'entry',
-        pattern: '/entry'
+        pattern: '/entry',
+        beforeEnter: checkUserAuthenticated
     },
     {
         name: 'notificationlog',
-        pattern: '/notificationlog'
+        pattern: '/notificationlog',
+        beforeEnter: checkUserAuthenticated
     },
     {
         name: 'notificationsettings',
-        pattern: '/notificationsettings'
+        pattern: '/notificationsettings',
+        beforeEnter: checkUserAuthenticated
     }
 ];

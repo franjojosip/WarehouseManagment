@@ -4,7 +4,6 @@ import Layout from "../../../common/layouts/Layout"
 import CategoryViewStore from '../stores/CategoryViewStore'
 import Table from '../../../common/layouts/Table';
 import ModalCategory from '../components/ModalCategory';
-import Loading from '../../../common/layouts/Loading';
 import { ToastContainer } from 'react-toastify';
 
 import "../styles/Category.css";
@@ -51,8 +50,7 @@ class Category extends React.Component {
         });
 
         return (
-            <Layout>
-                <Loading visible={isLoaderVisible} />
+            <Layout isLoaderVisible={isLoaderVisible}>
                 <ModalCategory modalTarget="modalTargetAdd" errorMessage={errorMessage} onSubmit={onCreateClick} name={clickedCategory.name} onNameChange={onNameChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalCategory modalTarget="modalTargetEdit" errorMessage={errorMessage} onSubmit={onEditClick} name={clickedCategory.name} onNameChange={onNameChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalCategory modalTarget="modalTargetDelete" errorMessage={errorMessage} onSubmit={onDeleteClick} name={clickedCategory.name} onNameChange={onNameChange} isSubmitDisabled={isSubmitDisabled} />

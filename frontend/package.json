@@ -16,6 +16,7 @@
         "customize-cra": "^1.0.0",
         "email-validator": "^2.0.4",
         "history": "^4.7.2",
+        "mdb-react-ui-kit": "^1.2.0",
         "mdbreact": "^5.1.0",
         "mobx": "^4.8.0",
         "mobx-react": "^5.4.3",

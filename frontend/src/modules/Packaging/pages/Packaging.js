@@ -4,7 +4,6 @@ import Layout from "../../../common/layouts/Layout"
 import PackagingViewStore from '../stores/PackagingViewStore'
 import Table from '../../../common/layouts/Table';
 import ModalPackaging from '../components/ModalPackaging';
-import Loading from '../../../common/layouts/Loading';
 import { ToastContainer } from 'react-toastify';
 
 import "../styles/Packaging.css";
@@ -49,8 +48,7 @@ class Packaging extends React.Component {
         });
 
         return (
-            <Layout>
-                <Loading visible={isLoaderVisible} />
+            <Layout isLoaderVisible={isLoaderVisible}>
                 <ModalPackaging modalTarget="modalTargetAdd" onSubmit={onCreateClick} errorMessage={errorMessage} name={clickedPackaging.name} onNameChange={onNameChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalPackaging modalTarget="modalTargetEdit" onSubmit={onEditClick} errorMessage={errorMessage} name={clickedPackaging.name} onNameChange={onNameChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalPackaging modalTarget="modalTargetDelete" onSubmit={onDeleteClick} errorMessage={errorMessage} name={clickedPackaging.name} onNameChange={onNameChange} isSubmitDisabled={isSubmitDisabled} />

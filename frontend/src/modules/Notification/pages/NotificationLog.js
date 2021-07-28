@@ -4,7 +4,6 @@ import Layout from "../../../common/layouts/Layout"
 import NotificationViewStore from '../stores/NotificationViewStore'
 import Table from '../../../common/layouts/Table';
 import ModalNotificationLog from '../components/ModalNotificationLog';
-import Loading from '../../../common/layouts/Loading';
 
 import "../styles/Notification.css";
 import { Button } from 'react-bootstrap';
@@ -35,8 +34,7 @@ class Notification extends React.Component {
             </tr>);
         });
         return (
-            <Layout>
-                <Loading visible={isLoaderVisible} />
+            <Layout isLoaderVisible={isLoaderVisible}>
                 <ModalNotificationLog modalTarget={"modalTargetShow"} notification_name={clickedNotification.notification_name} notification_type={clickedNotification.notification_type} notification_products={clickedNotification.products} email={clickedNotification.email} date_created={clickedNotification.date_created} />
                 <Table title={title} hideAddButton={true} columns={columns} tableRows={tableRows} page={page} pageSize={pageSize} totalPages={totalPages} previousEnabled={previousEnabled} nextEnabled={nextEnabled} onActionClicked={onNotificationClicked} onPageClick={onPageClick} onChangePageSize={onChangePageSize} onPreviousPageClick={onPreviousPageClick} onNextPageClick={onNextPageClick} />
             </Layout >
