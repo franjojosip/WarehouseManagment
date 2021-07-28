@@ -7,53 +7,22 @@ export default class SubcategoryDataStore extends React.Component {
         this.httpClient = new HttpClient("subcategory");
     }
 
-    create = async (subcategory) => {
-        const headers = new Headers();
-        headers.append("Content-Type", "application/json");
+    create = async (subcategory) => this.httpClient.create(
+        this.httpClient.createBodyWithTokens({
+            name: subcategory.name,
+            category_id: subcategory.category_id
+        }, true))
 
-        const options = {
-            method: "POST",
-            headers,
-            body: JSON.stringify({ name: subcategory.name, category_id: subcategory.category_id })
-        }
-        const request = new Request(this.httpClient.webApiUrl + "/add", options);
-        let response = await (fetch(request));
-        let data = await response.json();
-        return data;
-    }
+    get = async () => this.httpClient.get(this.httpClient.createBodyWithTokens({}));
 
-    get = async () => {
-        const options = {
-            method: "GET"
-        }
-        const request = new Request(this.httpClient.webApiUrl + "/", options);
-        let response = await (fetch(request));
-        let data = await response.json();
-        return data;
-    }
+    update = async (subcategory) => this.httpClient.update(
+        subcategory.id,
+        this.httpClient.createBodyWithTokens({
+            name: subcategory.name,
+            category_id: subcategory.category_id
+        }, true))
 
-    update = async (subcategory) => {
-        const headers = new Headers();
-        headers.append("Content-Type", "application/json");
+    delete = async (id) => this.httpClient.delete(id, this.httpClient.createBodyWithTokens({}, true));
 
-        const options = {
-            method: "PATCH",
-            headers,
-            body: JSON.stringify({ name: subcategory.name, category_id: subcategory.category_id })
-        }
-        const request = new Request(this.httpClient.webApiUrl + "/" + subcategory.id, options);
-        let response = await (fetch(request));
-        let data = await response.json();
-        return data;
-    }
-
-    delete = async (id) => {
-        const options = {
-            method: "DELETE"
-        }
-        const request = new Request(this.httpClient.webApiUrl + "/remove/" + id, options);
-        let response = await (fetch(request));
-        let data = await response.json();
-        return data;
-    }
+    submit = async (id) => this.httpClient.submit(id, this.httpClient.createBodyWithTokens({}));
 }

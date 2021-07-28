@@ -1,9 +1,10 @@
 import React from 'react';
-import { Nav, Navbar, Container, NavDropdown } from 'react-bootstrap';
+import { Nav, Navbar } from 'react-bootstrap';
 import "./TopNavigationBar.css"
-import { inject, observer } from 'mobx-react';
+import { inject } from 'mobx-react';
 import AuthenticationViewStore from "../../../modules/Auth/stores/AuthenticationViewStore";
 import logo from "./logout.png"
+import { getUser } from '../../LocalStorage';
 
 
 @inject(
@@ -13,11 +14,11 @@ import logo from "./logout.png"
 )
 class TopNavigationBar extends React.Component {
     render() {
-
         const { onLogout } = this.props.viewStore;
+        let user = getUser();
         return (
             <Navbar>
-                <Nav.Link style={{ float: "left", color: "white" }} href="">Dobrodošao nazad, Mark Otto !</Nav.Link>
+                <Nav.Link style={{ float: "left", color: "white" }} href="">Dobrodošao nazad, {user.fname} {user.lname}!</Nav.Link>
                 <Nav.Link id="link" onClick={() => onLogout()}>
                     Odjavi se
                     <img src={logo}></img>

@@ -1,18 +1,21 @@
-import { isUserLoggedIn, isUserAdmin } from './LocalStorage';
-
-
+import { isUserLoggedIn, isUserAdmin, getUser, clearUser, isUserTokenExpired } from './LocalStorage';
 import { RouterState } from 'mobx-state-router';
 
 
 const checkUserAuthenticated = (fromState, toState, routerStore) => {
+    if(isUserTokenExpired() && getUser() != null || getUser() == null){
+        clearUser();
+        return Promise.reject(new RouterState('login'));
+    }
+
     if (isUserLoggedIn()) {
-        if (!isUserAdmin() && (toState.routeName == "notificationlog" || toState.routeName == "notificationsettings")){
+        if (!isUserAdmin() && (toState.routeName == "notificationlog" || toState.routeName == "notificationsettings")) {
             return Promise.reject(new RouterState('home'));
         }
         else if (toState.routeName == "login") {
             return Promise.reject(new RouterState('home'));
         }
-        else{
+        else {
             return Promise.resolve();
         }
     }

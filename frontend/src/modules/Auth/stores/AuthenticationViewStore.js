@@ -2,6 +2,7 @@ import { action, observable } from "mobx";
 import EmailValidator from "email-validator";
 import { toast } from 'react-toastify';
 import { saveUser, getUser, clearUser } from '../../../common/LocalStorage'
+import moment from 'moment';
 
 class AuthenticationViewStore {
     constructor(rootStore) {
@@ -100,7 +101,7 @@ class AuthenticationViewStore {
         this.showLoader();
         let user = getUser();
         if (user != null && user.refreshToken != "") {
-            let response = await (this.dataStore.logout(user.refreshToken));
+            let response = await (this.dataStore.logout(user.accessToken, user.refreshToken));
             if (response.error) {
                 toast.error(response.error, {
                     position: "bottom-right",
@@ -113,9 +114,9 @@ class AuthenticationViewStore {
             }
             else {
                 await this.hideLoader();
-                clearUser();
-                this.routerStore.goTo("login");
             }
+            clearUser();
+            this.routerStore.goTo("login");
         }
         await this.hideLoader();
     }

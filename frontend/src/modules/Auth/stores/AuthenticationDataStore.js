@@ -8,12 +8,9 @@ export default class AuthenticationDataStore extends React.Component {
     }
 
     login = async (credentials) => {
-        const headers = new Headers();
-        headers.append("Content-Type", "application/json");
-
         const options = {
             method: "POST",
-            headers,
+            headers: this.httpClient.appJsonHeaders,
             body: JSON.stringify(credentials)
         }
         const request = new Request(this.httpClient.webApiUrl + "/login", options);
@@ -22,14 +19,12 @@ export default class AuthenticationDataStore extends React.Component {
         return data;
     }
 
-    logout = async (refreshToken) => {
-        const headers = new Headers();
-        headers.append("Content-Type", "application/json");
-
+    logout = async (accessToken, refreshToken) => {
         const options = {
             method: "POST",
-            headers,
+            headers: this.httpClient.appJsonHeaders,
             body: JSON.stringify({
+                accessToken,
                 refreshToken
             })
         }
@@ -40,13 +35,10 @@ export default class AuthenticationDataStore extends React.Component {
     }
 
     create = async (user) => {
-        const headers = new Headers();
-        headers.append("Content-Type", "application/json");
-
         const options = {
             method: "POST",
-            headers,
-            body: JSON.stringify({
+            headers: this.httpClient.appJsonHeaders,
+            body: this.httpClient.createBodyWithTokens({
                 fname: user.fname,
                 lname: user.lname,
                 email: user.email,
@@ -61,44 +53,17 @@ export default class AuthenticationDataStore extends React.Component {
         return data;
     }
 
-    get = async () => {
-        const options = {
-            method: "GET"
-        }
-        const request = new Request(this.httpClient.webApiUrl + "/", options);
-        let response = await (fetch(request));
-        let data = await response.json();
-        return data;
-    }
+    get = async () => this.httpClient.get(this.httpClient.createBodyWithTokens({}));
 
-    update = async (user) => {
-        const headers = new Headers();
-        headers.append("Content-Type", "application/json");
+    update = async (user) => this.httpClient.update(
+        user.id,
+        this.httpClient.createBodyWithTokens({
+            fname: user.fname,
+            lname: user.lname,
+            email: user.email,
+            role_id: user.role_id,
+            phone: user.phone
+        }))
 
-        const options = {
-            method: "PATCH",
-            headers,
-            body: JSON.stringify({
-                fname: user.fname,
-                lname: user.lname,
-                email: user.email,
-                role_id: user.role_id,
-                phone: user.phone
-            })
-        }
-        const request = new Request(this.httpClient.webApiUrl + "/" + user.id, options);
-        let response = await (fetch(request));
-        let data = await response.json();
-        return data;
-    }
-
-    delete = async (id) => {
-        const options = {
-            method: "DELETE"
-        }
-        const request = new Request(this.httpClient.webApiUrl + "/remove/" + id, options);
-        let response = await (fetch(request));
-        let data = await response.json();
-        return data;
-    }
+    delete = async (id) => this.httpClient.delete(id, this.httpClient.createBodyWithTokens({}));
 }

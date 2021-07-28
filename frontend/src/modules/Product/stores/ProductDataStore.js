@@ -7,63 +7,24 @@ export default class ProductDataStore extends React.Component {
         this.httpClient = new HttpClient("product");
     }
 
-    create = async (product) => {
-        const headers = new Headers();
-        headers.append("Content-Type", "application/json");
+    create = async (product) => this.httpClient.create(
+        this.httpClient.createBodyWithTokens({
+            name: product.name,
+            category_id: product.category_id,
+            subcategory_id: product.subcategory_id != "" ? product.subcategory_id : null,
+            packaging_id: product.packaging_id != "" ? product.packaging_id : null,
+        }, true))
 
-        const options = {
-            method: "POST",
-            headers,
-            body: JSON.stringify({
-                name: product.name,
-                category_id: product.category_id,
-                subcategory_id: product.subcategory_id != "" ? product.subcategory_id : null,
-                packaging_id: product.packaging_id != "" ? product.packaging_id : null,
-            })
-        }
-        const request = new Request(this.httpClient.webApiUrl + "/add", options);
-        let response = await (fetch(request));
-        let data = await response.json();
-        return data;
-    }
+    get = async () => this.httpClient.get(this.httpClient.createBodyWithTokens({}));
 
-    get = async () => {
-        const options = {
-            method: "GET"
-        }
-        const request = new Request(this.httpClient.webApiUrl + "/", options);
-        let response = await (fetch(request));
-        let data = await response.json();
-        return data;
-    }
+    update = async (product) => this.httpClient.update(
+        product.id,
+        this.httpClient.createBodyWithTokens({
+            name: product.name,
+            category_id: product.category_id,
+            subcategory_id: product.subcategory_id != "" ? product.subcategory_id : null,
+            packaging_id: product.packaging_id != "" ? product.packaging_id : null,
+        }, true))
 
-    update = async (product) => {
-        const headers = new Headers();
-        headers.append("Content-Type", "application/json");
-
-        const options = {
-            method: "PATCH",
-            headers,
-            body: JSON.stringify({
-                name: product.name,
-                category_id: product.category_id,
-                subcategory_id: product.subcategory_id != "" ? product.subcategory_id : null,
-                packaging_id: product.packaging_id != "" ? product.packaging_id : null,
-            })
-        }
-        const request = new Request(this.httpClient.webApiUrl + "/" + product.id, options);
-        let response = await (fetch(request));
-        let data = await response.json();
-        return data;
-    }
-
-    delete = async (id) => {
-        const options = {
-            method: "DELETE"
-        }
-        const request = new Request(this.httpClient.webApiUrl + "/remove/" + id, options);
-        let response = await (fetch(request));
-        let data = await response.json();
-        return data;
-    }
+    delete = async (id) => this.httpClient.delete(id, this.httpClient.createBodyWithTokens({}, true));
 }

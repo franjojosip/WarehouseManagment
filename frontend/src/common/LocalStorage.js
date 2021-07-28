@@ -1,4 +1,7 @@
+import moment from "moment";
+
 export const saveUser = (user) => {
+    user.logged_date = moment().format("YYYY/MM/DD");
     localStorage.setItem('user', JSON.stringify(user))
 }
 
@@ -17,10 +20,19 @@ export const clearStorage = () => {
 
 export const isUserLoggedIn = () => {
     var user = JSON.parse(localStorage.getItem('user'));
-    return user != null && user.id != "";
+    return user&& user.id != "";
 }
 
 export const isUserAdmin = () => {
     var user = JSON.parse(localStorage.getItem('user'));
-    return user != null && user.id != "" && user.role == "Administrator";
+    return user && user.id != "" && user.role == "Administrator";
+}
+
+export const isUserTokenExpired = () => {
+    var user = JSON.parse(localStorage.getItem('user'));
+    if (user && user.logged_date) {
+        return moment().diff(user.logged_date, 'days') > 0;
+    }
+    else return true;
+
 }

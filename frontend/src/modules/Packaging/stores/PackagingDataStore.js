@@ -7,54 +7,18 @@ export default class PackagingDataStore extends React.Component {
         this.httpClient = new HttpClient("packaging");
     }
 
+    create = async (packaging) => this.httpClient.create(
+        this.httpClient.createBodyWithTokens({
+            name: packaging.name
+        }, true))
 
-    create = async (packaging) => {
-        const headers = new Headers();
-        headers.append("Content-Type", "application/json");
+    get = async () => this.httpClient.get(this.httpClient.createBodyWithTokens({}));
 
-        const options = {
-            method: "POST",
-            headers,
-            body: JSON.stringify({ name: packaging.name })
-        }
-        const request = new Request(this.httpClient.webApiUrl + "/add", options);
-        let response = await (fetch(request));
-        let data = await response.json();
-        return data;
-    }
+    update = async (packaging) => this.httpClient.update(
+        packaging.id,
+        this.httpClient.createBodyWithTokens({
+            name: packaging.name
+        }, true))
 
-    get = async () => {
-        const options = {
-            method: "GET"
-        }
-        const request = new Request(this.httpClient.webApiUrl + "/", options);
-        let response = await (fetch(request));
-        let data = await response.json();
-        return data;
-    }
-
-    update = async (packaging) => {
-        const headers = new Headers();
-        headers.append("Content-Type", "application/json");
-
-        const options = {
-            method: "PATCH",
-            headers,
-            body: JSON.stringify({ name: packaging.name })
-        }
-        const request = new Request(this.httpClient.webApiUrl + "/" + packaging.id, options);
-        let response = await (fetch(request));
-        let data = await response.json();
-        return data;
-    }
-
-    delete = async (id) => {
-        const options = {
-            method: "DELETE"
-        }
-        const request = new Request(this.httpClient.webApiUrl + "/remove/" + id, options);
-        let response = await (fetch(request));
-        let data = await response.json();
-        return data;
-    }
+    delete = async (id) => this.httpClient.delete(id, this.httpClient.createBodyWithTokens({}, true));
 }

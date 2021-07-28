@@ -7,53 +7,20 @@ export default class CityDataStore extends React.Component {
         this.httpClient = new HttpClient("city");
     }
 
-    create = async (city) => {
-        const headers = new Headers();
-        headers.append("Content-Type", "application/json");
+    create = async (city) => this.httpClient.create(
+        this.httpClient.createBodyWithTokens({
+            name: city.name,
+            zip_code: city.zip_code
+        }, true))
 
-        const options = {
-            method: "POST",
-            headers,
-            body: JSON.stringify({ name: city.name, zip_code: city.zip_code })
-        }
-        const request = new Request(this.httpClient.webApiUrl + "/add", options);
-        let response = await (fetch(request));
-        let data = await response.json();
-        return data;
-    }
+    get = async () => this.httpClient.get(this.httpClient.createBodyWithTokens({}));
 
-    get = async () => {
-        const options = {
-            method: "GET"
-        }
-        const request = new Request(this.httpClient.webApiUrl + "/", options);
-        let response = await (fetch(request));
-        let data = await response.json();
-        return data;
-    }
+    update = async (city) => this.httpClient.update(
+        city.id,
+        this.httpClient.createBodyWithTokens({
+            name: city.name,
+            zip_code: city.zip_code
+        }, true))
 
-    update = async (city) => {
-        const headers = new Headers();
-        headers.append("Content-Type", "application/json");
-
-        const options = {
-            method: "PATCH",
-            headers,
-            body: JSON.stringify({ name: city.name, zip_code: city.zip_code })
-        }
-        const request = new Request(this.httpClient.webApiUrl + "/" + city.id, options);
-        let response = await (fetch(request));
-        let data = await response.json();
-        return data;
-    }
-
-    delete = async (id) => {
-        const options = {
-            method: "DELETE"
-        }
-        const request = new Request(this.httpClient.webApiUrl + "/remove/" + id, options);
-        let response = await (fetch(request));
-        let data = await response.json();
-        return data;
-    }
+    delete = async (id) => this.httpClient.delete(id, this.httpClient.createBodyWithTokens({}, true));
 }
