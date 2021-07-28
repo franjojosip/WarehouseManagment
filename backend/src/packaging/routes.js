@@ -8,10 +8,9 @@ const add = require('./add/index');
 const remove = require('./remove/index');
 const edit = require('./edit/index');
 
-//Add authenticateJWT and authenticateAdmin check
-router.get('/', list);
-router.post('/add', add);
-router.delete('/remove/:id', remove);
-router.patch('/:id', edit);
+router.post('/', authenticateJWT, list);
+router.post('/add', authenticateJWT, authenticateAdmin, add);
+router.delete('/remove/:id', authenticateJWT, authenticateAdmin, remove);
+router.patch('/:id', authenticateJWT, authenticateAdmin, edit);
 
 module.exports = router;

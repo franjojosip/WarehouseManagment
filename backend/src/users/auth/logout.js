@@ -3,7 +3,13 @@ const User = require("../schema");
 
 async function logout(req, res) {
   try {
+    const token = req.body.accessToken;
+    const refreshToken = req.body.refreshToken;
+    if (token == null || refreshToken == null)
+      return res.status(401).json({ error: "Neispravni tokeni!" });
+
     const user = await User.findOne({ refreshToken: req.body.refreshToken });
+    
     if (user) {
       user.refreshToken = "";
       await user.save();

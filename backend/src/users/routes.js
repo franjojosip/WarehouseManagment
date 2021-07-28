@@ -11,13 +11,12 @@ const login = require('./auth/login')
 const register = require('./auth/register')
 const logout = require('./auth/logout')
 
-//Add authenticateAdmin and authenticateJWT check for list, edit, remove
-router.get('/', list);
-router.patch('/:id', checkParamID, edit);
-router.delete('/remove/:id', checkParamID, remove);
+router.post('/', authenticateJWT, authenticateAdmin, list);
+router.patch('/:id', checkParamID, authenticateJWT, authenticateAdmin, edit);
+router.delete('/remove/:id', checkParamID, authenticateJWT, authenticateAdmin, remove);
 
 router.post('/login', login);
-router.post('/register', register); //Add authenticateAdmin and authenticateJWT check
+router.post('/register', authenticateJWT, authenticateAdmin, register);
 router.post('/logout', logout);
 
 module.exports = router;
