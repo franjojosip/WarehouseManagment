@@ -7,7 +7,7 @@ async function list(req, res) {
   try {
     let reciepts = [];
     let user = await User.findOne({ _id: req.body.userId }).populate("role_id", { name: 1 });
-    if (user.role_id.name.toString() == "administrator") {
+    if (user.role_id.name.toLowerCase() == "administrator") {
       reciepts = await Reciept.find({})
         .populate("warehouse_id", { name: 1, location_id: 1 })
         .populate("product_id", { name: 1 })
