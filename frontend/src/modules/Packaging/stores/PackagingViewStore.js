@@ -84,6 +84,7 @@ class PackagingViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
+            console.clear();
         }
         else {
             toast.success(response.status, {
@@ -135,6 +136,7 @@ class PackagingViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
+            console.clear();
             this.allData = [{ id: "", name: "Nema podataka" }];
         }
         else {

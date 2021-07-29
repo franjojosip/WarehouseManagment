@@ -15,7 +15,7 @@ export default class EntryDataStore extends React.Component {
             quantity: entry.quantity
         }))
 
-    get = async () => this.httpClient.get(this.httpClient.createBodyWithTokens({}));
+    get = async () => this.httpClient.get();
 
     update = async (entry) => this.httpClient.update(
         entry.id,

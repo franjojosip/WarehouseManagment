@@ -137,6 +137,7 @@ class HomeViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
+            console.clear();
         }
         else {
             toast.success(response.status, {
@@ -196,6 +197,7 @@ class HomeViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
+            console.clear();
             this.allData = [
                 {
                     id: "",
@@ -265,6 +267,7 @@ class HomeViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
+            console.clear();
         }
         else {
             if (response.cities.length > 0) {
@@ -287,6 +290,7 @@ class HomeViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
+            console.clear();
         }
         else {
             if (response.locations.length > 0) {
@@ -314,6 +318,7 @@ class HomeViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
+            console.clear();
         }
         else {
             if (response.warehouses.length > 0) {
@@ -343,6 +348,7 @@ class HomeViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
+            console.clear();
         }
         else {
             if (response.products.length > 0) {

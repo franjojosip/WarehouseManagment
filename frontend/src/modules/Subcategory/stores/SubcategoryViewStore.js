@@ -98,6 +98,7 @@ class SubcategoryViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
+            console.clear();
         }
         else {
             toast.success(response.status, {
@@ -149,6 +150,7 @@ class SubcategoryViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
+            console.clear();
             this.allData = [{ id: "", name: "Nema podataka", category_id: "", category_name: "" }];
         }
         else {
@@ -175,6 +177,7 @@ class SubcategoryViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
+            console.clear();
         }
         else {
             if (response.categories.length > 0) {

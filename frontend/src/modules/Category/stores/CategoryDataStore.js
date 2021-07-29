@@ -12,7 +12,7 @@ export default class CategoryDataStore extends React.Component {
             name: category.name
         }, true))
 
-    get = async () => this.httpClient.get(this.httpClient.createBodyWithTokens({}));
+    get = async () => this.httpClient.get();
 
     update = async (category) => this.httpClient.update(
         category.id,

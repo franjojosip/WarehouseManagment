@@ -13,7 +13,7 @@ export default class SubcategoryDataStore extends React.Component {
             category_id: subcategory.category_id
         }, true))
 
-    get = async () => this.httpClient.get(this.httpClient.createBodyWithTokens({}));
+    get = async () => this.httpClient.get();
 
     update = async (subcategory) => this.httpClient.update(
         subcategory.id,

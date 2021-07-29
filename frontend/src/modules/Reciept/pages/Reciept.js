@@ -101,7 +101,7 @@ class Reciept extends React.Component {
                                                             <td>
                                                                 {
                                                                     item.isSubmitted ?
-                                                                    <i className="fa fa-fw fa-check" style={{ fontSize: '1.4em' }} />
+                                                                        <i className="fa fa-fw fa-check" style={{ fontSize: '1.4em' }} />
                                                                         :
                                                                         <span className="table-submit">
                                                                             <button type="button" onClick={() => onRecieptClicked(item, false)} data-toggle="modal" data-target="#modalTargetSubmit" className="btn btn-info btn-rounded btn-sm my-0">
@@ -132,7 +132,7 @@ class Reciept extends React.Component {
                 <ModalReciept modalTarget="modalTargetDelete" errorMessage={errorMessage} warehouses={filteredWarehouses} cities={cities} locations={filteredLocations} products={products} onSubmit={onDeleteClick} warehouse_name={clickedReciept.warehouse_name} city_name={clickedReciept.city_name} location_name={clickedReciept.location_name} category_name={clickedReciept.category_name} subcategory_name={clickedReciept.subcategory_name} product_name={clickedReciept.product_name} subcategory_name={clickedReciept.subcategory_name} packaging_name={clickedReciept.packaging_name} quantity={clickedReciept.quantity} onWarehouseChange={onWarehouseChange} onCityChange={onCityChange} onLocationChange={onLocationChange} onProductChange={onProductChange} onQuantityChange={onQuantityChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalRecieptSubmit onSubmit={onSubmitClick} />
                 <ToastContainer style={{ fontSize: 15 }} />
-                <CollapsibleTable title={title} tableNestedRows={tableNestedRows} tableParentColumns={tableParentColumns} page={page} pageSize={pageSize} totalPages={totalPages} previousEnabled={previousEnabled} nextEnabled={nextEnabled} onActionClicked={onRecieptClicked} onPageClick={onPageClick} onChangePageSize={onChangePageSize} onPreviousPageClick={onPreviousPageClick} onNextPageClick={onNextPageClick} />
+                <CollapsibleTable isAdmin={true} title={title} tableNestedRows={tableNestedRows} tableParentColumns={tableParentColumns} page={page} pageSize={pageSize} totalPages={totalPages} previousEnabled={previousEnabled} nextEnabled={nextEnabled} onActionClicked={onRecieptClicked} onPageClick={onPageClick} onChangePageSize={onChangePageSize} onPreviousPageClick={onPreviousPageClick} onNextPageClick={onNextPageClick} />
             </Layout>
         );
     }

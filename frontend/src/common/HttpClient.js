@@ -12,6 +12,7 @@ export default class HttpClient extends React.Component {
     createAppJsonHeaders() {
         this.appJsonHeaders = new Headers();
         this.appJsonHeaders.append("Content-Type", "application/json");
+        this.appJsonHeaders.append('Access-Control-Allow-Credentials', 'true');
     }
 
     createBodyWithTokens(object, isAdminRoute) {
@@ -25,6 +26,7 @@ export default class HttpClient extends React.Component {
     }
 
     create = async (body) => {
+        console.log(body);
         const options = {
             method: "POST",
             headers: this.appJsonHeaders,
@@ -40,7 +42,7 @@ export default class HttpClient extends React.Component {
         const options = {
             method: "POST",
             headers: this.appJsonHeaders,
-            body
+            body: this.createBodyWithTokens({})
         }
         const request = new Request(this.webApiUrl + "/", options);
         let response = await (fetch(request));
@@ -62,7 +64,7 @@ export default class HttpClient extends React.Component {
 
     delete = async (id, body) => {
         const options = {
-            method: "REMOVE",
+            method: "DELETE",
             headers: this.appJsonHeaders,
             body
         }

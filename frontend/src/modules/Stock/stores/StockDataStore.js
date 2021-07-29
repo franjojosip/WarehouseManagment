@@ -15,7 +15,7 @@ export default class StockDataStore extends React.Component {
             minimum_quantity: stock.min_quantity,
         }, true))
 
-    get = async () => this.httpClient.get(this.httpClient.createBodyWithTokens({}));
+    get = async () => this.httpClient.get();
 
     update = async (stock) => this.httpClient.update(
         stock.id,

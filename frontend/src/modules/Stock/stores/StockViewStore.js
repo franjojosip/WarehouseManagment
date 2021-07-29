@@ -141,6 +141,7 @@ class StockViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
+            console.clear();
         }
         else {
             toast.success(response.status, {
@@ -192,6 +193,7 @@ class StockViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
+            console.clear();
             this.allData = [{ id: "", name: "Nema podataka", city_id: "", city_name: "", location_id: "", location_name: "", warehouse_id: "", warehouse_name: "", product_id: "", product_name: "", subcategory_id: "", subcategory_name: "", packaging_id: "", packaging_name: "", quantity: 0, min_quantity: 1 }];
         }
         else {
@@ -219,6 +221,7 @@ class StockViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
+            console.clear();
         }
         else {
             if (response.cities.length > 0) {
@@ -241,6 +244,7 @@ class StockViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
+            console.clear();
         }
         else {
             if (response.locations.length > 0) {
@@ -268,6 +272,7 @@ class StockViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
+            console.clear();
         }
         else {
             if (response.warehouses.length > 0) {
@@ -297,6 +302,7 @@ class StockViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
+            console.clear();
         }
         else {
             if (response.products.length > 0) {

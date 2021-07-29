@@ -118,6 +118,7 @@ class WarehouseViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
+            console.clear();
         }
         else {
             toast.success(response.status, {
@@ -169,6 +170,7 @@ class WarehouseViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
+            console.clear();
             this.allData = [{ id: "", name: "Nema podataka", city_id: "", city_name: "", location_id: "", location_name: "", users: [] }];
         }
         else {
@@ -195,6 +197,7 @@ class WarehouseViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
+            console.clear();
         }
         else {
             if (response.cities.length > 0) {
@@ -217,6 +220,7 @@ class WarehouseViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
+            console.clear();
         }
         else {
             if (response.locations.length > 0) {
@@ -244,6 +248,7 @@ class WarehouseViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
+            console.clear();
         }
         else {
             if (response.users.length > 0) {

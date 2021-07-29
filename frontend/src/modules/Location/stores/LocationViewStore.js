@@ -93,6 +93,7 @@ class LocationViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
+            console.clear();
         }
         else {
             toast.success(response.status, {
@@ -144,6 +145,7 @@ class LocationViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
+            console.clear();
             this.allData = [{ id: "", name: "Nema podataka", city_id: "", city_name: "" }];
         }
         else {
@@ -170,6 +172,7 @@ class LocationViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
+            console.clear();
         }
         else {
             if (response.cities.length > 0) {

@@ -6,6 +6,7 @@ import CollapsibleTable from '../../../common/layouts/CollapsibleTable';
 import ModalStock from '../components/ModalStock';
 import Button from "react-bootstrap/Button";
 import { ToastContainer } from 'react-toastify';
+import { getUser } from '../../../common/LocalStorage';
 
 import "../styles/Stock.css";
 
@@ -20,6 +21,8 @@ class Stock extends React.Component {
     render() {
 
         const { products, errorMessage, cities, filteredWarehouses, filteredLocations, clickedStock, onClickedRow, onClickedNestedRow, parentColumns, childColumns, nestedChildColumns, paginatedData, onStockClicked, onWarehouseChange, onProductChange, onCityChange, onLocationChange, onMinimumQuantityChange, onQuantityChange, isLoaderVisible, title, page, pageSize, totalPages, previousEnabled, nextEnabled, isSubmitDisabled, onPageClick, onChangePageSize, onPreviousPageClick, onNextPageClick, onEditClick, onDeleteClick, onCreateClick } = this.props.viewStore;
+        const loggedUser = getUser();
+        let isLoggedAdmin = loggedUser && loggedUser.role.toLowerCase() == "administrator";
 
         let tableParentColumns = parentColumns.map((element, i) => {
             return <th key={"parentColumn" + i} className="text-center">{element}</th>
@@ -41,6 +44,10 @@ class Stock extends React.Component {
         </tbody>);
 
         if (paginatedData.length > 0) {
+            if (!isLoggedAdmin) {
+                tableNestedChildColumns = tableNestedChildColumns.slice(0, -2)
+            }
+
             tableNestedRows = paginatedData.map((element, i) => {
                 let parentRow = element.data.find(item => item.warehouse_id.toString() === element.name.toString());
 
@@ -78,7 +85,9 @@ class Stock extends React.Component {
                                                                     <table className="table table-bordered table-responsive-md table-striped text-center mb-0">
                                                                         <thead>
                                                                             <tr className="info">
-                                                                                {tableNestedChildColumns}
+                                                                                {
+                                                                                    tableNestedChildColumns
+                                                                                }
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody>
@@ -90,19 +99,28 @@ class Stock extends React.Component {
                                                                                         <td>{product.packaging_name}</td>
                                                                                         <td>{product.quantity}</td>
                                                                                         <td>{product.min_quantity}</td>
-                                                                                        <td>
-                                                                                            <span className="table-remove">
-                                                                                                <button type="button" onClick={() => onStockClicked(categoryData, false)} data-toggle="modal" data-target="#modalTargetEdit" className="btn btn-primary btn-rounded btn-sm my-0">
-                                                                                                    Izmijeni
-                                                                                                </button>
-                                                                                            </span></td>
-                                                                                        <td>
-                                                                                            <span className="table-remove">
-                                                                                                <button type="button" onClick={() => onStockClicked(categoryData, false)} data-toggle="modal" data-target="#modalTargetDelete" className="btn btn-danger btn-rounded btn-sm my-0">
-                                                                                                    Obriši
-                                                                                                </button>
-                                                                                            </span>
-                                                                                        </td>
+                                                                                        {
+                                                                                            isLoggedAdmin ?
+                                                                                                <td>
+                                                                                                    <span className="table-remove">
+                                                                                                        <button type="button" onClick={() => onStockClicked(categoryData, false)} data-toggle="modal" data-target="#modalTargetEdit" className="btn btn-primary btn-rounded btn-sm my-0">
+                                                                                                            Izmijeni
+                                                                                                        </button>
+                                                                                                    </span>
+                                                                                                </td>
+                                                                                                : null
+                                                                                        }
+                                                                                        {
+                                                                                            isLoggedAdmin ?
+                                                                                                <td>
+                                                                                                    <span className="table-remove">
+                                                                                                        <button type="button" onClick={() => onStockClicked(categoryData, false)} data-toggle="modal" data-target="#modalTargetDelete" className="btn btn-danger btn-rounded btn-sm my-0">
+                                                                                                            Obriši
+                                                                                                        </button>
+                                                                                                    </span>
+                                                                                                </td>
+                                                                                                : null
+                                                                                        }
                                                                                     </tr>
                                                                                 );
                                                                             })}
@@ -130,7 +148,7 @@ class Stock extends React.Component {
                 <ModalStock modalTarget="modalTargetEdit" errorMessage={errorMessage} warehouses={filteredWarehouses} locations={filteredLocations} cities={cities} products={products} onSubmit={onEditClick} warehouse_name={clickedStock.warehouse_name} product_name={clickedStock.product_name} location_name={clickedStock.location_name} city_name={clickedStock.city_name} quantity={clickedStock.quantity} min_quantity={clickedStock.min_quantity} onWarehouseChange={onWarehouseChange} onProductChange={onProductChange} onCityChange={onCityChange} onLocationChange={onLocationChange} onMinimumQuantityChange={onMinimumQuantityChange} onQuantityChange={onQuantityChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalStock modalTarget="modalTargetDelete" errorMessage={errorMessage} warehouses={filteredWarehouses} locations={filteredLocations} cities={cities} products={products} onSubmit={onDeleteClick} warehouse_name={clickedStock.warehouse_name} product_name={clickedStock.product_name} location_name={clickedStock.location_name} city_name={clickedStock.city_name} quantity={clickedStock.quantity} min_quantity={clickedStock.min_quantity} onWarehouseChange={onWarehouseChange} onProductChange={onProductChange} onCityChange={onCityChange} onLocationChange={onLocationChange} onMinimumQuantityChange={onMinimumQuantityChange} onQuantityChange={onQuantityChange} isSubmitDisabled={isSubmitDisabled} />
                 <ToastContainer style={{ fontSize: 15 }} />
-                <CollapsibleTable title={title} tableNestedRows={tableNestedRows} tableParentColumns={tableParentColumns} page={page} pageSize={pageSize} totalPages={totalPages} previousEnabled={previousEnabled} nextEnabled={nextEnabled} onActionClicked={onStockClicked} onPageClick={onPageClick} onChangePageSize={onChangePageSize} onPreviousPageClick={onPreviousPageClick} onNextPageClick={onNextPageClick} />
+                <CollapsibleTable isAdmin={isLoggedAdmin} title={title} tableNestedRows={tableNestedRows} tableParentColumns={tableParentColumns} page={page} pageSize={pageSize} totalPages={totalPages} previousEnabled={previousEnabled} nextEnabled={nextEnabled} onActionClicked={onStockClicked} onPageClick={onPageClick} onChangePageSize={onChangePageSize} onPreviousPageClick={onPreviousPageClick} onNextPageClick={onNextPageClick} />
             </Layout >
         );
     }

@@ -111,6 +111,7 @@ class AuthenticationViewStore {
                     pauseOnHover: true,
                     progress: undefined,
                 });
+                console.clear();
             }
             else {
                 await this.hideLoader();

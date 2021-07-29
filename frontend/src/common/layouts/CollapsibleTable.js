@@ -3,7 +3,7 @@ import Pagination from './Pagination';
 
 import "./Table.css";
 
-export default function CollapsibleTable({ tableParentColumns, tableNestedRows, title, page, pageSize, totalPages, previousEnabled, nextEnabled, onActionClicked, onPageClick, onChangePageSize, onPreviousPageClick, onNextPageClick }) {
+export default function CollapsibleTable({ isAdmin, tableParentColumns, tableNestedRows, title, page, pageSize, totalPages, previousEnabled, nextEnabled, onActionClicked, onPageClick, onChangePageSize, onPreviousPageClick, onNextPageClick }) {
   return (
     <div className="card col-8 mx-auto mt-5 mb-5">
       <div className="card-body">
@@ -26,9 +26,13 @@ export default function CollapsibleTable({ tableParentColumns, tableNestedRows, 
               </div>
             </div>
             <div className="col-3">
-              <span className="table-add float-right mb-3 mt-3 mr-3">
-                <a className="text-success"><i className="fas fa-plus fa-2x" aria-hidden="true" data-toggle="modal" data-target="#modalTargetAdd" onClick={() => onActionClicked(null, true)}></i></a>
-              </span>
+              {
+                isAdmin ?
+                  <span className="table-add float-right mb-3 mt-3 mr-3">
+                    <a className="text-success"><i className="fas fa-plus fa-2x" aria-hidden="true" data-toggle="modal" data-target="#modalTargetAdd" onClick={() => onActionClicked(null, true)}></i></a>
+                  </span>
+                  : null
+              }
             </div>
           </div>
           <table className="table table-bordered table-responsive-md text-center">

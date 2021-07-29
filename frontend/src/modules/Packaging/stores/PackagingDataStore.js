@@ -12,7 +12,7 @@ export default class PackagingDataStore extends React.Component {
             name: packaging.name
         }, true))
 
-    get = async () => this.httpClient.get(this.httpClient.createBodyWithTokens({}));
+    get = async () => this.httpClient.get();
 
     update = async (packaging) => this.httpClient.update(
         packaging.id,

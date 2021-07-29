@@ -109,6 +109,7 @@ class UserViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
+            console.clear();
         }
         else {
             toast.success(response.status, {
@@ -160,6 +161,7 @@ class UserViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
+            console.clear();
             this.allData = [{ id: "", fname: "Nema podataka", lname: "", email: "", phone: "", role_id: "", role_name: "", password: "" }];
         }
         else {
@@ -186,6 +188,7 @@ class UserViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
+            console.clear();
         }
         else {
             if (response.roles.length > 0) {

@@ -1,6 +1,7 @@
 import { action, observable } from "mobx";
 import { toast } from 'react-toastify';
 import moment from "moment";
+import { getUser } from "../../../common/LocalStorage";
 
 class RecieptViewStore {
     constructor(rootStore) {
@@ -42,12 +43,9 @@ class RecieptViewStore {
         this.findLocations = this.findLocations.bind(this);
         this.findWarehouses = this.findWarehouses.bind(this);
         this.findProducts = this.findProducts.bind(this);
+        this.filterValuesForLoggedUser = this.filterValuesForLoggedUser.bind(this);
 
         this.findCities();
-        this.findLocations();
-        this.findWarehouses();
-        this.findProducts();
-        this.onFind();
     }
 
     @observable isLoaderVisible = false;
@@ -137,6 +135,7 @@ class RecieptViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
+            console.clear();
         }
         else {
             toast.success(response.status, {
@@ -198,6 +197,7 @@ class RecieptViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
+            console.clear();
             this.allData = [
                 {
                     id: "",
@@ -222,6 +222,7 @@ class RecieptViewStore {
 
         }
         else {
+            this.filterValuesForLoggedUser();
             if (response.reciepts.length > 0) {
                 response.reciepts.forEach(item => item.date_created = moment(new Date(item.date_created)).format('YYYY/MM/DD'))
                 this.allData = response.reciepts;
@@ -256,6 +257,18 @@ class RecieptViewStore {
     };
 
     @action
+    filterValuesForLoggedUser() {
+        let loggedUser = getUser();
+        if (loggedUser.role.toLowerCase() != "administrator") {
+            let name = loggedUser.fname + " " + loggedUser.lname;
+            this.warehouses = this.warehouses.filter(warehouse => warehouse.users.indexOf(name) != -1)
+            let warehouseCityIds = this.warehouses.map(warehouse => warehouse.city_id);
+            this.locations = this.locations.filter(location => warehouseCityIds.indexOf(location.city_id) != -1);
+            this.cities = this.cities.filter(city => warehouseCityIds.indexOf(city.city_id) != -1);
+        }
+    }
+
+    @action
     async findCities() {
         let response = await (this.cityDataStore.get())
         if (response.error) {
@@ -267,12 +280,14 @@ class RecieptViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
+            console.clear();
         }
         else {
             if (response.cities.length > 0) {
                 this.cities = response.cities.map((city) => {
                     return { city_id: city.id, city_name: city.name }
                 });
+                this.findLocations();
             }
         }
     }
@@ -289,6 +304,7 @@ class RecieptViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
+            console.clear();
         }
         else {
             if (response.locations.length > 0) {
@@ -300,6 +316,7 @@ class RecieptViewStore {
                         city_name: location.city_name
                     }
                 });
+                this.findWarehouses();
             }
         }
     }
@@ -316,6 +333,7 @@ class RecieptViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
+            console.clear();
         }
         else {
             if (response.warehouses.length > 0) {
@@ -326,9 +344,12 @@ class RecieptViewStore {
                         location_id: warehouse.location_id,
                         location_name: warehouse.location_name,
                         city_id: warehouse.city_id,
-                        city_name: warehouse.city_name
+                        city_name: warehouse.city_name,
+                        users: warehouse.users ? warehouse.users.map(user => user.name) : []
                     }
                 });
+                this.findProducts();
+                this.onFind();
             }
         }
     }
@@ -345,6 +366,7 @@ class RecieptViewStore {
                 pauseOnHover: true,
                 progress: undefined,
             });
+            console.clear();
         }
         else {
             if (response.products.length > 0) {

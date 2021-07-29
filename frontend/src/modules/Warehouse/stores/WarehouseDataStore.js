@@ -14,7 +14,7 @@ export default class WarehouseDataStore extends React.Component {
             users: warehouse.users.length > 0 ? warehouse.users.map(user => user.id) : []
         }))
 
-    get = async () => this.httpClient.get(this.httpClient.createBodyWithTokens({}));
+    get = async () => this.httpClient.get();
 
     update = async (warehouse) => this.httpClient.update(
         warehouse.id,

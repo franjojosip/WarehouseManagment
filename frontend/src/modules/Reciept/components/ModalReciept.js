@@ -12,17 +12,17 @@ export default function ModalReciept({ errorMessage, modalTarget, warehouses, ci
 
   if (modalTarget === "modalTargetAdd") {
     submitClassName = "btn btn-success";
-    modalTitle = "Dodaj proizvod na stanje";
+    modalTitle = "Dodaj preuzimanje";
     submitText = "Dodaj"
   }
   else if (modalTarget === "modalTargetEdit") {
     submitClassName = "btn btn-success";
-    modalTitle = "Izmijenite ovaj unos";
+    modalTitle = "Izmijenite ovo preuzimanje";
     submitText = "Izmijeni";
   }
   else {
     submitClassName = "btn btn-danger";
-    modalTitle = "Želite li sigurno obrisati ovaj unos?";
+    modalTitle = "Želite li sigurno obrisati ovo preuzimanje?";
     submitText = "Obriši";
     isDisabled = true;
   }

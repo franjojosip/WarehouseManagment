@@ -15,7 +15,7 @@ export default class ProductDataStore extends React.Component {
             packaging_id: product.packaging_id != "" ? product.packaging_id : null,
         }, true))
 
-    get = async () => this.httpClient.get(this.httpClient.createBodyWithTokens({}));
+    get = async () => this.httpClient.get();
 
     update = async (product) => this.httpClient.update(
         product.id,
