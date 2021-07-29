@@ -1,14 +1,26 @@
 const Reciept = require("../schema");
 const Location = require("../../location/schema");
 const Product = require("../../product/schema");
+const User = require("../../users/schema");
 
 async function list(req, res) {
   try {
-    let reciepts = await Reciept.find({})
-      .populate("warehouse_id", { name: 1, location_id: 1 })
-      .populate("product_id", { name: 1 })
-      .populate("user_id", { fname: 1, lname: 1 })
-      .sort({ createdAt: 'desc' });
+    let reciepts = [];
+    let user = await User.findOne({ _id: req.body.userId }).populate("role_id", { name: 1 });
+    if (user.role_id.name.toString() == "administrator") {
+      reciepts = await Reciept.find({})
+        .populate("warehouse_id", { name: 1, location_id: 1 })
+        .populate("product_id", { name: 1 })
+        .populate("user_id", { fname: 1, lname: 1 })
+        .sort({ createdAt: 'desc' });
+    }
+    else {
+      reciepts = await Reciept.find({ user_id: req.body.userId })
+        .populate("warehouse_id", { name: 1, location_id: 1 })
+        .populate("product_id", { name: 1 })
+        .populate("user_id", { fname: 1, lname: 1 })
+        .sort({ createdAt: 'desc' });
+    }
 
     let locations = await Location.find({}).populate("city_id", { name: 1 });
     let products = await Product.find({}).populate("category_id", { name: 1 }).populate("subcategory_id", { name: 1 }).populate("packaging_id", { name: 1 });

@@ -13,6 +13,8 @@ const serializer = Joi.object({
 
 async function edit(req, res) {
   try {
+    req.body.user_id = req.body.userId;
+    delete req.body.userId;
     const result = serializer.validate(req.body);
     if (result.error) {
       return res.status(400).json({ error: "Poslani su neispravni podatci!" });

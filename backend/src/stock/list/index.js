@@ -2,10 +2,24 @@ const Stock = require("../schema");
 const Location = require("../../location/schema");
 const Packaging = require("../../packaging/schema");
 const Product = require("../../product/schema");
+const Warehouse = require("../../warehouse/schema");
+const User = require("../../users/schema");
 
 async function list(req, res) {
   try {
-    let stocks = await Stock.find({}).populate("warehouse_id", { name: 1, location_id: 1 }).populate("product_id", { name: 1, packaging_id: 1 });
+    let stocks = [];
+    let user = await User.findOne({ _id: req.body.userId }).populate("role_id", { name: 1 });
+    if (user.role_id.name.toString() == "administrator") {
+      stocks = await Stock.find({}).populate("warehouse_id", { name: 1, location_id: 1 }).populate("product_id", { name: 1, packaging_id: 1 });
+    }
+    else {
+      let userWarehouseIds = await Warehouse.find({ user_ids: user.id });
+      if (userWarehouseIds.length > 0) {
+        let ids = userWarehouseIds.map(warehouse => warehouse.id);
+        stocks = await Stock.find({ warehouse_id: { $in: ids } }).populate("warehouse_id", { name: 1, location_id: 1 }).populate("product_id", { name: 1, packaging_id: 1 });
+      }
+    }
+
     let locations = await Location.find({}).populate("city_id", { name: 1 });
     let packagings = await Packaging.find({});
     let products = await Product.find({}).populate("category_id", { name: 1 }).populate("subcategory_id", { name: 1 });
