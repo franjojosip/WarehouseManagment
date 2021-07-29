@@ -4,9 +4,9 @@ import Layout from "../../../common/layouts/Layout"
 import StockViewStore from '../stores/StockViewStore'
 import CollapsibleTable from '../../../common/layouts/CollapsibleTable';
 import ModalStock from '../components/ModalStock';
-import Button from "react-bootstrap/Button";
 import { ToastContainer } from 'react-toastify';
 import { getUser } from '../../../common/LocalStorage';
+import { Button, Dropdown, DropdownButton } from 'react-bootstrap';
 
 import "../styles/Stock.css";
 
@@ -20,7 +20,7 @@ import "../styles/Stock.css";
 class Stock extends React.Component {
     render() {
 
-        const { products, errorMessage, cities, filteredWarehouses, filteredLocations, clickedStock, onClickedRow, onClickedNestedRow, parentColumns, childColumns, nestedChildColumns, paginatedData, onStockClicked, onWarehouseChange, onProductChange, onCityChange, onLocationChange, onMinimumQuantityChange, onQuantityChange, isLoaderVisible, title, page, pageSize, totalPages, previousEnabled, nextEnabled, isSubmitDisabled, onPageClick, onChangePageSize, onPreviousPageClick, onNextPageClick, onEditClick, onDeleteClick, onCreateClick } = this.props.viewStore;
+        const { products, cityFilter, onCityFilterChange, onResetFilterClick, errorMessage, cities, filteredWarehouses, filteredLocations, clickedStock, onClickedRow, onClickedNestedRow, parentColumns, childColumns, nestedChildColumns, paginatedData, onStockClicked, onWarehouseChange, onProductChange, onCityChange, onLocationChange, onMinimumQuantityChange, onQuantityChange, isLoaderVisible, title, page, pageSize, totalPages, previousEnabled, nextEnabled, isSubmitDisabled, onPageClick, onChangePageSize, onPreviousPageClick, onNextPageClick, onEditClick, onDeleteClick, onCreateClick } = this.props.viewStore;
         const loggedUser = getUser();
         let isLoggedAdmin = loggedUser && loggedUser.role.toLowerCase() == "administrator";
 
@@ -142,8 +142,17 @@ class Stock extends React.Component {
             })
         }
 
+        let cityFilterDropdown = (<DropdownButton id="customDropdown" variant="secondary" title={cityFilter.name ? cityFilter.name : "Svi gradovi"} style={{ marginBottom: 10 }}>
+            <Dropdown.Item key="default_city" onSelect={() => onCityFilterChange({ city_id: "", city_name: "" })}>Svi gradovi</Dropdown.Item>
+            {cities.map((city) => {
+                return <Dropdown.Item key={city.city_id} onSelect={() => onCityFilterChange(city)}>{city.city_name}</Dropdown.Item>;
+            })
+            }
+        </DropdownButton>);
         return (
             <Layout isLoaderVisible={isLoaderVisible}>
+                {cityFilterDropdown}
+                <Button className="btn btn-dark" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button>
                 <ModalStock modalTarget="modalTargetAdd" errorMessage={errorMessage} warehouses={filteredWarehouses} locations={filteredLocations} cities={cities} products={products} onSubmit={onCreateClick} warehouse_name={clickedStock.warehouse_name} product_name={clickedStock.product_name} location_name={clickedStock.location_name} city_name={clickedStock.city_name} quantity={clickedStock.quantity} min_quantity={clickedStock.min_quantity} onWarehouseChange={onWarehouseChange} onProductChange={onProductChange} onCityChange={onCityChange} onLocationChange={onLocationChange} onMinimumQuantityChange={onMinimumQuantityChange} onQuantityChange={onQuantityChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalStock modalTarget="modalTargetEdit" errorMessage={errorMessage} warehouses={filteredWarehouses} locations={filteredLocations} cities={cities} products={products} onSubmit={onEditClick} warehouse_name={clickedStock.warehouse_name} product_name={clickedStock.product_name} location_name={clickedStock.location_name} city_name={clickedStock.city_name} quantity={clickedStock.quantity} min_quantity={clickedStock.min_quantity} onWarehouseChange={onWarehouseChange} onProductChange={onProductChange} onCityChange={onCityChange} onLocationChange={onLocationChange} onMinimumQuantityChange={onMinimumQuantityChange} onQuantityChange={onQuantityChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalStock modalTarget="modalTargetDelete" errorMessage={errorMessage} warehouses={filteredWarehouses} locations={filteredLocations} cities={cities} products={products} onSubmit={onDeleteClick} warehouse_name={clickedStock.warehouse_name} product_name={clickedStock.product_name} location_name={clickedStock.location_name} city_name={clickedStock.city_name} quantity={clickedStock.quantity} min_quantity={clickedStock.min_quantity} onWarehouseChange={onWarehouseChange} onProductChange={onProductChange} onCityChange={onCityChange} onLocationChange={onLocationChange} onMinimumQuantityChange={onMinimumQuantityChange} onQuantityChange={onQuantityChange} isSubmitDisabled={isSubmitDisabled} />

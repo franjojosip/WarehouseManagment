@@ -33,6 +33,8 @@ class RecieptViewStore {
         this.onQuantityChange = this.onQuantityChange.bind(this);
         this.onClickedRow = this.onClickedRow.bind(this);
         this.groupData = this.groupData.bind(this);
+        this.onCityFilterChange = this.onCityFilterChange.bind(this);
+        this.onResetFilterClick = this.onResetFilterClick.bind(this);
 
         this.delay = this.delay.bind(this);
         this.showLoader = this.showLoader.bind(this);
@@ -48,8 +50,9 @@ class RecieptViewStore {
         this.findCities();
     }
 
-    @observable isLoaderVisible = false;
-    @observable isSubmitDisabled = true;
+    title = "Preuzimanja";
+    parentColumns = ['Naziv skladišta', 'Lokacija', 'Grad', 'Datum kreiranja'];
+    childColumns = ['Naziv proizvoda', 'Kategorija', 'Potkategorija', 'Ambalaža', 'Količina', 'Izmijeni', 'Obriši', 'Potvrda'];
 
     @observable clickedReciept = {
         id: "",
@@ -80,6 +83,9 @@ class RecieptViewStore {
         quantity: null
     };
 
+    @observable isLoaderVisible = false;
+    @observable isSubmitDisabled = true;
+
     @observable page = 1;
     @observable pageSize = 5;
     @observable totalPages = 1;
@@ -91,9 +97,6 @@ class RecieptViewStore {
     @observable clickedRows = [];
     @observable paginatedData = [];
 
-    title = "Preuzimanja";
-    parentColumns = ['Naziv skladišta', 'Lokacija', 'Grad', 'Datum kreiranja'];
-    childColumns = ['Naziv proizvoda', 'Kategorija', 'Potkategorija', 'Ambalaža', 'Količina', 'Izmijeni', 'Obriši', 'Potvrda'];
 
     @observable allData = [];
     @observable warehouses = [];
@@ -103,6 +106,36 @@ class RecieptViewStore {
 
     @observable filteredLocations = [];
     @observable filteredWarehouses = [];
+
+    @observable response = [];
+    @observable cityFilter = {
+        id: "",
+        name: ""
+    };
+
+    @action
+    onCityFilterChange(value) {
+        console.log(value);
+        this.cityFilter.id = value.city_id;
+        this.cityFilter.name = value.city_name;
+        if (value.city_id) {
+            this.allData = this.response.filter(data => data.city_id === value.city_id);
+        }
+        else {
+            this.allData = this.response;
+        }
+        this.groupData();
+        this.setPagination(1);
+    }
+
+    @action
+    onResetFilterClick() {
+        this.cityFilter.id = "";
+        this.cityFilter.name = "";
+        this.allData = this.response;
+        this.groupData();
+        this.setPagination(1);
+    }
 
     @action
     showLoader() {
@@ -226,6 +259,7 @@ class RecieptViewStore {
             if (response.reciepts.length > 0) {
                 response.reciepts.forEach(item => item.date_created = moment(new Date(item.date_created)).format('YYYY/MM/DD'))
                 this.allData = response.reciepts;
+                this.response = response.reciepts;
                 this.groupData();
             }
             else {

@@ -33,6 +33,10 @@ class EntryViewStore {
         this.onQuantityChange = this.onQuantityChange.bind(this);
         this.onClickedRow = this.onClickedRow.bind(this);
         this.groupData = this.groupData.bind(this);
+        this.onCityFilterChange = this.onCityFilterChange.bind(this);
+        this.onStartDateFilterChange = this.onStartDateFilterChange.bind(this);
+        this.onEndDateFilterChange = this.onEndDateFilterChange.bind(this);
+        this.onResetFilterClick = this.onResetFilterClick.bind(this);
 
         this.delay = this.delay.bind(this);
         this.showLoader = this.showLoader.bind(this);
@@ -48,8 +52,9 @@ class EntryViewStore {
         this.findCities();
     }
 
-    @observable isLoaderVisible = false;
-    @observable isSubmitDisabled = true;
+    title = "Unos proizvoda na stanje";
+    parentColumns = ['Naziv skladišta', 'Lokacija', 'Grad', 'Datum kreiranja'];
+    childColumns = ['Naziv proizvoda', 'Kategorija', 'Potkategorija', 'Ambalaža', 'Količina', 'Izmijeni', 'Obriši', 'Potvrdi'];
 
     @observable clickedEntry = {
         id: "",
@@ -80,6 +85,9 @@ class EntryViewStore {
         quantity: null
     };
 
+    @observable isLoaderVisible = false;
+    @observable isSubmitDisabled = true;
+
     @observable page = 1;
     @observable pageSize = 5;
     @observable totalPages = 1;
@@ -91,10 +99,6 @@ class EntryViewStore {
     @observable clickedRows = [];
     @observable paginatedData = [];
 
-    title = "Unos proizvoda na stanje";
-    parentColumns = ['Naziv skladišta', 'Lokacija', 'Grad', 'Datum kreiranja'];
-    childColumns = ['Naziv proizvoda', 'Kategorija', 'Potkategorija', 'Ambalaža', 'Količina', 'Izmijeni', 'Obriši', 'Potvrdi'];
-
     @observable allData = [];
     @observable warehouses = [];
     @observable cities = [];
@@ -104,6 +108,82 @@ class EntryViewStore {
     @observable filteredLocations = [];
     @observable filteredWarehouses = [];
 
+
+    @observable response = [];
+    @observable cityFilter = {
+        city_id: "",
+        city_name: ""
+    };
+    @observable dateFilter = {
+        startDate: "",
+        endDate: ""
+    }
+
+    @action
+    onCityFilterChange(value) {
+        let filteredData = this.response;
+        if (value.city_id != "") {
+            filteredData = filteredData.filter(data => data.city_id === value.city_id);
+            this.cityFilter.city_id = value.city_id;
+            this.cityFilter.city_name = value.city_name;
+        }
+        if (this.dateFilter.startDate != "" && this.dateFilter.endDate != "") {
+            filteredData = filteredData.filter(data =>
+                (moment(data.date_created).isAfter(this.dateFilter.startDate) || moment(data.date_created).isSame(this.dateFilter.startDate))
+                && (moment(data.date_created).isBefore(this.dateFilter.endDate) || moment(data.date_created).isSame(this.dateFilter.endDate))
+            );
+        }
+        this.allData = filteredData;
+        this.groupData();
+        this.setPagination(1);
+    }
+
+    @action
+    onStartDateFilterChange(value) {
+        let filteredData = this.response;
+        this.dateFilter.startDate = value;
+        if (this.dateFilter.startDate != "" && this.dateFilter.endDate != "") {
+            filteredData = filteredData.filter(data =>
+                (moment(data.date_created).isAfter(this.dateFilter.startDate) || moment(data.date_created).isSame(this.dateFilter.startDate))
+                && (moment(data.date_created).isBefore(this.dateFilter.endDate) || moment(data.date_created).isSame(this.dateFilter.endDate))
+            );
+        }
+        if (this.cityFilter.city_id != "") {
+            filteredData = filteredData.filter(data => data.city_id === this.cityFilter.city_id);
+        }
+        this.allData = filteredData;
+        this.groupData();
+        this.setPagination(1);
+    }
+
+    @action
+    onEndDateFilterChange(value) {
+        let filteredData = this.response;
+        this.dateFilter.endDate = value;
+        if (this.dateFilter.startDate != "" && this.dateFilter.endDate != "") {
+            filteredData = filteredData.filter(data =>
+                (moment(data.date_created).isAfter(this.dateFilter.startDate) || moment(data.date_created).isSame(this.dateFilter.startDate))
+                && (moment(data.date_created).isBefore(this.dateFilter.endDate) || moment(data.date_created).isSame(this.dateFilter.endDate))
+            );
+        }
+        if (this.cityFilter.city_id != "") {
+            filteredData = filteredData.filter(data => data.city_id === this.cityFilter.city_id);
+        }
+        this.allData = filteredData;
+        this.groupData();
+        this.setPagination(1);
+    }
+
+    @action
+    onResetFilterClick() {
+        this.cityFilter.id = "";
+        this.cityFilter.name = "";
+        this.dateFilter.startDate = "";
+        this.dateFilter.endDate = "";
+        this.allData = this.response;
+        this.groupData();
+        this.setPagination(1);
+    }
     @action
     showLoader() {
         this.isLoaderVisible = true;
@@ -224,6 +304,7 @@ class EntryViewStore {
             if (response.entries.length > 0) {
                 response.entries.forEach(item => item.date_created = moment(new Date(item.date_created)).format('YYYY/MM/DD'))
                 this.allData = response.entries;
+                this.response = response.entries;
                 this.groupData();
             }
             else {

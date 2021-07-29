@@ -26,7 +26,6 @@ export default class HttpClient extends React.Component {
     }
 
     create = async (body) => {
-        console.log(body);
         const options = {
             method: "POST",
             headers: this.appJsonHeaders,

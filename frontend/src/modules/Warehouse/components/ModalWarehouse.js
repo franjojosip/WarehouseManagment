@@ -109,7 +109,7 @@ export default function ModalWarehouse({ modalTarget, errorMessage, users, citie
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="customDropdown" variant="secondary" title={location_name ? location_name : "Odaberi lokaciju"} style={{ marginBottom: 10 }} disabled={isDisabled || locations.length == 0} required>
+                  <DropdownButton id="customDropdown" variant="secondary" title={location_name ? location_name : "Odaberi lokaciju"} style={{ marginBottom: 10 }} disabled={isDisabled || locations.length === 0} required>
                     {locations.map((location) => {
                       return <Dropdown.Item key={location.location_id} onSelect={() => onLocationChange(location)}>{location.location_name}</Dropdown.Item>;
                     })}

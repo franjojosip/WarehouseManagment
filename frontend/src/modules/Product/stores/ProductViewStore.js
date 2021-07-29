@@ -25,6 +25,11 @@ class ProductViewStore {
         this.onCategoryChange = this.onCategoryChange.bind(this);
         this.onSubcategoryChange = this.onSubcategoryChange.bind(this);
         this.onPackagingChange = this.onPackagingChange.bind(this);
+        this.onCategoryFilterChange = this.onCategoryFilterChange.bind(this);
+        this.onSubcategoryFilterChange = this.onSubcategoryFilterChange.bind(this);
+        this.onPackagingFilterChange = this.onPackagingFilterChange.bind(this);
+        this.filterData = this.filterData.bind(this);
+        this.onResetFilterClick = this.onResetFilterClick.bind(this);
 
         this.delay = this.delay.bind(this);
         this.showLoader = this.showLoader.bind(this);
@@ -43,8 +48,8 @@ class ProductViewStore {
         this.onFind();
     }
 
-    @observable isLoaderVisible = false;
-    @observable isSubmitDisabled = true;
+    title = "Proizvodi";
+    columns = ['Naziv proizvoda', 'Naziv kategorije', 'Naziv potkategorije', 'Naziv ambalaže', 'Izmjena', 'Brisanje'];
 
     @observable clickedProduct = {
         id: "",
@@ -63,6 +68,9 @@ class ProductViewStore {
         packaging: null
     };
 
+    @observable isLoaderVisible = false;
+    @observable isSubmitDisabled = true;
+
     @observable page = 1;
     @observable pageSize = 5;
     @observable totalPages = 1;
@@ -70,15 +78,70 @@ class ProductViewStore {
     @observable nextEnabled = false;
     @observable rows = [];
 
-    title = "Proizvodi";
-    columns = ['Naziv proizvoda', 'Naziv kategorije', 'Naziv potkategorije', 'Naziv ambalaže', 'Izmjena', 'Brisanje'];
-
     @observable allData = [];
     @observable categories = [];
     @observable subcategories = [];
     @observable packagings = [];
 
     @observable filteredSubcategories = [];
+
+    @observable response = [];
+    @observable productFilter = {
+        category_id: "",
+        category_name: "",
+        subcategory_id: "",
+        subcategory_name: "",
+        packaging_id: "",
+        packaging_name: "",
+    };
+
+    @action
+    onCategoryFilterChange(value) {
+        this.productFilter.category_id = value.category_id;
+        this.productFilter.category_name = value.category_name;
+        this.filterData();
+    }
+
+    @action
+    onSubcategoryFilterChange(value) {
+        this.productFilter.subcategory_id = value.subcategory_id;
+        this.productFilter.subcategory_name = value.subcategory_name;
+        this.filterData();
+    }
+
+    @action
+    onPackagingFilterChange(value) {
+        this.productFilter.packaging_id = value.packaging_id;
+        this.productFilter.packaging_name = value.packaging_name;
+        this.filterData();
+    }
+
+    filterData() {
+        let filteredData = this.response;
+        if (this.productFilter.category_id != "") {
+            filteredData = filteredData.filter(data => data.category_id === this.productFilter.category_id);
+        }
+        if (this.productFilter.subcategory_id != "") {
+            filteredData = filteredData.filter(data => data.subcategory_id === this.productFilter.subcategory_id);
+        }
+        if (this.productFilter.packaging_id != "") {
+            filteredData = filteredData.filter(data => data.packaging_id === this.productFilter.packaging_id);
+        }
+        this.allData = filteredData;
+        this.setPagination(1);
+    }
+
+    @action
+    onResetFilterClick() {
+        this.productFilter.category_id = "";
+        this.productFilter.category_name = "";
+        this.productFilter.subcategory_id = "";
+        this.productFilter.subcategory_name = "";
+        this.productFilter.packaging_id = "";
+        this.productFilter.packaging_name = "";
+        this.allData = this.response;
+        this.setPagination(1);
+    }
 
     @action
     showLoader() {
@@ -169,6 +232,7 @@ class ProductViewStore {
         else {
             if (response.products.length > 0) {
                 this.allData = response.products;
+                this.response = response.products;
             }
             else {
                 this.allData = [{ id: "", name: "Nema podataka", category_id: "", category_name: "", subcategory_id: "", subcategory_name: "", packaging_id: "", packaging_name: "" }];

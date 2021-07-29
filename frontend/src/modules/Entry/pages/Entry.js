@@ -5,11 +5,14 @@ import EntryViewStore from '../stores/EntryViewStore'
 import CollapsibleTable from '../../../common/layouts/CollapsibleTable';
 import ModalEntry from '../components/ModalEntry';
 import ModalEntrySubmit from '../components/ModalEntrySubmit';
-import Button from "react-bootstrap/Button";
 import { ToastContainer } from 'react-toastify';
 import { getUser } from '../../../common/LocalStorage';
+import { Button, Dropdown, DropdownButton } from 'react-bootstrap';
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
 
 import "../styles/Entry.css";
+import moment from 'moment';
 
 @inject(
     i => ({
@@ -20,7 +23,7 @@ import "../styles/Entry.css";
 @observer
 class Entry extends React.Component {
     render() {
-        const { errorMessage, cities, filteredLocations, filteredWarehouses, products, onSubmitClick, clickedEntry, onClickedRow, parentColumns, childColumns, paginatedData, onEntryClicked, onWarehouseChange, onCityChange, onLocationChange, onProductChange, onPackagingChange, onQuantityChange, isLoaderVisible, title, page, pageSize, totalPages, previousEnabled, nextEnabled, isSubmitDisabled, onPageClick, onChangePageSize, onPreviousPageClick, onNextPageClick, onEditClick, onDeleteClick, onCreateClick } = this.props.viewStore;
+        const { errorMessage, dateFilter, cityFilter, onCityFilterChange, onStartDateFilterChange, onEndDateFilterChange, onResetFilterClick, cities, filteredLocations, filteredWarehouses, products, onSubmitClick, clickedEntry, onClickedRow, parentColumns, childColumns, paginatedData, onEntryClicked, onWarehouseChange, onCityChange, onLocationChange, onProductChange, onPackagingChange, onQuantityChange, isLoaderVisible, title, page, pageSize, totalPages, previousEnabled, nextEnabled, isSubmitDisabled, onPageClick, onChangePageSize, onPreviousPageClick, onNextPageClick, onEditClick, onDeleteClick, onCreateClick } = this.props.viewStore;
         const loggedUser = getUser();
         let isLoggedAdmin = loggedUser && loggedUser.role.toLowerCase() == "administrator";
 
@@ -102,7 +105,7 @@ class Entry extends React.Component {
                                                             <td>
                                                                 {
                                                                     item.isSubmitted ?
-                                                                    <i className="fa fa-fw fa-check" style={{ fontSize: '1.4em' }} />
+                                                                        <i className="fa fa-fw fa-check" style={{ fontSize: '1.4em' }} />
                                                                         :
                                                                         <span className="table-submit">
                                                                             <button type="button" onClick={() => onEntryClicked(item, false)} data-toggle="modal" data-target="#modalTargetSubmit" className="btn btn-info btn-rounded btn-sm my-0">
@@ -125,9 +128,49 @@ class Entry extends React.Component {
                 );
             })
         }
-
+        let cityFilterDropdown = (<DropdownButton id="customDropdown" variant="secondary" title={cityFilter.city_name ? cityFilter.city_name : "Svi gradovi"} style={{ marginBottom: 10 }}>
+            <Dropdown.Item key="default_city" onSelect={() => onCityFilterChange({ city_id: "", city_name: "" })}>Svi gradovi</Dropdown.Item>
+            {cities.map((city) => {
+                return <Dropdown.Item key={city.city_id} onSelect={() => onCityFilterChange(city)}>{city.city_name}</Dropdown.Item>;
+            })
+            }
+        </DropdownButton>);
+        let classes = makeStyles((theme) => ({
+            container: {
+                display: 'flex',
+                flexWrap: 'wrap',
+            },
+            textField: {
+                marginLeft: theme.spacing(1),
+                marginRight: theme.spacing(1),
+                width: 200,
+            },
+        }));
         return (
             <Layout isLoaderVisible={isLoaderVisible}>
+                {cityFilterDropdown}
+                <TextField
+                    id="startDate"
+                    type="date"
+                    value={dateFilter.startDate}
+                    className={classes.textField}
+                    onChange={(e) => onStartDateFilterChange(e.target.value)}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                />
+                <TextField
+                    id="endDate"
+                    type="date"
+                    value={dateFilter.endDate}
+                    className={classes.textField}
+                    onChange={onEndDateFilterChange}
+                    onChange={(e) => onEndDateFilterChange(e.target.value)}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                />
+                <Button className="btn btn-dark" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button>
                 <ModalEntry modalTarget="modalTargetAdd" errorMessage={errorMessage} warehouses={filteredWarehouses} cities={cities} locations={filteredLocations} products={products} onSubmit={onCreateClick} warehouse_name={clickedEntry.warehouse_name} city_name={clickedEntry.city_name} location_name={clickedEntry.location_name} category_name={clickedEntry.category_name} subcategory_name={clickedEntry.subcategory_name} product_name={clickedEntry.product_name} subcategory_name={clickedEntry.subcategory_name} packaging_name={clickedEntry.packaging_name} quantity={clickedEntry.quantity} onWarehouseChange={onWarehouseChange} onCityChange={onCityChange} onLocationChange={onLocationChange} onProductChange={onProductChange} onQuantityChange={onQuantityChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalEntry modalTarget="modalTargetEdit" errorMessage={errorMessage} warehouses={filteredWarehouses} cities={cities} locations={filteredLocations} products={products} onSubmit={onEditClick} warehouse_name={clickedEntry.warehouse_name} city_name={clickedEntry.city_name} location_name={clickedEntry.location_name} category_name={clickedEntry.category_name} subcategory_name={clickedEntry.subcategory_name} product_name={clickedEntry.product_name} subcategory_name={clickedEntry.subcategory_name} packaging_name={clickedEntry.packaging_name} quantity={clickedEntry.quantity} onWarehouseChange={onWarehouseChange} onCityChange={onCityChange} onLocationChange={onLocationChange} onProductChange={onProductChange} onQuantityChange={onQuantityChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalEntry modalTarget="modalTargetDelete" errorMessage={errorMessage} warehouses={filteredWarehouses} cities={cities} locations={filteredLocations} products={products} onSubmit={onDeleteClick} warehouse_name={clickedEntry.warehouse_name} city_name={clickedEntry.city_name} location_name={clickedEntry.location_name} category_name={clickedEntry.category_name} subcategory_name={clickedEntry.subcategory_name} product_name={clickedEntry.product_name} subcategory_name={clickedEntry.subcategory_name} packaging_name={clickedEntry.packaging_name} quantity={clickedEntry.quantity} onWarehouseChange={onWarehouseChange} onCityChange={onCityChange} onLocationChange={onLocationChange} onProductChange={onProductChange} onQuantityChange={onQuantityChange} isSubmitDisabled={isSubmitDisabled} />

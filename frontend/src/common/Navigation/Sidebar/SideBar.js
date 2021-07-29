@@ -12,7 +12,7 @@ import { getUser } from '../../LocalStorage';
 )
 class SideBar extends React.Component {
     render() {
-        const { selectedRoute, onNavigate } = this.props.viewStore;
+        const { route, onNavigate } = this.props.viewStore;
         const loggedUser = getUser();
         let isLoggedAdmin = loggedUser && loggedUser.role.toLowerCase() == "administrator";
 
@@ -30,7 +30,7 @@ class SideBar extends React.Component {
                     }
                 }}
             >
-                <SideNav.Nav defaultSelected={selectedRoute} style={{ marginTop: 20 }}>
+                <SideNav.Nav defaultSelected={route} style={{ marginTop: 20 }}>
                     <NavItem eventKey="home">
                         <NavIcon style={{ paddingTop: 5 }}>
                             <i className="fa fa-fw fa-home" style={{ fontSize: '1.75em' }} />
@@ -40,7 +40,7 @@ class SideBar extends React.Component {
                         </NavText>
                     </NavItem>
                     <NavItem eventKey="warehouses">
-                         <NavIcon style={{ paddingTop: 5 }}>
+                        <NavIcon style={{ paddingTop: 5 }}>
                             <i className="fa fa-fw fa-warehouse" style={{ fontSize: '1.75em' }} />
                         </NavIcon>
                         <NavText style={textStyle}>
@@ -69,7 +69,7 @@ class SideBar extends React.Component {
                     {
                         isLoggedAdmin ?
                             <NavItem eventKey="products">
-                                 <NavIcon style={{ paddingTop: 5 }}>
+                                <NavIcon style={{ paddingTop: 5 }}>
                                     <i className="fa fa-fw fa-boxes" style={{ fontSize: '1.75em' }} />
                                 </NavIcon>
                                 <NavText style={textStyle}>
@@ -101,7 +101,7 @@ class SideBar extends React.Component {
                     {
                         isLoggedAdmin ?
                             <NavItem eventKey="cities">
-                                 <NavIcon style={{ paddingTop: 5 }}>
+                                <NavIcon style={{ paddingTop: 5 }}>
                                     <i className="fa fa-fw fa-city" style={{ fontSize: '1.75em' }} />
                                 </NavIcon>
                                 <NavText style={textStyle}>
@@ -123,7 +123,7 @@ class SideBar extends React.Component {
                     {
                         isLoggedAdmin ?
                             <NavItem eventKey="users">
-                                 <NavIcon style={{ paddingTop: 5 }}>
+                                <NavIcon style={{ paddingTop: 5 }}>
                                     <i className="fa fa-fw fa-users" style={{ fontSize: '1.75em' }} />
                                 </NavIcon>
                                 <NavText style={textStyle}>
@@ -137,7 +137,7 @@ class SideBar extends React.Component {
                             </NavItem>
                             : null
                     }<NavItem eventKey="reciepts">
-                         <NavIcon style={{ paddingTop: 5 }}>
+                        <NavIcon style={{ paddingTop: 5 }}>
                             <i className="fa fa-fw fa-receipt" style={{ fontSize: '1.75em' }} />
                         </NavIcon>
                         <NavText style={textStyle}>
@@ -150,7 +150,7 @@ class SideBar extends React.Component {
                         </NavItem>
                     </NavItem>
                     <NavItem eventKey="stocktakings">
-                         <NavIcon style={{ paddingTop: 5 }}>
+                        <NavIcon style={{ paddingTop: 5 }}>
                             <i className="fa fa-fw fa-cubes" style={{ fontSize: '1.75em' }} />
                         </NavIcon>
                         <NavText style={textStyle}>
@@ -165,7 +165,7 @@ class SideBar extends React.Component {
                     {
                         isLoggedAdmin ?
                             <NavItem eventKey="notifications">
-                                 <NavIcon style={{ paddingTop: 5 }}>
+                                <NavIcon style={{ paddingTop: 5 }}>
                                     <i className="fa fa-fw fa-bell" style={{ fontSize: '1.75em' }} />
                                 </NavIcon>
                                 <NavText style={textStyle}>

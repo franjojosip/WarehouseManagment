@@ -20,7 +20,7 @@ export const clearStorage = () => {
 
 export const isUserLoggedIn = () => {
     var user = JSON.parse(localStorage.getItem('user'));
-    return user&& user.id != "";
+    return user && user.id != "";
 }
 
 export const isUserAdmin = () => {
@@ -31,8 +31,7 @@ export const isUserAdmin = () => {
 export const isUserTokenExpired = () => {
     var user = JSON.parse(localStorage.getItem('user'));
     if (user && user.logged_date) {
-        return moment().diff(user.logged_date, 'days') > 0;
+        return moment().diff(moment(user.logged_date, "YYYY/MM/DD"), 'days') > 0;
     }
     else return true;
-
 }

@@ -32,6 +32,8 @@ class StockViewStore {
         this.groupData = this.groupData.bind(this);
         this.groupCategoryData = this.groupCategoryData.bind(this);
         this.productExistsInWarehouse = this.productExistsInWarehouse.bind(this);
+        this.onCityFilterChange = this.onCityFilterChange.bind(this);
+        this.onResetFilterClick = this.onResetFilterClick.bind(this);
 
         this.delay = this.delay.bind(this);
         this.showLoader = this.showLoader.bind(this);
@@ -51,9 +53,10 @@ class StockViewStore {
         this.onFind();
     }
 
-    @observable isLoaderVisible = false;
-    @observable isSubmitDisabled = true;
-    @observable clickedWarehouseProductId = "";
+    title = "Stanje proizvoda u skladištima";
+    parentColumns = ['Naziv Skladišta', 'Lokacija Skladišta', 'Grad'];
+    childColumns = ['Naziv Kategorije'];
+    nestedChildColumns = ['Naziv Proizvoda', 'Naziv Potkategorije', 'Naziv Ambalaže', 'Količina', 'Minimalna Količina', 'Izmjena', 'Brisanje'];
 
     @observable clickedStock = {
         id: "",
@@ -82,6 +85,9 @@ class StockViewStore {
         min_quantity: null
     };
 
+    @observable isLoaderVisible = false;
+    @observable isSubmitDisabled = true;
+    @observable clickedWarehouseProductId = "";
 
     @observable page = 1;
     @observable pageSize = 5;
@@ -95,11 +101,6 @@ class StockViewStore {
 
     @observable paginatedData = [];
 
-    title = "Stanje proizvoda u skladištima";
-    parentColumns = ['Naziv Skladišta', 'Lokacija Skladišta', 'Grad'];
-    childColumns = ['Naziv Kategorije'];
-    nestedChildColumns = ['Naziv Proizvoda', 'Naziv Potkategorije', 'Naziv Ambalaže', 'Količina', 'Minimalna Količina', 'Izmjena', 'Brisanje'];
-
     @observable allData = [];
     @observable warehouses = [];
     @observable cities = [];
@@ -109,6 +110,34 @@ class StockViewStore {
     @observable filteredLocations = [];
     @observable filteredWarehouses = [];
 
+    @observable response = [];
+    @observable cityFilter = {
+        id: "",
+        name: ""
+    };
+
+    @action
+    onCityFilterChange(value) {
+        this.cityFilter.id = value.city_id;
+        this.cityFilter.name = value.city_name;
+        if (value.city_id) {
+            this.allData = this.response.filter(data => data.city_id === value.city_id);
+        }
+        else {
+            this.allData = this.response;
+        }
+        this.groupData();
+        this.setPagination(1);
+    }
+
+    @action
+    onResetFilterClick() {
+        this.cityFilter.id = "";
+        this.cityFilter.name = "";
+        this.allData = this.response;
+        this.groupData();
+        this.setPagination(1);
+    }
 
     @action
     showLoader() {
@@ -199,6 +228,7 @@ class StockViewStore {
         else {
             if (response.stocks.length > 0) {
                 this.allData = response.stocks;
+                this.response = response.stocks;
                 this.groupData();
             }
             else {

@@ -20,6 +20,9 @@ class NotificationViewStore {
         this.onCreateClick = this.onCreateClick.bind(this);
         this.onEditClick = this.onEditClick.bind(this);
         this.onDeleteClick = this.onDeleteClick.bind(this);
+        this.onNotificationTypeFilterChange = this.onNotificationTypeFilterChange.bind(this);
+        this.onResetFilterClick = this.onResetFilterClick.bind(this);
+
 
         this.setPagination();
         this.checkFields();
@@ -52,6 +55,10 @@ class NotificationViewStore {
     columns = ['Tip notifikacije', 'Dan U Tjednu', 'Vrijeme', 'Primatelj', 'Izmjena', 'Brisanje'];
 
     //TESTNI PODATCI
+    @observable response = [
+        { id: 1, day_of_week_id: 1, day_of_week_name: "Ponedjeljak", time: "13:00", email: "email@mail.com", notification_name: "notifikacije1", notification_type_id: 1, notification_type_name: "Tjedna notifikacija", date_created: "21.05.2021." },
+        { id: 2, day_of_week_id: 1, day_of_week_name: "Ponedjeljak", time: "17:00", email: "email@mail.com", notification_name: "notifikacije121", notification_type_id: 2, notification_type_name: "Mjesečna notifikacija", date_created: "21.05.2021." }
+    ];
     allData = [
         { id: 1, day_of_week_id: 1, day_of_week_name: "Ponedjeljak", time: "13:00", email: "email@mail.com", notification_name: "notifikacije1", notification_type_id: 1, notification_type_name: "Tjedna notifikacija", date_created: "21.05.2021." },
         { id: 2, day_of_week_id: 1, day_of_week_name: "Ponedjeljak", time: "17:00", email: "email@mail.com", notification_name: "notifikacije121", notification_type_id: 2, notification_type_name: "Mjesečna notifikacija", date_created: "21.05.2021." }
@@ -76,22 +83,48 @@ class NotificationViewStore {
         }
     ];
 
+    @observable notifcationTypeFilter = {
+        id: "",
+        name: ""
+    }
+
+    @action
+    onNotificationTypeFilterChange(value) {
+        this.notifcationTypeFilter.id = value.notification_type_id;
+        this.notifcationTypeFilter.name = value.notification_type_name;
+        if (value.notification_type_id) {
+            this.allData = this.response.filter(data => data.notification_type_id === value.notification_type_id);
+        }
+        else {
+            this.allData = this.response;
+        }
+        this.setPagination(1);
+    }
+
+    @action
+    onResetFilterClick() {
+        this.notifcationTypeFilter.id = "";
+        this.notifcationTypeFilter.name = "";
+        this.allData = this.response;
+        this.setPagination(1);
+    }
+
     @action
     async onFind() {
         //FIND CITY
     };
 
     @action
-    onCreateClick(){
+    onCreateClick() {
 
     }
     @action
-    onEditClick(){
-        
+    onEditClick() {
+
     }
     @action
-    onDeleteClick(){
-        
+    onDeleteClick() {
+
     }
 
     @action

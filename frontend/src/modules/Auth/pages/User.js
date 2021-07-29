@@ -5,6 +5,7 @@ import UserViewStore from '../stores/UserViewStore'
 import Table from '../../../common/layouts/Table';
 import ModalUser from '../components/ModalUser';
 import { ToastContainer } from 'react-toastify';
+import { Button, Dropdown, DropdownButton } from 'react-bootstrap';
 
 import "../styles/User.css";
 
@@ -17,7 +18,7 @@ import "../styles/User.css";
 @observer
 class User extends React.Component {
     render() {
-        const { isLoaderVisible, errorMessage, title, clickedUser, onRoleChange, columns, rows, roles, page, pageSize, totalPages, previousEnabled, nextEnabled, isSubmitDisabled, onPageClick, onChangePageSize, onFirstNameChange, onLastNameChange, onEmailChange, onPhoneChange, onPasswordChange, onUserClicked, onPreviousPageClick, onNextPageClick, onEditClick, onDeleteClick, onCreateClick } = this.props.viewStore;
+        const { isLoaderVisible, roleFilter, onResetFilterClick, onRoleFilterChange, errorMessage, title, clickedUser, onRoleChange, columns, rows, roles, page, pageSize, totalPages, previousEnabled, nextEnabled, isSubmitDisabled, onPageClick, onChangePageSize, onFirstNameChange, onLastNameChange, onEmailChange, onPhoneChange, onPasswordChange, onUserClicked, onPreviousPageClick, onNextPageClick, onEditClick, onDeleteClick, onCreateClick } = this.props.viewStore;
 
         let tableRows = rows.map((element, i) => {
             let phoneNumber = "";
@@ -58,8 +59,18 @@ class User extends React.Component {
                 </td>
             </tr>);
         });
+
+        let roleFilterDropdown = (<DropdownButton id="customDropdown" variant="secondary" title={roleFilter.name ? roleFilter.name : "Sve uloge"} style={{ marginBottom: 10 }}>
+            <Dropdown.Item key="default_role" onSelect={() => onRoleFilterChange({ role_id: "", role_name: "" })}>Sve uloge</Dropdown.Item>
+            {roles.map((role) => {
+                return <Dropdown.Item key={role.role_id} onSelect={() => onRoleFilterChange(role)}>{role.role_name}</Dropdown.Item>;
+            })
+            }
+        </DropdownButton>);
         return (
             <Layout isLoaderVisible={isLoaderVisible}>
+                {roleFilterDropdown}
+                <Button className="btn btn-dark" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button>
                 <ModalUser modalTarget="modalTargetAdd" errorMessage={errorMessage} roles={roles} onSubmit={onCreateClick} role_name={clickedUser.role_name} fname={clickedUser.fname} lname={clickedUser.lname} email={clickedUser.email} phone={clickedUser.phone} password={clickedUser.password} onFirstNameChange={onFirstNameChange} onLastNameChange={onLastNameChange} onEmailChange={onEmailChange} onPhoneChange={onPhoneChange} onPasswordChange={onPasswordChange} onRoleChange={onRoleChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalUser modalTarget="modalTargetEdit" errorMessage={errorMessage} roles={roles} onSubmit={onEditClick} role_name={clickedUser.role_name} fname={clickedUser.fname} lname={clickedUser.lname} email={clickedUser.email} phone={clickedUser.phone} password={clickedUser.password} onFirstNameChange={onFirstNameChange} onLastNameChange={onLastNameChange} onEmailChange={onEmailChange} onPhoneChange={onPhoneChange} onPasswordChange={onPasswordChange} onRoleChange={onRoleChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalUser modalTarget="modalTargetDelete" errorMessage={errorMessage} roles={roles} onSubmit={onDeleteClick} role_name={clickedUser.role_name} fname={clickedUser.fname} lname={clickedUser.lname} email={clickedUser.email} phone={clickedUser.phone} password={clickedUser.password} onFirstNameChange={onFirstNameChange} onLastNameChange={onLastNameChange} onEmailChange={onEmailChange} onPhoneChange={onPhoneChange} onPasswordChange={onPasswordChange} onRoleChange={onRoleChange} isSubmitDisabled={isSubmitDisabled} />

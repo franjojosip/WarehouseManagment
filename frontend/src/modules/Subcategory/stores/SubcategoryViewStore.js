@@ -20,12 +20,14 @@ class SubcategoryViewStore {
         this.onSubcategoryClicked = this.onSubcategoryClicked.bind(this);
         this.onNameChange = this.onNameChange.bind(this);
         this.onCategoryChange = this.onCategoryChange.bind(this);
+        this.onCategoryFilterChange = this.onCategoryFilterChange.bind(this);
+        this.onResetFilterClick = this.onResetFilterClick.bind(this);
 
         this.delay = this.delay.bind(this);
         this.showLoader = this.showLoader.bind(this);
         this.hideLoader = this.hideLoader.bind(this);
         this.processData = this.processData.bind(this);
-        
+
         this.findCategories = this.findCategories.bind(this);
         this.subcategoryNameExist = this.subcategoryNameExist.bind(this);
 
@@ -34,8 +36,8 @@ class SubcategoryViewStore {
         this.onFind();
     }
 
-    @observable isLoaderVisible = false;
-    @observable isSubmitDisabled = true;
+    title = "Potkategorije";
+    columns = ['Naziv potkategorije', 'Naziv kategorije', 'Izmjena', 'Brisanje'];
 
     @observable clickedSubcategory = {
         id: "",
@@ -54,6 +56,9 @@ class SubcategoryViewStore {
         category: null
     };
 
+    @observable isLoaderVisible = false;
+    @observable isSubmitDisabled = true;
+
     @observable page = 1;
     @observable pageSize = 5;
     @observable totalPages = 1;
@@ -61,11 +66,36 @@ class SubcategoryViewStore {
     @observable nextEnabled = false;
     @observable rows = [];
 
-    title = "Potkategorije";
-    columns = ['Naziv potkategorije', 'Naziv kategorije', 'Izmjena', 'Brisanje'];
 
     @observable allData = [];
     @observable categories = [];
+
+    @observable response = [];
+    @observable categoryFilter = {
+        id: "",
+        name: ""
+    };
+
+    @action
+    onCategoryFilterChange(value) {
+        this.categoryFilter.id = value.category_id;
+        this.categoryFilter.name = value.category_name;
+        if (value.category_id != "") {
+            this.allData = this.response.filter(data => data.category_id === value.category_id);
+        }
+        else {
+            this.allData = this.response;
+        }
+        this.setPagination(1);
+    }
+
+    @action
+    onResetFilterClick() {
+        this.categoryFilter.id = "";
+        this.categoryFilter.name = "";
+        this.allData = this.response;
+        this.setPagination(1);
+    }
 
     @action
     showLoader() {
@@ -156,6 +186,7 @@ class SubcategoryViewStore {
         else {
             if (response.subcategories.length > 0) {
                 this.allData = response.subcategories;
+                this.response = response.subcategories;
             }
             else {
                 this.allData = [{ id: "", name: "Nema podataka", category_id: "", category_name: "" }];

@@ -24,7 +24,9 @@ class WarehouseViewStore {
         this.onCityChange = this.onCityChange.bind(this);
         this.onLocationChange = this.onLocationChange.bind(this);
         this.onUserSelect = this.onUserSelect.bind(this);
-        this.onUserRemove = this.onUserRemove.bind(this);        
+        this.onUserRemove = this.onUserRemove.bind(this);
+        this.onCityFilterChange = this.onCityFilterChange.bind(this);
+        this.onResetFilterClick = this.onResetFilterClick.bind(this);
 
         this.onMultiSelect = this.onMultiSelect.bind(this);
 
@@ -45,12 +47,12 @@ class WarehouseViewStore {
         this.onFind();
     }
 
-    onMultiSelect(event){
+    onMultiSelect(event) {
         this.clickedWarehouse.users = event.value;
     }
-    
-    @observable isLoaderVisible = false;
-    @observable isSubmitDisabled = true;
+
+    title = "Skladišta";
+    columns = ['Naziv skladišta', 'Naziv lokacije', 'Naziv grada', 'Radnici', 'Izmjena', 'Brisanje'];
 
     @observable clickedWarehouse = {
         id: "",
@@ -68,24 +70,52 @@ class WarehouseViewStore {
         location: null
     };
 
+    @observable isLoaderVisible = false;
+    @observable isSubmitDisabled = true;
+
     @observable page = 1;
     @observable pageSize = 5;
     @observable totalPages = 1;
     @observable previousEnabled = false;
     @observable nextEnabled = false;
+
     @observable rows = [];
 
-    title = "Skladišta";
-    columns = ['Naziv skladišta', 'Naziv lokacije', 'Naziv grada', 'Radnici', 'Izmjena', 'Brisanje'];
-
-    allData = [];
-
+    @observable allData = [];
     @observable cities = [];
     @observable locations = []
     @observable users = [];
     @observable dropdownUserList = [];
 
     @observable filteredLocations = [];
+
+    @observable response = [];
+    @observable cityFilter = {
+        id: "",
+        name: ""
+    };
+
+    @action
+    onCityFilterChange(value) {
+        this.cityFilter.id = value.city_id;
+        this.cityFilter.name = value.city_name;
+        if (value.city_id != "") {
+            this.allData = this.response.filter(data => data.city_id === value.city_id);
+        }
+        else {
+            this.allData = this.response;
+        }
+        this.setPagination(1);
+    }
+
+    @action
+    onResetFilterClick() {
+        this.cityFilter.id = "";
+        this.cityFilter.name = "";
+        this.allData = this.response;
+        this.setPagination(1);
+    }
+
 
     @action
     showLoader() {
@@ -176,6 +206,7 @@ class WarehouseViewStore {
         else {
             if (response.warehouses.length > 0) {
                 this.allData = response.warehouses;
+                this.response = response.warehouses;
             }
             else {
                 this.allData = [{ id: "", name: "Nema podataka", city_id: "", city_name: "", location_id: "", location_name: "", users: [] }];

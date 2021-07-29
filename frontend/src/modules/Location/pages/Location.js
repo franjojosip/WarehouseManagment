@@ -5,6 +5,7 @@ import LocationViewStore from '../stores/LocationViewStore'
 import Table from '../../../common/layouts/Table';
 import ModalLocation from '../components/ModalLocation';
 import { ToastContainer } from 'react-toastify';
+import { Button, Dropdown, DropdownButton } from 'react-bootstrap';
 
 import "../styles/Location.css";
 
@@ -17,7 +18,7 @@ import "../styles/Location.css";
 @observer
 class Location extends React.Component {
     render() {
-        const { isLoaderVisible, errorMessage, cities, title, clickedLocation, onCityChange, columns, rows, page, pageSize, totalPages, previousEnabled, nextEnabled, isSubmitDisabled, onPageClick, onChangePageSize, onNameChange, onLocationClicked, onPreviousPageClick, onNextPageClick, onEditClick, onDeleteClick, onCreateClick } = this.props.viewStore;
+        const { isLoaderVisible, cityFilter, onCityFilterChange, onResetFilterClick, errorMessage, cities, title, clickedLocation, onCityChange, columns, rows, page, pageSize, totalPages, previousEnabled, nextEnabled, isSubmitDisabled, onPageClick, onChangePageSize, onNameChange, onLocationClicked, onPreviousPageClick, onNextPageClick, onEditClick, onDeleteClick, onCreateClick } = this.props.viewStore;
 
         let tableRows = rows.map((element, i) => {
             return (<tr key={i}>
@@ -49,8 +50,19 @@ class Location extends React.Component {
                 </td>
             </tr>);
         });
+
+        let cityFilterDropdown = (<DropdownButton id="customDropdown" variant="secondary" title={cityFilter.name ? cityFilter.name : "Svi gradovi"} style={{ marginBottom: 10 }}>
+            <Dropdown.Item key="default_city" onSelect={() => onCityFilterChange({city_id:"", city_name:""})}>Svi gradovi</Dropdown.Item>
+            {cities.map((city) => {
+                return <Dropdown.Item key={city.city_id} onSelect={() => onCityFilterChange(city)}>{city.city_name}</Dropdown.Item>;
+            })
+            }
+        </DropdownButton>);
+
         return (
             <Layout isLoaderVisible={isLoaderVisible}>
+                {cityFilterDropdown}
+                <Button className="btn btn-dark" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button>
                 <ModalLocation modalTarget="modalTargetAdd" errorMessage={errorMessage} cities={cities} onSubmit={onCreateClick} name={clickedLocation.name} city_name={clickedLocation.city_name} onNameChange={onNameChange} onCityChange={onCityChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalLocation modalTarget="modalTargetEdit" errorMessage={errorMessage} cities={cities} onSubmit={onEditClick} name={clickedLocation.name} city_name={clickedLocation.city_name} onNameChange={onNameChange} onCityChange={onCityChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalLocation modalTarget="modalTargetDelete" errorMessage={errorMessage} cities={cities} onSubmit={onDeleteClick} name={clickedLocation.name} city_name={clickedLocation.city_name} onNameChange={onNameChange} onCityChange={onCityChange} isSubmitDisabled={isSubmitDisabled} />

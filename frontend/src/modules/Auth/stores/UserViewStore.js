@@ -26,6 +26,8 @@ class UserViewStore {
         this.onEmailChange = this.onEmailChange.bind(this);
         this.onPasswordChange = this.onPasswordChange.bind(this);
         this.onRoleChange = this.onRoleChange.bind(this);
+        this.onRoleFilterChange = this.onRoleFilterChange.bind(this);
+        this.onResetFilterClick = this.onResetFilterClick.bind(this);
 
         this.delay = this.delay.bind(this);
         this.showLoader = this.showLoader.bind(this);
@@ -77,6 +79,32 @@ class UserViewStore {
     @observable allData = [];
     @observable roles = [];
 
+    @observable response = [];
+    @observable roleFilter = {
+        id: "",
+        name: ""
+    };
+
+    @action
+    onRoleFilterChange(value) {
+        this.roleFilter.id = value.role_id;
+        this.roleFilter.name = value.role_name;
+        if (value.role_id) {
+            this.allData = this.response.filter(data => data.role_id === value.role_id);
+        }
+        else {
+            this.allData = this.response;
+        }
+        this.setPagination(1);
+    }
+
+    @action
+    onResetFilterClick() {
+        this.roleFilter.id = "";
+        this.roleFilter.name = "";
+        this.allData = this.response;
+        this.setPagination(1);
+    }
 
     @action
     showLoader() {
@@ -167,6 +195,7 @@ class UserViewStore {
         else {
             if (response.users.length > 0) {
                 this.allData = response.users;
+                this.response = response.users;
             }
             else {
                 this.allData = [{ id: "", fname: "Nema podataka", lname: "", email: "", phone: "", role_id: "", role_name: "", password: "" }];

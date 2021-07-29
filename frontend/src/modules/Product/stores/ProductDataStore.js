@@ -11,8 +11,8 @@ export default class ProductDataStore extends React.Component {
         this.httpClient.createBodyWithTokens({
             name: product.name,
             category_id: product.category_id,
-            subcategory_id: product.subcategory_id != "" ? product.subcategory_id : null,
-            packaging_id: product.packaging_id != "" ? product.packaging_id : null,
+            subcategory_id: product.subcategory_id !== "" ? product.subcategory_id : null,
+            packaging_id: product.packaging_id !== "" ? product.packaging_id : null,
         }, true))
 
     get = async () => this.httpClient.get();
@@ -22,8 +22,8 @@ export default class ProductDataStore extends React.Component {
         this.httpClient.createBodyWithTokens({
             name: product.name,
             category_id: product.category_id,
-            subcategory_id: product.subcategory_id != "" ? product.subcategory_id : null,
-            packaging_id: product.packaging_id != "" ? product.packaging_id : null,
+            subcategory_id: product.subcategory_id !== "" ? product.subcategory_id : null,
+            packaging_id: product.packaging_id !== "" ? product.packaging_id : null,
         }, true))
 
     delete = async (id) => this.httpClient.delete(id, this.httpClient.createBodyWithTokens({}, true));

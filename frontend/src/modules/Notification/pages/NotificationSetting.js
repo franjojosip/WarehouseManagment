@@ -4,6 +4,7 @@ import Layout from "../../../common/layouts/Layout"
 import NotificationSettingViewStore from '../stores/NotificationSettingViewStore'
 import Table from '../../../common/layouts/Table';
 import ModalNotificationSetting from '../components/ModalNotificationSetting';
+import { Button, Dropdown, DropdownButton } from 'react-bootstrap';
 
 import "../styles/Notification.css";
 
@@ -16,7 +17,7 @@ import "../styles/Notification.css";
 @observer
 class NotificationSetting extends React.Component {
     render() {
-        const { isLoaderVisible, title, clickedNotificationSetting, notification_types, days, columns, rows, page, pageSize, totalPages, previousEnabled, nextEnabled, isSubmitDisabled, onDayOfWeekChange, onTimeChange, onNotificationTypeChange, onPageClick, onChangePageSize, onNotificationSettingClicked, onPreviousPageClick, onNextPageClick, onEditClick, onDeleteClick, onCreateClick } = this.props.viewStore;
+        const { isLoaderVisible, notifcationTypeFilter, onNotificationTypeFilterChange, onResetFilterClick, title, clickedNotificationSetting, notification_types, days, columns, rows, page, pageSize, totalPages, previousEnabled, nextEnabled, isSubmitDisabled, onDayOfWeekChange, onTimeChange, onNotificationTypeChange, onPageClick, onChangePageSize, onNotificationSettingClicked, onPreviousPageClick, onNextPageClick, onEditClick, onDeleteClick, onCreateClick } = this.props.viewStore;
 
         let tableRows = rows.map((element, i) => {
             return (<tr key={i}>
@@ -40,8 +41,17 @@ class NotificationSetting extends React.Component {
                 </td>
             </tr>);
         });
+        let notificationTypeDropdown = (<DropdownButton id="customDropdown" variant="secondary" title={notifcationTypeFilter.name ? notifcationTypeFilter.name : "Svi tipovi notifikacije"} style={{ marginBottom: 10 }}>
+            <Dropdown.Item key="default_notification_setting" onSelect={() => onNotificationTypeFilterChange({ notification_type_id: "", notification_type_name: "" })}>Svi gradovi</Dropdown.Item>
+            {notification_types.map((notification_type) => {
+                return <Dropdown.Item key={notification_type.notification_type_id} onSelect={() => onNotificationTypeFilterChange(notification_type)}>{notification_type.notification_type_name}</Dropdown.Item>;
+            })
+            }
+        </DropdownButton>);
         return (
             <Layout isLoaderVisible={isLoaderVisible}>
+                {notificationTypeDropdown}
+                <Button className="btn btn-dark" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button>
                 <ModalNotificationSetting modalTarget="modalTargetAdd" days={days} notification_types={notification_types} day_of_week_name={clickedNotificationSetting.day_of_week_name} time={clickedNotificationSetting.time} email={clickedNotificationSetting.email} notification_type_name={clickedNotificationSetting.notification_type_name} onDayOfWeekChange={onDayOfWeekChange} onTimeChange={onTimeChange} onNotificationTypeChange={onNotificationTypeChange} onSubmit={onCreateClick} isSubmitDisabled={isSubmitDisabled} />
                 <ModalNotificationSetting modalTarget="modalTargetEdit" days={days} notification_types={notification_types} day_of_week_name={clickedNotificationSetting.day_of_week_name} time={clickedNotificationSetting.time} email={clickedNotificationSetting.email} notification_type_name={clickedNotificationSetting.notification_type_name} onDayOfWeekChange={onDayOfWeekChange} onTimeChange={onTimeChange} onNotificationTypeChange={onNotificationTypeChange} onSubmit={onEditClick} isSubmitDisabled={isSubmitDisabled} />
                 <ModalNotificationSetting modalTarget="modalTargetDelete" days={days} notification_types={notification_types} day_of_week_name={clickedNotificationSetting.day_of_week_name} time={clickedNotificationSetting.time} email={clickedNotificationSetting.email} notification_type_name={clickedNotificationSetting.notification_type_name} onDayOfWeekChange={onDayOfWeekChange} onTimeChange={onTimeChange} onNotificationTypeChange={onNotificationTypeChange} onSubmit={onDeleteClick} isSubmitDisabled={isSubmitDisabled} />

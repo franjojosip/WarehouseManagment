@@ -5,6 +5,7 @@ import SubcategoryViewStore from '../stores/SubcategoryViewStore'
 import Table from '../../../common/layouts/Table';
 import ModalSubcategory from '../components/ModalSubcategory';
 import { ToastContainer } from 'react-toastify';
+import { Button, Dropdown, DropdownButton } from 'react-bootstrap';
 
 import "../styles/Subcategory.css";
 
@@ -17,7 +18,7 @@ import "../styles/Subcategory.css";
 @observer
 class Subcategory extends React.Component {
     render() {
-        const { isLoaderVisible, errorMessage, title, clickedSubcategory, onCategoryChange, columns, rows, categories, page, pageSize, totalPages, previousEnabled, nextEnabled, isSubmitDisabled, onPageClick, onChangePageSize, onNameChange, onSubcategoryClicked, onPreviousPageClick, onNextPageClick, onEditClick, onDeleteClick, onCreateClick } = this.props.viewStore;
+        const { isLoaderVisible, categoryFilter, onCategoryFilterChange, onResetFilterClick, errorMessage, title, clickedSubcategory, onCategoryChange, columns, rows, categories, page, pageSize, totalPages, previousEnabled, nextEnabled, isSubmitDisabled, onPageClick, onChangePageSize, onNameChange, onSubcategoryClicked, onPreviousPageClick, onNextPageClick, onEditClick, onDeleteClick, onCreateClick } = this.props.viewStore;
 
         let tableRows = rows.map((element, i) => {
             return (<tr key={i}>
@@ -50,8 +51,19 @@ class Subcategory extends React.Component {
             </tr>);
         });
 
+        let categoryFilterDropdown = (<DropdownButton id="customDropdown" variant="secondary" title={categoryFilter.name ? categoryFilter.name : "Sve kategorije"} style={{ marginBottom: 10 }}>
+            <Dropdown.Item key="default_category" onSelect={() => onCategoryFilterChange({ category_id: "", category_name: "" })}>Sve kategorije</Dropdown.Item>
+            {categories.map((category) => {
+                return <Dropdown.Item key={category.category_id} onSelect={() => onCategoryFilterChange(category)}>{category.category_name}</Dropdown.Item>;
+            })
+            }
+        </DropdownButton>);
+
         return (
             <Layout isLoaderVisible={isLoaderVisible}>
+                {categoryFilterDropdown}
+                <Button className="btn btn-dark" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button>
+
                 <ModalSubcategory modalTarget="modalTargetAdd" errorMessage={errorMessage} categories={categories} onSubmit={onCreateClick} name={clickedSubcategory.name} category_name={clickedSubcategory.category_name} onNameChange={onNameChange} onCategoryChange={onCategoryChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalSubcategory modalTarget="modalTargetEdit" errorMessage={errorMessage} categories={categories} onSubmit={onEditClick} name={clickedSubcategory.name} category_name={clickedSubcategory.category_name} onNameChange={onNameChange} onCategoryChange={onCategoryChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalSubcategory modalTarget="modalTargetDelete" errorMessage={errorMessage} categories={categories} onSubmit={onDeleteClick} name={clickedSubcategory.name} category_name={clickedSubcategory.category_name} onNameChange={onNameChange} onCategoryChange={onCategoryChange} isSubmitDisabled={isSubmitDisabled} />

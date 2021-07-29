@@ -1,9 +1,9 @@
-import { Form, Button, Dropdown, DropdownButton } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import React from "react";
 
 import "../../../common/styles/Modal.css";
 
-export default function ModalEntry({ onSubmit }) {
+export default function ModalEntrySubmit({ onSubmit }) {
 
   return (
     <div className="modal fade" id="modalTargetSubmit" tabIndex="-1" aria-labelledby="modalTarget" aria-hidden="true">

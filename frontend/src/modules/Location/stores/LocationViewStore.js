@@ -20,6 +20,8 @@ class LocationViewStore {
         this.onLocationClicked = this.onLocationClicked.bind(this);
         this.onNameChange = this.onNameChange.bind(this);
         this.onCityChange = this.onCityChange.bind(this);
+        this.onCityFilterChange = this.onCityFilterChange.bind(this);
+        this.onResetFilterClick = this.onResetFilterClick.bind(this);
 
         this.delay = this.delay.bind(this);
         this.showLoader = this.showLoader.bind(this);
@@ -34,8 +36,8 @@ class LocationViewStore {
         this.onFind();
     }
 
-    @observable isLoaderVisible = false;
-    @observable isSubmitDisabled = true;
+    title = "Lokacije";
+    columns = ['Naziv ulice', 'Naziv grada', 'Izmjena', 'Brisanje'];
 
     @observable clickedLocation = {
         id: "",
@@ -49,6 +51,9 @@ class LocationViewStore {
         city: null
     };
 
+    @observable isLoaderVisible = false;
+    @observable isSubmitDisabled = true;
+
     @observable page = 1;
     @observable pageSize = 5;
     @observable totalPages = 1;
@@ -56,11 +61,36 @@ class LocationViewStore {
     @observable nextEnabled = false;
     @observable rows = [];
 
-    title = "Lokacije";
-    columns = ['Naziv ulice', 'Naziv grada', 'Izmjena', 'Brisanje'];
 
     @observable allData = [];
     @observable cities = [];
+
+    @observable response = [];
+    @observable cityFilter = {
+        id: "",
+        name: ""
+    };
+
+    @action
+    onCityFilterChange(value) {
+        this.cityFilter.id = value.city_id;
+        this.cityFilter.name = value.city_name;
+        if (value.city_id) {
+            this.allData = this.response.filter(data => data.city_id === value.city_id);
+        }
+        else {
+            this.allData = this.response;
+        }
+        this.setPagination(1);
+    }
+
+    @action
+    onResetFilterClick() {
+        this.cityFilter.id = "";
+        this.cityFilter.name = "";
+        this.allData = this.response;
+        this.setPagination(1);
+    }
 
     @action
     showLoader() {
@@ -151,6 +181,7 @@ class LocationViewStore {
         else {
             if (response.locations.length > 0) {
                 this.allData = response.locations;
+                this.response = response.locations;
             }
             else {
                 this.allData = [{ id: "", name: "Nema podataka", city_id: "", city_name: "" }];
