@@ -60,21 +60,27 @@ class User extends React.Component {
             </tr>);
         });
 
-        let roleFilterDropdown = (<DropdownButton id="customDropdown" variant="secondary" title={roleFilter.name ? roleFilter.name : "Sve uloge"} style={{ marginBottom: 10 }}>
-            <Dropdown.Item key="default_role" onSelect={() => onRoleFilterChange({ role_id: "", role_name: "" })}>Sve uloge</Dropdown.Item>
-            {roles.map((role) => {
-                return <Dropdown.Item key={role.role_id} onSelect={() => onRoleFilterChange(role)}>{role.role_name}</Dropdown.Item>;
-            })
-            }
-        </DropdownButton>);
+        let filterRow = (
+            <div className="row" style={{ alignItems: "center" }}>
+                <div className="col-4">
+                    <DropdownButton id="customDropdown" variant="secondary" title={roleFilter.name ? roleFilter.name : "Sve uloge"} style={{ marginBottom: 10 }}>
+                        <Dropdown.Item key="default_role" onSelect={() => onRoleFilterChange({ role_id: "", role_name: "" })}>Sve uloge</Dropdown.Item>
+                        {roles.map((role) => {
+                            return <Dropdown.Item key={role.role_id} onSelect={() => onRoleFilterChange(role)}>{role.role_name}</Dropdown.Item>;
+                        })
+                        }
+                    </DropdownButton>
+                </div>
+                <div className="col-3">
+                    <Button className="btn btn-dark" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button>
+                </div>
+            </div>);
         return (
             <Layout isLoaderVisible={isLoaderVisible}>
-                {roleFilterDropdown}
-                <Button className="btn btn-dark" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button>
                 <ModalUser modalTarget="modalTargetAdd" errorMessage={errorMessage} roles={roles} onSubmit={onCreateClick} role_name={clickedUser.role_name} fname={clickedUser.fname} lname={clickedUser.lname} email={clickedUser.email} phone={clickedUser.phone} password={clickedUser.password} onFirstNameChange={onFirstNameChange} onLastNameChange={onLastNameChange} onEmailChange={onEmailChange} onPhoneChange={onPhoneChange} onPasswordChange={onPasswordChange} onRoleChange={onRoleChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalUser modalTarget="modalTargetEdit" errorMessage={errorMessage} roles={roles} onSubmit={onEditClick} role_name={clickedUser.role_name} fname={clickedUser.fname} lname={clickedUser.lname} email={clickedUser.email} phone={clickedUser.phone} password={clickedUser.password} onFirstNameChange={onFirstNameChange} onLastNameChange={onLastNameChange} onEmailChange={onEmailChange} onPhoneChange={onPhoneChange} onPasswordChange={onPasswordChange} onRoleChange={onRoleChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalUser modalTarget="modalTargetDelete" errorMessage={errorMessage} roles={roles} onSubmit={onDeleteClick} role_name={clickedUser.role_name} fname={clickedUser.fname} lname={clickedUser.lname} email={clickedUser.email} phone={clickedUser.phone} password={clickedUser.password} onFirstNameChange={onFirstNameChange} onLastNameChange={onLastNameChange} onEmailChange={onEmailChange} onPhoneChange={onPhoneChange} onPasswordChange={onPasswordChange} onRoleChange={onRoleChange} isSubmitDisabled={isSubmitDisabled} />
-                <Table title={title} columns={columns} tableRows={tableRows} page={page} pageSize={pageSize} totalPages={totalPages} previousEnabled={previousEnabled} nextEnabled={nextEnabled} onActionClicked={onUserClicked} onPageClick={onPageClick} onChangePageSize={onChangePageSize} onPreviousPageClick={onPreviousPageClick} onNextPageClick={onNextPageClick} />
+                <Table filterRow={filterRow} title={title} columns={columns} tableRows={tableRows} page={page} pageSize={pageSize} totalPages={totalPages} previousEnabled={previousEnabled} nextEnabled={nextEnabled} onActionClicked={onUserClicked} onPageClick={onPageClick} onChangePageSize={onChangePageSize} onPreviousPageClick={onPreviousPageClick} onNextPageClick={onNextPageClick} />
                 <ToastContainer style={{ fontSize: 15 }} />
             </Layout>
         )

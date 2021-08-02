@@ -3,7 +3,7 @@ import Pagination from './Pagination';
 
 import "./Table.css";
 
-export default function CollapsibleTable({ isAdmin, tableParentColumns, tableNestedRows, title, page, pageSize, totalPages, previousEnabled, nextEnabled, onActionClicked, onPageClick, onChangePageSize, onPreviousPageClick, onNextPageClick }) {
+export default function CollapsibleTable({ filterRow, isAdmin, tableParentColumns, tableNestedRows, title, page, pageSize, totalPages, previousEnabled, nextEnabled, onActionClicked, onPageClick, onChangePageSize, onPreviousPageClick, onNextPageClick }) {
   return (
     <div className="card col-8 mx-auto mt-5 mb-5">
       <div className="card-body">
@@ -35,6 +35,7 @@ export default function CollapsibleTable({ isAdmin, tableParentColumns, tableNes
               }
             </div>
           </div>
+          {filterRow ? filterRow : null}
           <table className="table table-bordered table-responsive-md text-center">
             <thead>
               <tr>

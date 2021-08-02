@@ -31,6 +31,10 @@ class StocktakingViewStore {
         this.onQuantityChange = this.onQuantityChange.bind(this);
         this.onClickedRow = this.onClickedRow.bind(this);
         this.groupData = this.groupData.bind(this);
+        this.onCityFilterChange = this.onCityFilterChange.bind(this);
+        this.onStartDateFilterChange = this.onStartDateFilterChange.bind(this);
+        this.onEndDateFilterChange = this.onEndDateFilterChange.bind(this);
+        this.onResetFilterClick = this.onResetFilterClick.bind(this);
         this.checkProductExistInStocktaking = this.checkProductExistInStocktaking.bind(this);
 
         this.delay = this.delay.bind(this);
@@ -104,6 +108,83 @@ class StocktakingViewStore {
 
     @observable filteredLocations = [];
     @observable filteredWarehouses = [];
+
+    @observable response = [];
+    @observable cityFilter = {
+        city_id: "",
+        city_name: ""
+    };
+    
+    @observable dateFilter = {
+        startDate: "",
+        endDate: ""
+    }
+
+    @action
+    onCityFilterChange(value) {
+        let filteredData = this.response;
+        if (value.city_id != "") {
+            filteredData = filteredData.filter(data => data.city_id === value.city_id);
+            this.cityFilter.city_id = value.city_id;
+            this.cityFilter.city_name = value.city_name;
+        }
+        if (this.dateFilter.startDate != "" && this.dateFilter.endDate != "" && moment(this.dateFilter.startDate).diff(moment(this.dateFilter.endDate), 'days') <= 0) {
+            filteredData = filteredData.filter(data =>
+                (moment(data.date_created).isAfter(this.dateFilter.startDate) || moment(data.date_created).isSame(this.dateFilter.startDate))
+                && (moment(data.date_created).isBefore(this.dateFilter.endDate) || moment(data.date_created).isSame(this.dateFilter.endDate))
+            );
+        }
+        this.allData = filteredData;
+        this.groupData();
+        this.setPagination(1);
+    }
+
+    @action
+    onStartDateFilterChange(value) {
+        let filteredData = this.response;
+        this.dateFilter.startDate = value;
+        if (this.dateFilter.startDate != "" && this.dateFilter.endDate != "" && moment(this.dateFilter.startDate).diff(moment(this.dateFilter.endDate), 'days') <= 0) {
+            filteredData = filteredData.filter(data =>
+                (moment(data.date_created).isAfter(this.dateFilter.startDate) || moment(data.date_created).isSame(this.dateFilter.startDate))
+                && (moment(data.date_created).isBefore(this.dateFilter.endDate) || moment(data.date_created).isSame(this.dateFilter.endDate))
+            );
+        }
+        if (this.cityFilter.city_id != "") {
+            filteredData = filteredData.filter(data => data.city_id === this.cityFilter.city_id);
+        }
+        this.allData = filteredData;
+        this.groupData();
+        this.setPagination(1);
+    }
+
+    @action
+    onEndDateFilterChange(value) {
+        let filteredData = this.response;
+        this.dateFilter.endDate = value;
+        if (this.dateFilter.startDate != "" && this.dateFilter.endDate != "" && moment(this.dateFilter.startDate).diff(moment(this.dateFilter.endDate), 'days') <= 0) {
+            filteredData = filteredData.filter(data =>
+                (moment(data.date_created).isAfter(this.dateFilter.startDate) || moment(data.date_created).isSame(this.dateFilter.startDate))
+                && (moment(data.date_created).isBefore(this.dateFilter.endDate) || moment(data.date_created).isSame(this.dateFilter.endDate))
+            );
+        }
+        if (this.cityFilter.city_id != "") {
+            filteredData = filteredData.filter(data => data.city_id === this.cityFilter.city_id);
+        }
+        this.allData = filteredData;
+        this.groupData();
+        this.setPagination(1);
+    }
+    
+    @action
+    onResetFilterClick() {
+        this.cityFilter.id = "";
+        this.cityFilter.name = "";
+        this.dateFilter.startDate = "";
+        this.dateFilter.endDate = "";
+        this.allData = this.response;
+        this.groupData();
+        this.setPagination(1);
+    }
 
     @action
     showLoader() {
@@ -227,6 +308,7 @@ class StocktakingViewStore {
             if (response.stocktakings.length > 0) {
                 response.stocktakings.forEach(item => item.date_created = moment(new Date(item.date_created)).format('YYYY/MM'))
                 this.allData = response.stocktakings;
+                this.response = response.stocktakings;
                 this.groupData();
             }
             else {

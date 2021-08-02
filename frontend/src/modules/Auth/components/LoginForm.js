@@ -4,18 +4,7 @@ import { Form, Button, Dropdown, DropdownButton } from 'react-bootstrap';
 import '../styles/Login.css';
 
 
-export default function LoginForm({ errorMessage, email, password, onEmailChange, onPasswordChange, onForgotPasswordClick, onSubmit, isSubmitDisabled }) {
-
-  const config = {
-    rules: [
-      {
-        type: 'object',
-        required: true,
-        message: "Unesite vrijednost u polje",
-      },
-    ],
-  };
-
+const LoginForm = (props) => {
   return (
     <div className="Login">
       <Form style={{ margin: 15 }}>
@@ -25,17 +14,15 @@ export default function LoginForm({ errorMessage, email, password, onEmailChange
           <Form.Control
             autoFocus
             type="text"
-            value={email}
+            value={props.email}
             minLength="4"
-            required
-            {...config}
             placeholder="Unesite email"
-            onChange={(e) => onEmailChange(e.target.value)}
+            onChange={(e) => props.onEmailChange(e.target.value)}
           />
-          <div hidden={!isSubmitDisabled}>
-            <p style={{ color: "red", paddingTop:5 }}>
-              {errorMessage.email ?
-                errorMessage.email
+          <div hidden={!props.isSubmitDisabled}>
+            <p style={{ color: "red", paddingTop: 5 }}>
+              {props.errorMessage.email ?
+                props.errorMessage.email
                 : null
               }
             </p>
@@ -46,35 +33,35 @@ export default function LoginForm({ errorMessage, email, password, onEmailChange
           <Form.Control
             autoFocus
             type="password"
-            value={password}
+            value={props.password}
             minLength="4"
-            required
-            {...config}
             placeholder="Unesite lozinku"
-            onChange={(e) => onPasswordChange(e.target.value)}
+            onChange={(e) => props.onPasswordChange(e.target.value)}
           />
-          <div hidden={!isSubmitDisabled}>
-            <p style={{ color: "red", paddingTop:5 }}>
-              {errorMessage.password ?
-                errorMessage.password
+          <div hidden={!props.isSubmitDisabled}>
+            <p style={{ color: "red", paddingTop: 5 }}>
+              {props.errorMessage.password ?
+                props.errorMessage.password
                 : null
               }
             </p>
           </div>
         </Form.Group>
-          <div hidden={errorMessage.credentials == null}>
-            <p style={{ color: "red" }}>
-              {errorMessage.credentials ?
-                errorMessage.credentials
-                : null
-              }
-            </p>
-          </div>
+        <div hidden={props.errorMessage.credentials == null}>
+          <p style={{ color: "red" }}>
+            {props.errorMessage.credentials ?
+              props.errorMessage.credentials
+              : null
+            }
+          </p>
+        </div>
         <a href="/forgotpassword">Zaboravljena lozinka?</a>
         <div className="modal-footer" style={{ padding: 0 }}>
-          <Button type="submit" disabled={isSubmitDisabled} className="btn btn-success" onClick={(e) => { e.preventDefault(); onSubmit() }}>Prijavi se</Button>
+          <Button type="submit" disabled={props.isSubmitDisabled} className="btn btn-success" onClick={(e) => { e.preventDefault(); props.onSubmit() }}>Prijavi se</Button>
         </div>
       </Form>
     </div>
   );
 };
+
+export default LoginForm;

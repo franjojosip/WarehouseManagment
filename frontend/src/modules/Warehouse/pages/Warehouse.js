@@ -50,13 +50,17 @@ class Warehouse extends React.Component {
                 </td>
             </tr>);
         });
-        let cityFilterDropdown = (<DropdownButton id="customDropdown" variant="secondary" title={cityFilter.name ? cityFilter.name : "Svi gradovi"} style={{ marginBottom: 10 }}>
-            <Dropdown.Item key="default_city" onSelect={() => onCityFilterChange({city_id:"",city_name:"F"})}>Svi gradovi</Dropdown.Item>
-            {cities.map((city) => {
-                return <Dropdown.Item key={city.city_id} onSelect={() => onCityFilterChange(city)}>{city.city_name}</Dropdown.Item>;
-            })
-            }
-        </DropdownButton>);
+        let filterRow = (
+            <div className="row" style={{ alignItems: "center" }}>
+                <div className="col-3"><DropdownButton id="customDropdown" variant="secondary" title={cityFilter.name ? cityFilter.name : "Svi gradovi"} style={{ marginBottom: 10 }}>
+                    <Dropdown.Item key="default_city" onSelect={() => onCityFilterChange({ city_id: "", city_name: "F" })}>Svi gradovi</Dropdown.Item>
+                    {cities.map((city) => {
+                        return <Dropdown.Item key={city.city_id} onSelect={() => onCityFilterChange(city)}>{city.city_name}</Dropdown.Item>;
+                    })
+                    }
+                </DropdownButton></div>
+                <div className="col-3"><Button className="btn btn-dark" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button></div>
+            </div>);
 
 
         let selectedUsers = clickedWarehouse.users ? clickedWarehouse.users.map((user) => { return { name: user.name, id: user.id } }) : [];
@@ -64,13 +68,10 @@ class Warehouse extends React.Component {
 
         return (
             <Layout isLoaderVisible={isLoaderVisible}>
-                {cityFilterDropdown}
-                <Button className="btn btn-dark" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button>
-
                 <ModalWarehouse modalTarget="modalTargetAdd" onMultiSelect={onMultiSelect} errorMessage={errorMessage} users={mappedUsers} selectedUsers={selectedUsers} locations={filteredLocations} cities={cities} onSelect={onUserSelect} onRemove={onUserRemove} onSubmit={onCreateClick} name={clickedWarehouse.name} city_name={clickedWarehouse.city_name} location_name={clickedWarehouse.location_name} onNameChange={onNameChange} onCityChange={onCityChange} onLocationChange={onLocationChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalWarehouse modalTarget="modalTargetEdit" onMultiSelect={onMultiSelect} errorMessage={errorMessage} users={mappedUsers} selectedUsers={selectedUsers} locations={filteredLocations} cities={cities} onSelect={onUserSelect} onRemove={onUserRemove} onSubmit={onEditClick} name={clickedWarehouse.name} city_name={clickedWarehouse.city_name} location_name={clickedWarehouse.location_name} onNameChange={onNameChange} onCityChange={onCityChange} onLocationChange={onLocationChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalWarehouse modalTarget="modalTargetDelete" onMultiSelect={onMultiSelect} errorMessage={errorMessage} users={mappedUsers} selectedUsers={selectedUsers} locations={filteredLocations} cities={cities} onSelect={onUserSelect} onRemove={onUserRemove} onSubmit={onDeleteClick} name={clickedWarehouse.name} city_name={clickedWarehouse.city_name} location_name={clickedWarehouse.location_name} onNameChange={onNameChange} onCityChange={onCityChange} onLocationChange={onLocationChange} isSubmitDisabled={isSubmitDisabled} />
-                <Table title={title} columns={columns} tableRows={tableRows} page={page} pageSize={pageSize} totalPages={totalPages} previousEnabled={previousEnabled} nextEnabled={nextEnabled} onActionClicked={onWarehouseClicked} onPageClick={onPageClick} onChangePageSize={onChangePageSize} onPreviousPageClick={onPreviousPageClick} onNextPageClick={onNextPageClick} />
+                <Table filterRow={filterRow} title={title} columns={columns} tableRows={tableRows} page={page} pageSize={pageSize} totalPages={totalPages} previousEnabled={previousEnabled} nextEnabled={nextEnabled} onActionClicked={onWarehouseClicked} onPageClick={onPageClick} onChangePageSize={onChangePageSize} onPreviousPageClick={onPreviousPageClick} onNextPageClick={onNextPageClick} />
                 <ToastContainer style={{ fontSize: 15 }} />
             </Layout>
         )

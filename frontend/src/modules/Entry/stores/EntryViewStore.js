@@ -127,7 +127,7 @@ class EntryViewStore {
             this.cityFilter.city_id = value.city_id;
             this.cityFilter.city_name = value.city_name;
         }
-        if (this.dateFilter.startDate != "" && this.dateFilter.endDate != "") {
+        if (this.dateFilter.startDate != "" && this.dateFilter.endDate != "" && moment(this.dateFilter.startDate).diff(moment(this.dateFilter.endDate), 'days') <= 0) {
             filteredData = filteredData.filter(data =>
                 (moment(data.date_created).isAfter(this.dateFilter.startDate) || moment(data.date_created).isSame(this.dateFilter.startDate))
                 && (moment(data.date_created).isBefore(this.dateFilter.endDate) || moment(data.date_created).isSame(this.dateFilter.endDate))
@@ -142,7 +142,7 @@ class EntryViewStore {
     onStartDateFilterChange(value) {
         let filteredData = this.response;
         this.dateFilter.startDate = value;
-        if (this.dateFilter.startDate != "" && this.dateFilter.endDate != "") {
+        if (this.dateFilter.startDate != "" && this.dateFilter.endDate != "" && moment(this.dateFilter.startDate).diff(moment(this.dateFilter.endDate), 'days') <= 0) {
             filteredData = filteredData.filter(data =>
                 (moment(data.date_created).isAfter(this.dateFilter.startDate) || moment(data.date_created).isSame(this.dateFilter.startDate))
                 && (moment(data.date_created).isBefore(this.dateFilter.endDate) || moment(data.date_created).isSame(this.dateFilter.endDate))
@@ -160,7 +160,7 @@ class EntryViewStore {
     onEndDateFilterChange(value) {
         let filteredData = this.response;
         this.dateFilter.endDate = value;
-        if (this.dateFilter.startDate != "" && this.dateFilter.endDate != "") {
+        if (this.dateFilter.startDate != "" && this.dateFilter.endDate != "" && moment(this.dateFilter.startDate).diff(moment(this.dateFilter.endDate), 'days') <= 0) {
             filteredData = filteredData.filter(data =>
                 (moment(data.date_created).isAfter(this.dateFilter.startDate) || moment(data.date_created).isSame(this.dateFilter.startDate))
                 && (moment(data.date_created).isBefore(this.dateFilter.endDate) || moment(data.date_created).isSame(this.dateFilter.endDate))
@@ -184,6 +184,7 @@ class EntryViewStore {
         this.groupData();
         this.setPagination(1);
     }
+    
     @action
     showLoader() {
         this.isLoaderVisible = true;

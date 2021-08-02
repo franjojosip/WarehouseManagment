@@ -51,22 +51,27 @@ class Location extends React.Component {
             </tr>);
         });
 
-        let cityFilterDropdown = (<DropdownButton id="customDropdown" variant="secondary" title={cityFilter.name ? cityFilter.name : "Svi gradovi"} style={{ marginBottom: 10 }}>
-            <Dropdown.Item key="default_city" onSelect={() => onCityFilterChange({city_id:"", city_name:""})}>Svi gradovi</Dropdown.Item>
-            {cities.map((city) => {
-                return <Dropdown.Item key={city.city_id} onSelect={() => onCityFilterChange(city)}>{city.city_name}</Dropdown.Item>;
-            })
-            }
-        </DropdownButton>);
-
+        let filterRow = (
+            <div className="row" style={{ alignItems: "center" }}>
+                <div className="col-4">
+                    <DropdownButton id="customDropdown" variant="secondary" title={cityFilter.name ? cityFilter.name : "Svi gradovi"} style={{ marginBottom: 10 }}>
+                        <Dropdown.Item key="default_city" onSelect={() => onCityFilterChange({ city_id: "", city_name: "" })}>Svi gradovi</Dropdown.Item>
+                        {cities.map((city) => {
+                            return <Dropdown.Item key={city.city_id} onSelect={() => onCityFilterChange(city)}>{city.city_name}</Dropdown.Item>;
+                        })
+                        }
+                    </DropdownButton>
+                </div>
+                <div className="col-3">
+                    <Button className="btn btn-dark" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button>
+                </div>
+            </div>);
         return (
             <Layout isLoaderVisible={isLoaderVisible}>
-                {cityFilterDropdown}
-                <Button className="btn btn-dark" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button>
                 <ModalLocation modalTarget="modalTargetAdd" errorMessage={errorMessage} cities={cities} onSubmit={onCreateClick} name={clickedLocation.name} city_name={clickedLocation.city_name} onNameChange={onNameChange} onCityChange={onCityChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalLocation modalTarget="modalTargetEdit" errorMessage={errorMessage} cities={cities} onSubmit={onEditClick} name={clickedLocation.name} city_name={clickedLocation.city_name} onNameChange={onNameChange} onCityChange={onCityChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalLocation modalTarget="modalTargetDelete" errorMessage={errorMessage} cities={cities} onSubmit={onDeleteClick} name={clickedLocation.name} city_name={clickedLocation.city_name} onNameChange={onNameChange} onCityChange={onCityChange} isSubmitDisabled={isSubmitDisabled} />
-                <Table title={title} columns={columns} tableRows={tableRows} page={page} pageSize={pageSize} totalPages={totalPages} previousEnabled={previousEnabled} nextEnabled={nextEnabled} onActionClicked={onLocationClicked} onPageClick={onPageClick} onChangePageSize={onChangePageSize} onPreviousPageClick={onPreviousPageClick} onNextPageClick={onNextPageClick} />
+                <Table filterRow={filterRow} title={title} columns={columns} tableRows={tableRows} page={page} pageSize={pageSize} totalPages={totalPages} previousEnabled={previousEnabled} nextEnabled={nextEnabled} onActionClicked={onLocationClicked} onPageClick={onPageClick} onChangePageSize={onChangePageSize} onPreviousPageClick={onPreviousPageClick} onNextPageClick={onNextPageClick} />
                 <ToastContainer style={{ fontSize: 15 }} />
             </Layout>
         )

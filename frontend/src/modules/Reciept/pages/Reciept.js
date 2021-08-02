@@ -7,6 +7,8 @@ import ModalReciept from '../components/ModalReciept';
 import ModalRecieptSubmit from '../components/ModalRecieptSubmit';
 import { ToastContainer } from 'react-toastify';
 import { Button, Dropdown, DropdownButton } from 'react-bootstrap';
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
 
 import "../styles/Reciept.css";
 
@@ -19,7 +21,7 @@ import "../styles/Reciept.css";
 @observer
 class Reciept extends React.Component {
     render() {
-        const { errorMessage, cityFilter, onCityFilterChange, onResetFilterClick, cities, filteredLocations, filteredWarehouses, products, onSubmitClick, clickedReciept, onClickedRow, parentColumns, childColumns, paginatedData, onRecieptClicked, onWarehouseChange, onCityChange, onLocationChange, onProductChange, onQuantityChange, isLoaderVisible, title, page, pageSize, totalPages, previousEnabled, nextEnabled, isSubmitDisabled, onPageClick, onChangePageSize, onPreviousPageClick, onNextPageClick, onEditClick, onDeleteClick, onCreateClick } = this.props.viewStore;
+        const { errorMessage, onGeneratePdfClick, dateFilter, cityFilter, onCityFilterChange, onStartDateFilterChange, onEndDateFilterChange, onResetFilterClick, cities, filteredLocations, filteredWarehouses, products, onSubmitClick, clickedReciept, onClickedRow, parentColumns, childColumns, paginatedData, onRecieptClicked, onWarehouseChange, onCityChange, onLocationChange, onProductChange, onQuantityChange, isLoaderVisible, title, page, pageSize, totalPages, previousEnabled, nextEnabled, isSubmitDisabled, onPageClick, onChangePageSize, onPreviousPageClick, onNextPageClick, onEditClick, onDeleteClick, onCreateClick } = this.props.viewStore;
 
         let tableParentColumns = parentColumns.map((element, i) => {
             return <th key={"parentColumn" + i} className="text-center">{element}</th>
@@ -124,8 +126,19 @@ class Reciept extends React.Component {
                 );
             })
         }
+        let classes = makeStyles((theme) => ({
+            container: {
+                display: 'flex',
+                flexWrap: 'wrap',
+            },
+            textField: {
+                marginLeft: theme.spacing(1),
+                marginRight: theme.spacing(1),
+                width: 200,
+            },
+        }));
 
-        let cityFilterDropdown = (<DropdownButton id="customDropdown" variant="secondary" title={cityFilter.name ? cityFilter.name : "Svi gradovi"} style={{ marginBottom: 10 }}>
+        let cityFilterDropdown = (<DropdownButton id="customDropdown" variant="secondary" title={cityFilter.city_name ? cityFilter.city_name : "Svi gradovi"} style={{ marginBottom: 10 }}>
             <Dropdown.Item key="default_city" onSelect={() => onCityFilterChange({ city_id: "", city_name: "" })}>Svi gradovi</Dropdown.Item>
             {cities.map((city) => {
                 return <Dropdown.Item key={city.city_id} onSelect={() => onCityFilterChange(city)}>{city.city_name}</Dropdown.Item>;
@@ -133,16 +146,54 @@ class Reciept extends React.Component {
             }
         </DropdownButton>);
 
+
+        let filterRow = (<div className="row" style={{ alignItems: "center" }}>
+            <div className="col-3">{cityFilterDropdown}</div>
+            <div className="col-3">
+                <TextField
+                    id="startDate"
+                    type="date"
+                    format="dd/MM/yyyy"
+                    value={dateFilter.startDate}
+                    className={classes.textField}
+                    onChange={(e) => onStartDateFilterChange(e.target.value)}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                />
+            </div>
+            <div className="col-3">
+                <TextField
+                    id="endDate"
+                    type="date"
+                    format="dd/MM/yyyy"
+                    value={dateFilter.endDate}
+                    className={classes.textField}
+                    onChange={onEndDateFilterChange}
+                    onChange={(e) => onEndDateFilterChange(e.target.value)}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                />
+            </div>
+            <div className="col-3"><Button className="btn btn-dark" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button></div>
+
+            <button
+                className="btn btn-primary"
+                onClick={(e) => { e.preventDefault(); onGeneratePdfClick() }}
+            >
+                GENERIRAJ IZVJEŠĆE
+            </button>
+        </div >);
+
         return (
             <Layout isLoaderVisible={isLoaderVisible}>
-                {cityFilterDropdown}
-                <Button className="btn btn-dark" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button>
                 <ModalReciept modalTarget="modalTargetAdd" errorMessage={errorMessage} warehouses={filteredWarehouses} cities={cities} locations={filteredLocations} products={products} onSubmit={onCreateClick} warehouse_name={clickedReciept.warehouse_name} city_name={clickedReciept.city_name} location_name={clickedReciept.location_name} category_name={clickedReciept.category_name} subcategory_name={clickedReciept.subcategory_name} product_name={clickedReciept.product_name} packaging_name={clickedReciept.packaging_name} quantity={clickedReciept.quantity} onWarehouseChange={onWarehouseChange} onCityChange={onCityChange} onLocationChange={onLocationChange} onProductChange={onProductChange} onQuantityChange={onQuantityChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalReciept modalTarget="modalTargetEdit" errorMessage={errorMessage} warehouses={filteredWarehouses} cities={cities} locations={filteredLocations} products={products} onSubmit={onEditClick} warehouse_name={clickedReciept.warehouse_name} city_name={clickedReciept.city_name} location_name={clickedReciept.location_name} category_name={clickedReciept.category_name} subcategory_name={clickedReciept.subcategory_name} product_name={clickedReciept.product_name} packaging_name={clickedReciept.packaging_name} quantity={clickedReciept.quantity} onWarehouseChange={onWarehouseChange} onCityChange={onCityChange} onLocationChange={onLocationChange} onProductChange={onProductChange} onQuantityChange={onQuantityChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalReciept modalTarget="modalTargetDelete" errorMessage={errorMessage} warehouses={filteredWarehouses} cities={cities} locations={filteredLocations} products={products} onSubmit={onDeleteClick} warehouse_name={clickedReciept.warehouse_name} city_name={clickedReciept.city_name} location_name={clickedReciept.location_name} category_name={clickedReciept.category_name} subcategory_name={clickedReciept.subcategory_name} product_name={clickedReciept.product_name} packaging_name={clickedReciept.packaging_name} quantity={clickedReciept.quantity} onWarehouseChange={onWarehouseChange} onCityChange={onCityChange} onLocationChange={onLocationChange} onProductChange={onProductChange} onQuantityChange={onQuantityChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalRecieptSubmit onSubmit={onSubmitClick} />
                 <ToastContainer style={{ fontSize: 15 }} />
-                <CollapsibleTable isAdmin={true} title={title} tableNestedRows={tableNestedRows} tableParentColumns={tableParentColumns} page={page} pageSize={pageSize} totalPages={totalPages} previousEnabled={previousEnabled} nextEnabled={nextEnabled} onActionClicked={onRecieptClicked} onPageClick={onPageClick} onChangePageSize={onChangePageSize} onPreviousPageClick={onPreviousPageClick} onNextPageClick={onNextPageClick} />
+                <CollapsibleTable filterRow={filterRow} isAdmin={true} title={title} tableNestedRows={tableNestedRows} tableParentColumns={tableParentColumns} page={page} pageSize={pageSize} totalPages={totalPages} previousEnabled={previousEnabled} nextEnabled={nextEnabled} onActionClicked={onRecieptClicked} onPageClick={onPageClick} onChangePageSize={onChangePageSize} onPreviousPageClick={onPreviousPageClick} onNextPageClick={onNextPageClick} />
             </Layout>
         );
     }

@@ -51,23 +51,28 @@ class Subcategory extends React.Component {
             </tr>);
         });
 
-        let categoryFilterDropdown = (<DropdownButton id="customDropdown" variant="secondary" title={categoryFilter.name ? categoryFilter.name : "Sve kategorije"} style={{ marginBottom: 10 }}>
-            <Dropdown.Item key="default_category" onSelect={() => onCategoryFilterChange({ category_id: "", category_name: "" })}>Sve kategorije</Dropdown.Item>
-            {categories.map((category) => {
-                return <Dropdown.Item key={category.category_id} onSelect={() => onCategoryFilterChange(category)}>{category.category_name}</Dropdown.Item>;
-            })
-            }
-        </DropdownButton>);
+        let filterRow = (
+            <div className="row" style={{ alignItems: "center" }}>
+                <div className="col-4">
+                    <DropdownButton id="customDropdown" variant="secondary" title={categoryFilter.name ? categoryFilter.name : "Sve kategorije"} style={{ marginBottom: 10 }}>
+                        <Dropdown.Item key="default_category" onSelect={() => onCategoryFilterChange({ category_id: "", category_name: "" })}>Sve kategorije</Dropdown.Item>
+                        {categories.map((category) => {
+                            return <Dropdown.Item key={category.category_id} onSelect={() => onCategoryFilterChange(category)}>{category.category_name}</Dropdown.Item>;
+                        })
+                        }
+                    </DropdownButton>
+                </div>
+                <div className="col-3">
+                    <Button className="btn btn-dark" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button>
+                </div>
+            </div>);
 
         return (
             <Layout isLoaderVisible={isLoaderVisible}>
-                {categoryFilterDropdown}
-                <Button className="btn btn-dark" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button>
-
                 <ModalSubcategory modalTarget="modalTargetAdd" errorMessage={errorMessage} categories={categories} onSubmit={onCreateClick} name={clickedSubcategory.name} category_name={clickedSubcategory.category_name} onNameChange={onNameChange} onCategoryChange={onCategoryChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalSubcategory modalTarget="modalTargetEdit" errorMessage={errorMessage} categories={categories} onSubmit={onEditClick} name={clickedSubcategory.name} category_name={clickedSubcategory.category_name} onNameChange={onNameChange} onCategoryChange={onCategoryChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalSubcategory modalTarget="modalTargetDelete" errorMessage={errorMessage} categories={categories} onSubmit={onDeleteClick} name={clickedSubcategory.name} category_name={clickedSubcategory.category_name} onNameChange={onNameChange} onCategoryChange={onCategoryChange} isSubmitDisabled={isSubmitDisabled} />
-                <Table title={title} columns={columns} tableRows={tableRows} page={page} pageSize={pageSize} totalPages={totalPages} previousEnabled={previousEnabled} nextEnabled={nextEnabled} onActionClicked={onSubcategoryClicked} onPageClick={onPageClick} onChangePageSize={onChangePageSize} onPreviousPageClick={onPreviousPageClick} onNextPageClick={onNextPageClick} />
+                <Table filterRow={filterRow} title={title} columns={columns} tableRows={tableRows} page={page} pageSize={pageSize} totalPages={totalPages} previousEnabled={previousEnabled} nextEnabled={nextEnabled} onActionClicked={onSubcategoryClicked} onPageClick={onPageClick} onChangePageSize={onChangePageSize} onPreviousPageClick={onPreviousPageClick} onNextPageClick={onNextPageClick} />
                 <ToastContainer style={{ fontSize: 15 }} />
             </Layout>
         )

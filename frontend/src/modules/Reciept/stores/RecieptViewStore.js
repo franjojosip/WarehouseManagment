@@ -2,6 +2,7 @@ import { action, observable } from "mobx";
 import { toast } from 'react-toastify';
 import moment from "moment";
 import { getUser } from "../../../common/LocalStorage";
+import generatePdf from "../../../common/components/ReportGenerator";
 
 class RecieptViewStore {
     constructor(rootStore) {
@@ -34,7 +35,10 @@ class RecieptViewStore {
         this.onClickedRow = this.onClickedRow.bind(this);
         this.groupData = this.groupData.bind(this);
         this.onCityFilterChange = this.onCityFilterChange.bind(this);
+        this.onStartDateFilterChange = this.onStartDateFilterChange.bind(this);
+        this.onEndDateFilterChange = this.onEndDateFilterChange.bind(this);
         this.onResetFilterClick = this.onResetFilterClick.bind(this);
+        this.onGeneratePdfClick = this.onGeneratePdfClick.bind(this);
 
         this.delay = this.delay.bind(this);
         this.showLoader = this.showLoader.bind(this);
@@ -109,29 +113,74 @@ class RecieptViewStore {
 
     @observable response = [];
     @observable cityFilter = {
-        id: "",
-        name: ""
+        city_id: "",
+        city_name: ""
     };
-
+    @observable dateFilter = {
+        startDate: "",
+        endDate: ""
+    }
     @action
     onCityFilterChange(value) {
-        console.log(value);
-        this.cityFilter.id = value.city_id;
-        this.cityFilter.name = value.city_name;
-        if (value.city_id) {
-            this.allData = this.response.filter(data => data.city_id === value.city_id);
+        let filteredData = this.response;
+        if (value.city_id != "") {
+            filteredData = filteredData.filter(data => data.city_id === value.city_id);
+            this.cityFilter.city_id = value.city_id;
+            this.cityFilter.city_name = value.city_name;
         }
-        else {
-            this.allData = this.response;
+        if (this.dateFilter.startDate != "" && this.dateFilter.endDate != "" && moment(this.dateFilter.startDate).diff(moment(this.dateFilter.endDate), 'days') <= 0) {
+            filteredData = filteredData.filter(data =>
+                (moment(data.date_created).isAfter(this.dateFilter.startDate) || moment(data.date_created).isSame(this.dateFilter.startDate))
+                && (moment(data.date_created).isBefore(this.dateFilter.endDate) || moment(data.date_created).isSame(this.dateFilter.endDate))
+            );
         }
+        this.allData = filteredData;
+        this.groupData();
+        this.setPagination(1);
+    }
+
+    @action
+    onStartDateFilterChange(value) {
+        let filteredData = this.response;
+        this.dateFilter.startDate = value;
+        if (this.dateFilter.startDate != "" && this.dateFilter.endDate != "" && moment(this.dateFilter.startDate).diff(moment(this.dateFilter.endDate), 'days') <= 0) {
+            filteredData = filteredData.filter(data =>
+                (moment(data.date_created).isAfter(this.dateFilter.startDate) || moment(data.date_created).isSame(this.dateFilter.startDate))
+                && (moment(data.date_created).isBefore(this.dateFilter.endDate) || moment(data.date_created).isSame(this.dateFilter.endDate))
+            );
+        }
+        if (this.cityFilter.city_id != "") {
+            filteredData = filteredData.filter(data => data.city_id === this.cityFilter.city_id);
+        }
+        this.allData = filteredData;
+        this.groupData();
+        this.setPagination(1);
+    }
+
+    @action
+    onEndDateFilterChange(value) {
+        let filteredData = this.response;
+        this.dateFilter.endDate = value;
+        if (this.dateFilter.startDate != "" && this.dateFilter.endDate != "" && moment(this.dateFilter.startDate).diff(moment(this.dateFilter.endDate), 'days') <= 0) {
+            filteredData = filteredData.filter(data =>
+                (moment(data.date_created).isAfter(this.dateFilter.startDate) || moment(data.date_created).isSame(this.dateFilter.startDate))
+                && (moment(data.date_created).isBefore(this.dateFilter.endDate) || moment(data.date_created).isSame(this.dateFilter.endDate))
+            );
+        }
+        if (this.cityFilter.city_id != "") {
+            filteredData = filteredData.filter(data => data.city_id === this.cityFilter.city_id);
+        }
+        this.allData = filteredData;
         this.groupData();
         this.setPagination(1);
     }
 
     @action
     onResetFilterClick() {
-        this.cityFilter.id = "";
-        this.cityFilter.name = "";
+        this.cityFilter.city_id = "";
+        this.cityFilter.city_name = "";
+        this.dateFilter.startDate = "";
+        this.dateFilter.endDate = "";
         this.allData = this.response;
         this.groupData();
         this.setPagination(1);
@@ -672,6 +721,51 @@ class RecieptViewStore {
             let index = this.grouppedData.findIndex((element) => element.name.toString() === key.toString())
             this.grouppedData[index].data.push(element);
         })
+    }
+
+    @action
+    async onGeneratePdfClick() {
+        let startDate = this.dateFilter.startDate;
+        let endDate = this.dateFilter.endDate;
+        if (startDate != "" && endDate != "" && moment(startDate).diff(moment(endDate), 'days') <= 0) {
+            let response = await (this.dataStore.report(startDate, endDate))
+            if (response.error) {
+                toast.error(response.error, {
+                    position: "bottom-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    progress: undefined,
+                });
+                console.clear();
+            }
+            else {
+                if (response.reciepts.length == 0) {
+                    toast.error("Nema podataka za dobiveni raspon datuma", {
+                        position: "bottom-right",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        progress: undefined,
+                    });
+                }
+                else {
+                    generatePdf(response.reciepts, startDate, endDate);
+                }
+            }
+        }
+        else {
+            toast.error("Potrebni je odabrati početni i krajnji datum za generiranje izvješća", {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+        }
     }
 
 }

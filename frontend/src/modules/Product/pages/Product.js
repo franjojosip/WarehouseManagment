@@ -75,16 +75,24 @@ class Product extends React.Component {
             })
             }
         </DropdownButton>);
+
+
+        let filterRow = (
+            <div className="row" style={{ alignItems: "center" }}>
+                <div className="col-4">{categoryFilterDropdown}</div>
+                <div className="col-4">{subcategoryFilterDropdown}</div>
+                <div className="col-4">{packagingFilterDropdown}</div>
+                <div className="col-3">
+                    <Button className="btn btn-dark" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button>
+                </div>
+            </div>);
+
         return (
             <Layout isLoaderVisible={isLoaderVisible}>
-                {categoryFilterDropdown}
-                {subcategoryFilterDropdown}
-                {packagingFilterDropdown}
-                <Button className="btn btn-dark" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button>
                 <ModalProduct modalTarget="modalTargetAdd" errorMessage={errorMessage} categories={categories} subcategories={filteredSubcategories} packagings={packagings} onSubmit={onCreateClick} name={clickedProduct.name} category_name={clickedProduct.category_name} subcategory_name={clickedProduct.subcategory_name} packaging_name={clickedProduct.packaging_name} onNameChange={onNameChange} onCategoryChange={onCategoryChange} onSubcategoryChange={onSubcategoryChange} onPackagingChange={onPackagingChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalProduct modalTarget="modalTargetEdit" errorMessage={errorMessage} categories={categories} subcategories={filteredSubcategories} packagings={packagings} onSubmit={onEditClick} name={clickedProduct.name} category_name={clickedProduct.category_name} subcategory_name={clickedProduct.subcategory_name} packaging_name={clickedProduct.packaging_name} onNameChange={onNameChange} onCategoryChange={onCategoryChange} onSubcategoryChange={onSubcategoryChange} onPackagingChange={onPackagingChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalProduct modalTarget="modalTargetDelete" errorMessage={errorMessage} categories={categories} subcategories={filteredSubcategories} packagings={packagings} onSubmit={onDeleteClick} name={clickedProduct.name} category_name={clickedProduct.category_name} subcategory_name={clickedProduct.subcategory_name} packaging_name={clickedProduct.packaging_name} onNameChange={onNameChange} onCategoryChange={onCategoryChange} onSubcategoryChange={onSubcategoryChange} onPackagingChange={onPackagingChange} isSubmitDisabled={isSubmitDisabled} />
-                <Table title={title} columns={columns} tableRows={tableRows} page={page} pageSize={pageSize} totalPages={totalPages} previousEnabled={previousEnabled} nextEnabled={nextEnabled} onActionClicked={onProductClicked} onPageClick={onPageClick} onChangePageSize={onChangePageSize} onPreviousPageClick={onPreviousPageClick} onNextPageClick={onNextPageClick} />
+                <Table filterRow={filterRow} title={title} columns={columns} tableRows={tableRows} page={page} pageSize={pageSize} totalPages={totalPages} previousEnabled={previousEnabled} nextEnabled={nextEnabled} onActionClicked={onProductClicked} onPageClick={onPageClick} onChangePageSize={onChangePageSize} onPreviousPageClick={onPreviousPageClick} onNextPageClick={onNextPageClick} />
                 <ToastContainer style={{ fontSize: 15 }} />
             </Layout>
         )

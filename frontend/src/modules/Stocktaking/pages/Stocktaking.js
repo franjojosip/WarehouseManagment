@@ -5,8 +5,10 @@ import StocktakingViewStore from '../stores/StocktakingViewStore'
 import CollapsibleTable from '../../../common/layouts/CollapsibleTable';
 import ModalStocktaking from '../components/ModalStocktaking';
 import ModalStocktakingSubmit from '../components/ModalStocktakingSubmit';
-import Button from 'react-bootstrap/Button';
 import { ToastContainer } from 'react-toastify';
+import { Button, Dropdown, DropdownButton } from 'react-bootstrap';
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
 
 import "../styles/Stocktaking.css";
 
@@ -19,7 +21,7 @@ import "../styles/Stocktaking.css";
 @observer
 class Stocktaking extends React.Component {
     render() {
-        const { errorMessage, cities, filteredLocations, filteredWarehouses, products, onSubmitClick, clickedStocktaking, onClickedRow, parentColumns, childColumns, paginatedData, onStocktakingClicked, onWarehouseChange, onCityChange, onLocationChange, onProductChange, onQuantityChange, isLoaderVisible, title, page, pageSize, totalPages, previousEnabled, nextEnabled, isSubmitDisabled, onPageClick, onChangePageSize, onPreviousPageClick, onNextPageClick, onEditClick, onDeleteClick, onCreateClick } = this.props.viewStore;
+        const { errorMessage, cityFilter, dateFilter, onCityFilterChange, onStartDateFilterChange, onEndDateFilterChange, onResetFilterClick, cities, filteredLocations, filteredWarehouses, products, onSubmitClick, clickedStocktaking, onClickedRow, parentColumns, childColumns, paginatedData, onStocktakingClicked, onWarehouseChange, onCityChange, onLocationChange, onProductChange, onQuantityChange, isLoaderVisible, title, page, pageSize, totalPages, previousEnabled, nextEnabled, isSubmitDisabled, onPageClick, onChangePageSize, onPreviousPageClick, onNextPageClick, onEditClick, onDeleteClick, onCreateClick } = this.props.viewStore;
 
         let tableParentColumns = parentColumns.map((element, i) => {
             return <th key={"parentColumn" + i} className="text-center">{element}</th>
@@ -124,6 +126,60 @@ class Stocktaking extends React.Component {
             })
         }
 
+        let classes = makeStyles((theme) => ({
+            container: {
+                display: 'flex',
+                flexWrap: 'wrap',
+            },
+            textField: {
+                marginLeft: theme.spacing(1),
+                marginRight: theme.spacing(1),
+                width: 200,
+            },
+        }));
+
+        let cityFilterDropdown = (<DropdownButton id="customDropdown" variant="secondary" title={cityFilter.city_name ? cityFilter.city_name : "Svi gradovi"} style={{ marginBottom: 10 }}>
+            <Dropdown.Item key="default_city" onSelect={() => onCityFilterChange({ city_id: "", city_name: "" })}>Svi gradovi</Dropdown.Item>
+            {cities.map((city) => {
+                return <Dropdown.Item key={city.city_id} onSelect={() => onCityFilterChange(city)}>{city.city_name}</Dropdown.Item>;
+            })
+            }
+        </DropdownButton>);
+
+
+        let filterRow = (<div className="row" style={{ alignItems: "center" }}>
+            <div className="col-3">{cityFilterDropdown}</div>
+            <div className="col-3">
+                <TextField
+                    id="startDate"
+                    type="date"
+                    format="dd/MM/yyyy"
+                    value={dateFilter.startDate}
+                    className={classes.textField}
+                    onChange={(e) => onStartDateFilterChange(e.target.value)}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                />
+            </div>
+            <div className="col-3">
+                <TextField
+                    id="endDate"
+                    type="date"
+                    format="dd/MM/yyyy"
+                    value={dateFilter.endDate}
+                    className={classes.textField}
+                    onChange={onEndDateFilterChange}
+                    onChange={(e) => onEndDateFilterChange(e.target.value)}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                />
+            </div>
+            <div className="col-3"><Button className="btn btn-dark" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button></div>
+
+        </div >);
+
         return (
             <Layout isLoaderVisible={isLoaderVisible}>
                 <ModalStocktaking modalTarget="modalTargetAdd" errorMessage={errorMessage} warehouses={filteredWarehouses} cities={cities} locations={filteredLocations} products={products} onSubmit={onCreateClick} warehouse_name={clickedStocktaking.warehouse_name} city_name={clickedStocktaking.city_name} location_name={clickedStocktaking.location_name} category_name={clickedStocktaking.category_name} product_name={clickedStocktaking.product_name} subcategory_name={clickedStocktaking.subcategory_name} packaging_name={clickedStocktaking.packaging_name} quantity={clickedStocktaking.quantity} onWarehouseChange={onWarehouseChange} onCityChange={onCityChange} onLocationChange={onLocationChange} onProductChange={onProductChange} onQuantityChange={onQuantityChange} isSubmitDisabled={isSubmitDisabled} />
@@ -131,7 +187,7 @@ class Stocktaking extends React.Component {
                 <ModalStocktaking modalTarget="modalTargetDelete" errorMessage={errorMessage} warehouses={filteredWarehouses} cities={cities} locations={filteredLocations} products={products} onSubmit={onDeleteClick} warehouse_name={clickedStocktaking.warehouse_name} city_name={clickedStocktaking.city_name} location_name={clickedStocktaking.location_name} category_name={clickedStocktaking.category_name} product_name={clickedStocktaking.product_name} subcategory_name={clickedStocktaking.subcategory_name} packaging_name={clickedStocktaking.packaging_name} quantity={clickedStocktaking.quantity} onWarehouseChange={onWarehouseChange} onCityChange={onCityChange} onLocationChange={onLocationChange} onProductChange={onProductChange} onQuantityChange={onQuantityChange} isSubmitDisabled={isSubmitDisabled} />
                 <ModalStocktakingSubmit onSubmit={onSubmitClick} />
                 <ToastContainer style={{ fontSize: 15 }} />
-                <CollapsibleTable isAdmin={true} title={title} tableNestedRows={tableNestedRows} tableParentColumns={tableParentColumns} page={page} pageSize={pageSize} totalPages={totalPages} previousEnabled={previousEnabled} nextEnabled={nextEnabled} onActionClicked={onStocktakingClicked} onPageClick={onPageClick} onChangePageSize={onChangePageSize} onPreviousPageClick={onPreviousPageClick} onNextPageClick={onNextPageClick} />
+                <CollapsibleTable filterRow={filterRow} isAdmin={true} title={title} tableNestedRows={tableNestedRows} tableParentColumns={tableParentColumns} page={page} pageSize={pageSize} totalPages={totalPages} previousEnabled={previousEnabled} nextEnabled={nextEnabled} onActionClicked={onStocktakingClicked} onPageClick={onPageClick} onChangePageSize={onChangePageSize} onPreviousPageClick={onPreviousPageClick} onNextPageClick={onNextPageClick} />
             </Layout>
         );
     }

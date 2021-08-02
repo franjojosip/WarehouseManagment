@@ -3,7 +3,7 @@ import Pagination from './Pagination';
 
 import "./Table.css";
 
-export default function Table({ title, hideAddButton, columns, tableRows, page, pageSize, totalPages, previousEnabled, nextEnabled, onActionClicked, onPageClick, onChangePageSize, onPreviousPageClick, onNextPageClick }) {
+export default function Table({ title, filterRow, hideAddButton, columns, tableRows, page, pageSize, totalPages, previousEnabled, nextEnabled, onActionClicked, onPageClick, onChangePageSize, onPreviousPageClick, onNextPageClick }) {
 
   return (
     <div className="card col-8 mx-auto mt-5 mb-5">
@@ -37,6 +37,7 @@ export default function Table({ title, hideAddButton, columns, tableRows, page, 
                 </div>
             }
           </div>
+          {filterRow ? filterRow : null}
           <table className="table table-bordered table-responsive-md table-striped text-center">
             <thead>
               <tr>
