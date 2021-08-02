@@ -52,10 +52,31 @@ async function list(req, res) {
         isSubmitted: reciept.isSubmitted
       };
     });
-    return res.status(200).json({ reciepts });
+    return res.status(200).json({ reciepts: reciepts.sort(compare).sort(deepCompare) });
   } catch (err) {
     return res.status(500).json({ error: "Dogodila se pogreška, molimo kontaktirajte administratora!" });
   }
 }
+
+function compare(a, b) {
+  if (a.city_name[0] < b.city_name[0]) {
+    return -1;
+  }
+  if (a.city_name[0] > b.city_name[0]) {
+    return 1;
+  }
+  return 0;
+}
+
+function deepCompare(a, b) {
+  if (a.city_name[0] == b.city_name[0] && a.location_name[0] < b.location_name[0]) {
+    return -1;
+  }
+  if (a.city_name[0] == b.city_name[0] && a.location_name[0] > b.location_name[0]) {
+    return 1;
+  }
+  return 0;
+}
+
 
 module.exports = list;
