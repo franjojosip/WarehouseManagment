@@ -5,7 +5,7 @@ import TextField from '@material-ui/core/TextField';
 
 import "../../../common/styles/Modal.css";
 
-export default function ModalNotificationSetting({ modalTarget, onSubmit, days, day_of_week_name, time, email, notification_type_name, notification_types, onDayOfWeekChange, onTimeChange, onNotificationTypeChange, isSubmitDisabled }) {
+export default function ModalNotificationSetting({ modalTarget, onSubmit, days, day_of_week_name, time, email, onEmailChange, notification_type_name, notification_types, onDayOfWeekChange, onTimeChange, onNotificationTypeChange, isSubmitDisabled }) {
   let classes = makeStyles((theme) => ({
     container: {
       display: 'flex',
@@ -39,16 +39,6 @@ export default function ModalNotificationSetting({ modalTarget, onSubmit, days, 
     submitText = "Obriši";
     isDisabled = true;
   }
-  const config = {
-    rules: [
-      {
-        type: 'object',
-        required: true,
-        message: "Unesite vrijednost u polje",
-      },
-    ],
-  };
-  let displayBlock = isDisabled ? "none" : "block";
 
   return (
     <div className="modal fade" id={modalTarget} tabIndex="-1" aria-labelledby="modalTarget" aria-hidden="true">
@@ -61,44 +51,51 @@ export default function ModalNotificationSetting({ modalTarget, onSubmit, days, 
             </button>
           </div>
           <Form style={{ margin: 15 }}>
-            <Form.Group size="md" controlId="day_of_week_name">
-              <Form.Label>Dan U Tjednu *</Form.Label>
-              {
-                isDisabled ?
-                  < Form.Control
-                    type="text"
-                    value={day_of_week_name}
-                    disabled={isDisabled}
-                  /> :
-                  <DropdownButton id="customDropdown" variant="secondary" title={day_of_week_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
-                    {days.map((day) => {
-                      return <Dropdown.Item key={day.id} onSelect={() => onDayOfWeekChange(day)}>{day.name}</Dropdown.Item>;
-                    })}
-                  </DropdownButton>
-              }
+            {
+              notification_type_name == "Tjedna obavijest" ?
+                <Form.Group size="md" controlId="day_of_week_name">
+                  <Form.Label>Dan u Tjednu *</Form.Label>
+                  {
+                    isDisabled ?
+                      < Form.Control
+                        type="text"
+                        value={day_of_week_name}
+                        disabled={isDisabled}
+                      /> :
+                      <DropdownButton id="customDropdown" variant="secondary" title={day_of_week_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                        {days.map((day) => {
+                          return <Dropdown.Item key={day.id} onSelect={() => onDayOfWeekChange(day)}>{day.name}</Dropdown.Item>;
+                        })}
+                      </DropdownButton>
+                  }
+                </Form.Group>
+                : null
+            }
+            <Form.Group size="md" controlId="time">
+              <Form.Label>Vrijeme *</Form.Label>
+              <br />
+              <TextField
+                id="time"
+                type="time"
+                value={time}
+                className={classes.textField}
+                onChange={(e) => onTimeChange(e.target.value)}
+                disabled={isDisabled}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                inputProps={{
+                  step: 300, // 5 min
+                }}
+              />
             </Form.Group>
-            <Form.Label>Vrijeme *</Form.Label>
-            <br />
-            <TextField
-              id="time"
-              type="time"
-              value={time}
-              className={classes.textField}
-              onChange={(e) => onTimeChange(e.target.value)}
-              disabled={isDisabled}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              inputProps={{
-                step: 300, // 5 min
-              }}
-            />
-            <Form.Group size="md" controlId="email">
+            <Form.Group size="md" controlId="email" className="pt-3">
               <Form.Label>Email *</Form.Label>
               <Form.Control
                 type="text"
                 value={email}
-                disabled={true}
+                disabled={isDisabled}
+                onChange={(e) => onEmailChange(e.target.value)}
               />
             </Form.Group>
             <Form.Group size="md" controlId="notification_type">
@@ -118,13 +115,13 @@ export default function ModalNotificationSetting({ modalTarget, onSubmit, days, 
               }
             </Form.Group>
             <div hidden={isDisabled || !isSubmitDisabled}>
-              <p style={{color: "red"}}>
-              Provjerite sva polja !!!
+              <p style={{ color: "red" }}>
+                Provjerite sva polja !!!
               </p>
             </div>
             <div className="modal-footer" style={{ padding: 0 }}>
               <Button className="btn btn-primary" data-dismiss="modal">Odustani</Button>
-              <Button type="submit" disabled={isSubmitDisabled} className={submitClassName} onClick={(e) => { e.preventDefault(); onSubmit() }}>{submitText}</Button>
+              <Button type="submit" data-dismiss="modal" disabled={isSubmitDisabled && !isDisabled} className={submitClassName} onClick={(e) => { e.preventDefault(); onSubmit() }}>{submitText}</Button>
             </div>
           </Form>
         </div>

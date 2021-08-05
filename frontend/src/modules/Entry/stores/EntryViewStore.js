@@ -2,6 +2,7 @@ import { action, observable } from "mobx";
 import { toast } from 'react-toastify';
 import moment from "moment";
 import { getUser } from "../../../common/LocalStorage";
+import generateEntryPDF from "../../../common/components/EntryReportGenerator";
 
 class EntryViewStore {
     constructor(rootStore) {
@@ -37,6 +38,7 @@ class EntryViewStore {
         this.onStartDateFilterChange = this.onStartDateFilterChange.bind(this);
         this.onEndDateFilterChange = this.onEndDateFilterChange.bind(this);
         this.onResetFilterClick = this.onResetFilterClick.bind(this);
+        this.onGeneratePdfClick = this.onGeneratePdfClick.bind(this);
 
         this.delay = this.delay.bind(this);
         this.showLoader = this.showLoader.bind(this);
@@ -303,7 +305,7 @@ class EntryViewStore {
         else {
             this.filterValuesForLoggedUser();
             if (response.entries.length > 0) {
-                response.entries.forEach(item => item.date_created = moment(new Date(item.date_created)).format('YYYY/MM/DD'))
+                response.entries.forEach(item => item.date_created = moment(new Date(item.date_created)).format('DD/MM/YYYY'));
                 this.allData = response.entries;
                 this.response = response.entries;
                 this.groupData();
@@ -717,6 +719,50 @@ class EntryViewStore {
         })
     }
 
+    @action
+    async onGeneratePdfClick() {
+        let startDate = this.dateFilter.startDate;
+        let endDate = this.dateFilter.endDate;
+        if (startDate != "" && endDate != "" && moment(startDate).diff(moment(endDate), 'days') <= 0) {
+            let response = await (this.dataStore.report(startDate, endDate))
+            if (response.error) {
+                toast.error(response.error, {
+                    position: "bottom-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    progress: undefined,
+                });
+                console.clear();
+            }
+            else {
+                if (response.entries.length == 0) {
+                    toast.error("Nema podataka za dobiveni raspon datuma", {
+                        position: "bottom-right",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        progress: undefined,
+                    });
+                }
+                else {
+                    generateEntryPDF(response.entries, startDate, endDate);
+                }
+            }
+        }
+        else {
+            toast.error("Potrebno je odabrati početni i krajnji datum za generiranje izvješća", {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+        }
+    }
 }
 
 export default EntryViewStore;

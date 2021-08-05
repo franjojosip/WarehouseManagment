@@ -1,8 +1,8 @@
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
-const generatePDF = (data, startDate, endDate) => {
-  console.log(startDate);
+const generateEntryPDF = (data, startDate, endDate) => {
+  console.log(data);
   let tableRows = [];
   let head = [];
   let y = 40;
@@ -13,18 +13,18 @@ const generatePDF = (data, startDate, endDate) => {
   let endDateArray = endDate.split("-").reverse();
 
   doc.setFontSize(18);
-  doc.text("Izvještaj za preuzimanja", 75, 18);
+  doc.text("Izvještaj za unos na stanje", 75, 18);
   doc.text("Period od " + startDateArray.join(".") + "." + " do " + endDateArray.join(".") + ".", 55, 28);
   doc.setFontSize(16);
 
   data.forEach((warehouse, i) => {
     head = [
       [
-        { content: 'Naziv skladista: ' + warehouse.warehouse_name, colSpan: 2, styles: { halign: 'center', fillColor: [22, 160, 133] } },
+        { content: 'Naziv skladista: ' + warehouse.warehouse_name, colSpan: 3, styles: { halign: 'center', fillColor: [22, 160, 133] } },
         { content: 'Lokacija: ' + warehouse.location_name, colSpan: 2, styles: { halign: 'center', fillColor: [22, 160, 133] } },
-        { content: 'Grad: ' + warehouse.city_name, colSpan: 1, styles: { halign: 'center', fillColor: [22, 160, 133] } }
+        { content: 'Grad: ' + warehouse.city_name, colSpan: 2, styles: { halign: 'center', fillColor: [22, 160, 133] } }
       ],
-      ["Proizvod", "Kategorija", "Potkategorija", "Ambalaza", "Kolicina"],
+      ["Proizvod", "Kategorija", "Potkategorija", "Ambalaza", "Kolicina", "Izvrsitelj", "Datum"],
     ];
     tableRows = [];
     warehouse.data.forEach(item => {
@@ -34,7 +34,8 @@ const generatePDF = (data, startDate, endDate) => {
         item.subcategory_name,
         item.packaging_name,
         item.quantity,
-
+        item.user,
+        item.date
       ];
       tableRows.push(itemData);
     });
@@ -62,7 +63,7 @@ const generatePDF = (data, startDate, endDate) => {
   });
   let dateStr = startDateArray.join("_") + "_do_" + endDateArray.join("_");
 
-  doc.save(`izvještaj_preuzimanja_${dateStr}.pdf`);
+  doc.save(`izvještaj_unos_${dateStr}.pdf`);
 };
 
 function enhanceWordBreak({ doc, cell, column }) {
@@ -112,4 +113,4 @@ function enhanceWordBreak({ doc, cell, column }) {
   }
 }
 
-export default generatePDF;
+export default generateEntryPDF;

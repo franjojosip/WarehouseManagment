@@ -4,14 +4,14 @@ import moment from "moment";
 
 import "../../../common/styles/Modal.css";
 
-export default function ModalNotificationLog({ modalTarget, notification_type_name, data, email, date_created, onSubmit }) {
+export default function ModalNotificationLogShow({ modalTarget, notification_type_name, data, email, date_created }) {
   let isDisabled = true;
   return (
     <div className="modal fade" id={modalTarget} tabIndex="-1" aria-labelledby="modalTarget" aria-hidden="true">
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="title" id="modalTarget">Izbrišite ovaj podatak</h5>
+            <h5 className="title" id="modalTarget">Prikaz detalja obavijesti</h5>
             <button type="button" className="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -46,8 +46,7 @@ export default function ModalNotificationLog({ modalTarget, notification_type_na
               <Form.Control as="textarea" value={data} readOnly />
             </Form.Group>
             <div className="modal-footer" style={{ padding: 0 }}>
-              <Button className="btn btn-primary" data-dismiss="modal">Odustani</Button>
-              <Button type="submit" data-dismiss="modal" className="btn btn-danger" onClick={(e) => { e.preventDefault(); onSubmit() }}>Obriši</Button>
+              <Button className="btn btn-primary" data-dismiss="modal">Uredu</Button>
 
             </div>
           </Form>

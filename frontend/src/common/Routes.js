@@ -84,8 +84,17 @@ export const routes = [
         pattern: '/forgotpassword'
     },
     {
+        name: 'resetpassword',
+        pattern: '/resetpassword'
+    },
+    {
         name: 'reciept',
         pattern: '/reciept',
+        beforeEnter: checkUserAuthenticated
+    },
+    {
+        name: 'schedule',
+        pattern: '/schedule',
         beforeEnter: checkUserAuthenticated
     },
     {

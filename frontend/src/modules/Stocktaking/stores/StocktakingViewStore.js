@@ -2,6 +2,7 @@ import { action, observable } from "mobx";
 import { toast } from 'react-toastify';
 import moment from "moment";
 import { getUser } from "../../../common/LocalStorage";
+import generateStocktakingPdf from "../../../common/components/StocktakingReportGenerator";
 
 class StocktakingViewStore {
     constructor(rootStore) {
@@ -36,6 +37,7 @@ class StocktakingViewStore {
         this.onEndDateFilterChange = this.onEndDateFilterChange.bind(this);
         this.onResetFilterClick = this.onResetFilterClick.bind(this);
         this.checkProductExistInStocktaking = this.checkProductExistInStocktaking.bind(this);
+        this.onGeneratePdfClick = this.onGeneratePdfClick.bind(this);
 
         this.delay = this.delay.bind(this);
         this.showLoader = this.showLoader.bind(this);
@@ -47,7 +49,7 @@ class StocktakingViewStore {
         this.findWarehouses = this.findWarehouses.bind(this);
         this.findProducts = this.findProducts.bind(this);
         this.filterValuesForLoggedUser = this.filterValuesForLoggedUser.bind(this);
-
+        
         this.findCities();
     }
 
@@ -306,7 +308,7 @@ class StocktakingViewStore {
         else {
             this.filterValuesForLoggedUser();
             if (response.stocktakings.length > 0) {
-                response.stocktakings.forEach(item => item.date_created = moment(new Date(item.date_created)).format('YYYY/MM'))
+                response.stocktakings.forEach(item => item.date_created = moment(new Date(item.date_created)).format('DD/MM/YYYY'));
                 this.allData = response.stocktakings;
                 this.response = response.stocktakings;
                 this.groupData();
@@ -470,7 +472,7 @@ class StocktakingViewStore {
         };
         if (isCreate) {
             this.clickedStocktakingProductId = "";
-            this.clickedStocktakingDate = moment().format('YYYY/MM');
+            this.clickedStocktakingDate = moment().format('DD/MM/YYYY');
             this.clickedStocktaking = {
                 id: "",
                 city_id: "",
@@ -741,6 +743,51 @@ class StocktakingViewStore {
             let index = this.grouppedData.findIndex((element) => element.name.toString() === key.toString())
             this.grouppedData[index].data.push(element);
         })
+    }
+
+    @action
+    async onGeneratePdfClick() {
+        let startDate = this.dateFilter.startDate;
+        let endDate = this.dateFilter.endDate;
+        if (startDate != "" && endDate != "" && moment(startDate).diff(moment(endDate), 'days') <= 0) {
+            let response = await (this.dataStore.report(startDate, endDate))
+            if (response.error) {
+                toast.error(response.error, {
+                    position: "bottom-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    progress: undefined,
+                });
+                console.clear();
+            }
+            else {
+                if (response.stocktakings.length == 0) {
+                    toast.error("Nema podataka za dobiveni raspon datuma", {
+                        position: "bottom-right",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        progress: undefined,
+                    });
+                }
+                else {
+                    generateStocktakingPdf(response.stocktakings, startDate, endDate);
+                }
+            }
+        }
+        else {
+            toast.error("Potrebno je odabrati početni i krajnji datum za generiranje izvješća", {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+        }
     }
 
 }

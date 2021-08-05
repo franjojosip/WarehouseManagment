@@ -1,7 +1,7 @@
 import React from "react";
 import { inject, observer } from 'mobx-react';
 import AuthenticationViewStore from '../stores/AuthenticationViewStore';
-import ForgotPasswordForm from "../components/ForgotPasswordForm";
+import ResetPasswordForm from "../components/ResetPasswordForm";
 import Loading from '../../../common/layouts/Loading';
 import { ToastContainer } from 'react-toastify';
 
@@ -13,18 +13,18 @@ import "../styles/ForgotPassword.css";
     })
 )
 @observer
-class ForgotPassword extends React.Component {
+class ResetPassword extends React.Component {
     render() {
-        const { email, errorMessage, isLoaderVisible, onResetPasswordEmailChange, isSubmitDisabled, onForgotPasswordSubmit } = this.props.viewStore;
+        const { oldPassword, newPassword, resetPasswordMessage, isLoaderVisible, onOldPasswordChange, onNewPasswordChange, isSubmitDisabled, onResetPasswordSubmit } = this.props.viewStore;
 
         return (
             <React.Fragment>
                 <Loading visible={isLoaderVisible} />
                 <ToastContainer style={{ fontSize: 15 }} />
-                <ForgotPasswordForm email={email} onSubmit={onForgotPasswordSubmit} onEmailChange={onResetPasswordEmailChange} errorMessage={errorMessage} isSubmitDisabled={isSubmitDisabled} />
+                <ResetPasswordForm oldPassword={oldPassword} newPassword={newPassword} onSubmit={onResetPasswordSubmit} onOldPasswordChange={onOldPasswordChange} onNewPasswordChange={onNewPasswordChange} resetPasswordMessage={resetPasswordMessage} isSubmitDisabled={isSubmitDisabled} />
             </React.Fragment>
         );
     };
 }
 
-export default ForgotPassword;
+export default ResetPassword;

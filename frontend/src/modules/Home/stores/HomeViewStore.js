@@ -223,7 +223,7 @@ class HomeViewStore {
         }
         else {
             if (response.entries.length > 0) {
-                response.entries.forEach(item => item.date_created = moment(new Date(item.date_created)).format('YYYY/MM/DD'))
+                response.entries.forEach(item => item.date_created = moment(new Date(item.date_created)).format('DD/MM/YYYY'));
                 this.allData = response.entries;
                 this.groupData();
             }

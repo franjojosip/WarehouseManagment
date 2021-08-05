@@ -2,7 +2,7 @@ import { action, observable } from "mobx";
 import { toast } from 'react-toastify';
 import moment from "moment";
 import { getUser } from "../../../common/LocalStorage";
-import generatePdf from "../../../common/components/ReportGenerator";
+import generateRecieptPdf from "../../../common/components/RecieptReportGenerator";
 
 class RecieptViewStore {
     constructor(rootStore) {
@@ -306,7 +306,7 @@ class RecieptViewStore {
         else {
             this.filterValuesForLoggedUser();
             if (response.reciepts.length > 0) {
-                response.reciepts.forEach(item => item.date_created = moment(new Date(item.date_created)).format('YYYY/MM/DD'))
+                response.reciepts.forEach(item => item.date_created = moment(new Date(item.date_created)).format('DD/MM/YYYY'));
                 this.allData = response.reciepts;
                 this.response = response.reciepts;
                 this.groupData();
@@ -752,12 +752,12 @@ class RecieptViewStore {
                     });
                 }
                 else {
-                    generatePdf(response.reciepts, startDate, endDate);
+                    generateRecieptPdf(response.reciepts, startDate, endDate);
                 }
             }
         }
         else {
-            toast.error("Potrebni je odabrati početni i krajnji datum za generiranje izvješća", {
+            toast.error("Potrebno je odabrati početni i krajnji datum za generiranje izvješća", {
                 position: "bottom-right",
                 autoClose: 3000,
                 hideProgressBar: false,

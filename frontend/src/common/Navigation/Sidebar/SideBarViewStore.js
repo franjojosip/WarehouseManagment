@@ -26,9 +26,10 @@ class SideBarViewStore {
         else if (selectedRoute === "stocktaking") {
             this.route = "stocktakings";
         }
-        else if (selectedRoute === "notificationlog" || selectedRoute === "notificationsettings") {
+        else if (selectedRoute === "notificationlog" || selectedRoute === "notificationsettings" || selectedRoute === "schedule") {
             this.route = "notifications";
-        } else {
+        }
+        else {
             this.route = "home";
         }
     }

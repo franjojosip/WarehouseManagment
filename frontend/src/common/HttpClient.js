@@ -84,7 +84,6 @@ export default class HttpClient extends React.Component {
         let data = await response.json();
         return data;
     }
-
     report = async (body) => {
         const options = {
             method: "POST",
@@ -92,6 +91,42 @@ export default class HttpClient extends React.Component {
             body
         }
         const request = new Request(this.webApiUrl + "/report", options);
+        let response = await (fetch(request));
+        let data = await response.json();
+        return data;
+    }
+
+    requestResetPassword = async (email) => {
+        const options = {
+            method: "POST",
+            headers: this.appJsonHeaders,
+            body: JSON.stringify({email: email})
+        }
+        const request = new Request(this.webApiUrl + "/requestresetpassword", options);
+        let response = await (fetch(request));
+        let data = await response.json();
+        return data;
+    }
+
+    resetPassword = async (credentials) => {
+        const options = {
+            method: "POST",
+            headers: this.appJsonHeaders,
+            body: JSON.stringify(credentials)
+        }
+        const request = new Request(this.webApiUrl + "/resetpassword", options);
+        let response = await (fetch(request));
+        let data = await response.json();
+        return data;
+    }
+
+    refreshSchedule = async (body) => {
+        const options = {
+            method: "POST",
+            headers: this.appJsonHeaders,
+            body
+        }
+        const request = new Request(this.webApiUrl + "/refresh", options);
         let response = await (fetch(request));
         let data = await response.json();
         return data;

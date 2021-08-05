@@ -4,9 +4,12 @@ import Layout from "../../../common/layouts/Layout"
 import NotificationViewStore from '../stores/NotificationViewStore'
 import Table from '../../../common/layouts/Table';
 import ModalNotificationLog from '../components/ModalNotificationLog';
+import ModalNotificationLogShow from '../components/ModalNotificationLogShow';
+import { ToastContainer } from 'react-toastify';
+import moment from "moment";
 
 import "../styles/Notification.css";
-import { Button } from 'react-bootstrap';
+import { Button, DropdownButton, Dropdown } from 'react-bootstrap';
 
 @inject(
     i => ({
@@ -17,27 +20,63 @@ import { Button } from 'react-bootstrap';
 @observer
 class Notification extends React.Component {
     render() {
-        const { isLoaderVisible, title, clickedNotification, columns, rows, page, pageSize, totalPages, previousEnabled, nextEnabled, isSubmitDisabled, onPageClick, onChangePageSize, onZipCodeChange, onNotificationClicked, onPreviousPageClick, onNextPageClick, onEditClick, onDeleteClick, onCreateClick } = this.props.viewStore;
+        const { isLoaderVisible, types, notificationTypeFilter, onNotificationTypeFilterChange, onResetFilterClick, title, clickedNotificationLog, onNotificationClicked, columns, rows, page, pageSize, totalPages, previousEnabled, nextEnabled, onPageClick, onChangePageSize, onPreviousPageClick, onNextPageClick, onDeleteClick } = this.props.viewStore;
 
         let tableRows = rows.map((element, i) => {
             return (<tr key={i}>
-                <td className="pt-3-half">{element.notification_name}</td>
-                <td className="pt-3-half">{element.notification_type}</td>
+                <td className="pt-3-half">{element.subject}</td>
+                <td className="pt-3-half">{element.notification_type_name}</td>
                 <td className="pt-3-half">{element.email}</td>
-                <td className="pt-3-half">{element.date_created}</td>
-                <td className="pt-3-half">
-                    <span className="table-show">
-                        <button type="button" onClick={() => onNotificationClicked(element)} data-toggle="modal" data-target="#modalTargetShow" className="btn btn-info btn-rounded btn-sm my-0">
-                            Detalji
-                        </button>
-                    </span></td>
+                <td className="pt-3-half">{element.data.substring(0, 20) + "..."}</td>
+                <td className="pt-3-half">{element.date_created ? moment(element.date_created).format("DD/MM/YYYY HH:mm") : null}</td>
+                <td>
+                    {
+                        element.id !== "" ?
+                            <span className="table-remove">
+                                <button type="button" onClick={() => onNotificationClicked(element, false)} data-toggle="modal" data-target="#modalTargetDelete" className="btn btn-danger btn-rounded btn-sm my-0">
+                                    Obriši
+                                </button>
+                            </span>
+                            :
+                            null
+                    }
+                </td>
+                <td>
+                    {
+                        element.id !== "" ?
+                            <span className="table-success">
+                                <button type="button" onClick={() => onNotificationClicked(element, false)} data-toggle="modal" data-target="#modalTargetShow" className="btn btn-info btn-rounded btn-sm my-0">
+                                    Prikaži
+                                </button>
+                            </span>
+                            :
+                            null
+                    }
+                </td>
             </tr>);
         });
+        let filterRow = (
+            <div className="row" style={{ alignItems: "center" }}>
+                <div className="col-4">
+                    <DropdownButton id="customDropdown" variant="secondary" title={notificationTypeFilter.name ? notificationTypeFilter.name : "Svi tipovi notifikacija"} style={{ marginBottom: 10 }}>
+                        <Dropdown.Item key="default_type" onSelect={() => onNotificationTypeFilterChange({ notification_type_id: "", notification_type_name: "" })}>Svi tipovi notifikacija</Dropdown.Item>
+                        {types.map((type) => {
+                            return <Dropdown.Item key={type.notification_type_id} onSelect={() => onNotificationTypeFilterChange(type)}>{type.notification_type_name}</Dropdown.Item>;
+                        })
+                        }
+                    </DropdownButton>
+                </div>
+                <div className="col-3">
+                    <Button className="btn btn-dark" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button>
+                </div>
+            </div>);
         return (
             <Layout isLoaderVisible={isLoaderVisible}>
-                <ModalNotificationLog modalTarget={"modalTargetShow"} notification_name={clickedNotification.notification_name} notification_type={clickedNotification.notification_type} notification_products={clickedNotification.products} email={clickedNotification.email} date_created={clickedNotification.date_created} />
-                <Table title={title} hideAddButton={true} columns={columns} tableRows={tableRows} page={page} pageSize={pageSize} totalPages={totalPages} previousEnabled={previousEnabled} nextEnabled={nextEnabled} onActionClicked={onNotificationClicked} onPageClick={onPageClick} onChangePageSize={onChangePageSize} onPreviousPageClick={onPreviousPageClick} onNextPageClick={onNextPageClick} />
-            </Layout >
+                <ModalNotificationLog modalTarget="modalTargetDelete" data={clickedNotificationLog.data} email={clickedNotificationLog.email} date_created={clickedNotificationLog.date_created} notification_type_name={clickedNotificationLog.notification_type_name} onSubmit={onDeleteClick} />
+                <ModalNotificationLogShow modalTarget="modalTargetShow" data={clickedNotificationLog.data} email={clickedNotificationLog.email} date_created={clickedNotificationLog.date_created} notification_type_name={clickedNotificationLog.notification_type_name} />
+                <Table hideAddButton={true} filterRow={filterRow} title={title} columns={columns} tableRows={tableRows} page={page} pageSize={pageSize} totalPages={totalPages} previousEnabled={previousEnabled} nextEnabled={nextEnabled} onPageClick={onPageClick} onChangePageSize={onChangePageSize} onPreviousPageClick={onPreviousPageClick} onNextPageClick={onNextPageClick} />
+                <ToastContainer style={{ fontSize: 15 }} />
+            </Layout>
         )
     }
 }

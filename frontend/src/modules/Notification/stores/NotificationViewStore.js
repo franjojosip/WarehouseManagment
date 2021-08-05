@@ -1,4 +1,5 @@
 import { action, observable } from "mobx";
+import { toast } from 'react-toastify';
 
 class NotificationViewStore {
     constructor(rootStore) {
@@ -13,22 +14,34 @@ class NotificationViewStore {
         this.setPagination = this.setPagination.bind(this);
         this.loadPageData = this.loadPageData.bind(this);
         this.onNotificationClicked = this.onNotificationClicked.bind(this);
+        this.onNotificationTypeFilterChange = this.onNotificationTypeFilterChange.bind(this);
+        this.onResetFilterClick = this.onResetFilterClick.bind(this);
+        this.onDeleteClick = this.onDeleteClick.bind(this);
 
-        this.setPagination();
+
+        this.delay = this.delay.bind(this);
+        this.showLoader = this.showLoader.bind(this);
+        this.hideLoader = this.hideLoader.bind(this);
+        this.processData = this.processData.bind(this);
+        this.findNotificationTypes = this.findNotificationTypes.bind(this);
+
+        this.findNotificationTypes();
     }
 
-    @observable isLoaderVisible = false;
+    title = "Popis notifikacija";
+    columns = ['Naziv notifikacije', 'Tip notifikacije', 'Primatelj', 'Datum slanja', 'Detalji', 'Obriši', 'Informacije'];
 
-    @observable clickedNotification = {
-        id: "",
-        email: "",
-        notification_name: "",
-        notification_type: "",
-        date_created: "",
-        products: []
-    };
+    @observable isLoaderVisible = false;
     @observable isSubmitDisabled = true;
 
+    @observable clickedNotificationLog = {
+        id: "",
+        notification_type_id: "",
+        notification_type_name: "",
+        email: "",
+        date_created: "",
+        data: ""
+    };
 
     @observable page = 1;
     @observable pageSize = 5;
@@ -37,37 +50,152 @@ class NotificationViewStore {
     @observable nextEnabled = false;
     @observable rows = [];
 
-    title = "Popis notifikacija";
-    columns = ['Naziv notifikacije', 'Tip notifikacije', 'Primatelj', 'Datum slanja', 'Detalji'];
+    @observable allData = [];
+    @observable types = [];
+    @observable response = [];
+    @observable notificationTypeFilter = {
+        id: "",
+        name: ""
+    };
 
-    //TESTNI PODATCI
-    allData = [
-        { id: 1, email: "email@mail.com", notification_name: "notifikacije1", notification_type: "Tjedna notifikacija", date_created: "21.05.2021.", products: ['Pivo', 'Majica', 'Jeger'] },
-        { id: 2, email: "email@mail.com", notification_name: "notifikacije121", notification_type: "Tjedna notifikacija", date_created: "21.05.2021.", products: ['Pivo', 'Majica', 'Jeger'] },
-        { id: 3, email: "email@mail.com", notification_name: "notifikacije Mikanovci", notification_type: "Tjedna notifikacija", date_created: "21.05.2021.", products: ['Pivo', 'Majica', 'Jeger'] },
-        { id: 4, email: "email@mail.com", notification_name: "notifikaci12je", notification_type: "Tjedna notifikacija", date_created: "21.05.2021.", products: ['Pivo', 'Majica', 'Jeger'] },
-        { id: 5, email: "email@mail.com", notification_name: "notifikac12ije", notification_type: "Tjedna notifikacija", date_created: "21.05.2021.", products: ['Pivo', 'Majica', 'Jeger'] },
-        { id: 6, email: "email@mail.com", notification_name: "notifikacije Mikanovci", notification_type: "Tjedna notifikacija", date_created: "21.05.2021.", products: ['Pivo', 'Majica', 'Jeger'] },
-        { id: 7, email: "email@mail.com", notification_name: "notifikacij1231234e", notification_type: "Tjedna notifikacija", date_created: "21.05.2021.", products: ['Pivo', 'Majica', 'Jeger'] },
-        { id: 8, email: "email@mail.com", notification_name: "notifikac14514ije", notification_type: "Tjedna notifikacija", date_created: "21.05.2021.", products: ['Pivo', 'Majica', 'Jeger'] },
-        { id: 9, email: "email@mail.com", notification_name: "notifika12cije Mikanovci", notification_type: "Tjedna notifikacija", date_created: "21.05.2021.", products: ['Pivo', 'Majica', 'Jeger'] },
-        { id: 10, email: "email@mail.com", notification_name: "notifikacije", notification_type: "Tjedna notifikacija", date_created: "21.05.2021.", products: ['Pivo', 'Majica', 'Jeger'] }
-    ];
+    @action
+    onNotificationTypeFilterChange(value) {
+        this.notificationTypeFilter.id = value.notification_type_id;
+        this.notificationTypeFilter.name = value.notification_type_name;
+        if (value.notification_type_id) {
+            this.allData = this.response.filter(data => data.notification_type_id === value.notification_type_id);
+        }
+        else {
+            this.allData = this.response;
+        }
+        this.setPagination(1);
+    }
+
+    @action
+    onResetFilterClick() {
+        this.notificationTypeFilter.id = "";
+        this.notificationTypeFilter.name = "";
+        this.allData = this.response;
+        this.setPagination(1);
+    }
+
+
+    @action
+    showLoader() {
+        this.isLoaderVisible = true;
+    }
+
+    @action
+    async hideLoader() {
+        await this.delay(500);
+        this.isLoaderVisible = false;
+    }
+
+    @action
+    delay(delayInMs) {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve(2);
+            }, delayInMs);
+        });
+    }
+
+    @action
+    async processData(response) {
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+            console.clear();
+        }
+        else {
+            toast.success(response.status, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+            this.onFind();
+        }
+    }
+
+    @action
+    async onDeleteClick() {
+        this.showLoader();
+        let response = await (this.dataStore.delete(this.clickedNotificationLog.id));
+        this.processData(response);
+        await this.hideLoader();
+    }
+
+    @action
+    async findNotificationTypes() {
+        let response = await (this.dataStore.getNotificationTypes())
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+            console.clear();
+        }
+        else {
+            if (response.types && response.types.length > 0) {
+                this.types = response.types.map((type) => {
+                    return { notification_type_id: type.id, notification_type_name: type.name }
+                });
+                this.onFind();
+            }
+        }
+    }
 
     @action
     async onFind() {
-        //FIND CITY
+        this.showLoader();
+        let response = await (this.dataStore.get())
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+            console.clear();
+            this.allData = [{ id: "", notification_type_id: "", subject: "Nema podataka", notification_type_name: "", email: "", date_created: "", data: "" }];
+        }
+        else {
+            if (response.notificationLogs.length > 0) {
+                this.allData = response.notificationLogs;
+                this.response = response.notificationLogs;
+            }
+            else {
+                this.allData = [{ id: "", notification_type_id: "", subject: "Nema podataka", notification_type_name: "", email: "", date_created: "", data: "" }];
+            }
+        }
+        this.setPagination();
+        await this.hideLoader();
     };
 
     @action
     onNotificationClicked(data) {
-        this.clickedNotification = {
+        console.log(data);
+        this.clickedNotificationLog = {
             id: data.id,
             email: data.email,
-            notification_name: data.notification_name,
-            notification_type: data.notification_type,
+            notification_type_name: data.notification_type_name,
             date_created: data.date_created,
-            products: data.products
+            data: data.data
         };
     }
 
@@ -81,19 +209,14 @@ class NotificationViewStore {
             this.totalPages = this.totalPages + 1;
         }
         this.previousEnabled = this.page > 1;
-        this.nextEnabled = Math.floor(this.allData.length / this.pageSize) > this.page;
+        this.nextEnabled = this.page < this.totalPages;
 
-        this.loadPageData()
+        this.loadPageData();
     }
 
     @action
     loadPageData() {
-        if (this.allData.length === 0) {
-            this.rows = [{ id: -1, email: "", notification_name: "Nema obavijesti za odabrane postavke", notification_type: "", date_created: "", products: [] }];
-        }
-        else {
-            this.rows = this.allData.slice((this.page - 1) * this.pageSize, this.page * this.pageSize)
-        }
+        this.rows = this.allData.slice((this.page - 1) * this.pageSize, this.page * this.pageSize)
     }
 
     @action

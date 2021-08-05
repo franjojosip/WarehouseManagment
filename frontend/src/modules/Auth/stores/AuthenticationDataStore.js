@@ -66,4 +66,8 @@ export default class AuthenticationDataStore extends React.Component {
         }))
 
     delete = async (id) => this.httpClient.delete(id, this.httpClient.createBodyWithTokens({}));
+
+    requestResetPassword = async (email) => this.httpClient.requestResetPassword(email);
+
+    resetPassword = async (data) => this.httpClient.resetPassword(data);
 }

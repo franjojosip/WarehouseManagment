@@ -181,6 +181,11 @@ class SideBar extends React.Component {
                                         Postavke obavijesti
                                     </NavText>
                                 </NavItem>
+                                <NavItem eventKey="schedule">
+                                    <NavText style={textStyle}>
+                                        Osvježenje obavijesti
+                                    </NavText>
+                                </NavItem>
                             </NavItem>
                             : null
                     }

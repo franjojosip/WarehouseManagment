@@ -15,6 +15,7 @@ import EntryModuleStore from "../modules/Entry/stores/EntryModuleStore";
 import NotificationModuleStore from "../modules/Notification/stores/NotificationModuleStore";
 import RoleModuleStore from "../modules/Role/stores/RoleModuleStore";
 import HomeModuleStore from "../modules/Home/stores/HomeModuleStore";
+import ScheduleModuleStore from "../modules/Schedule/stores/ScheduleModuleStore";
 
 const notFound = new RouterState('notFound');
 
@@ -38,5 +39,6 @@ export class RootStore {
         this.entryModuleStore = new EntryModuleStore(this);
         this.notificationModuleStore = new NotificationModuleStore(this);
         this.homeModuleStore = new HomeModuleStore(this);
+        this.scheduleModuleStore = new ScheduleModuleStore(this);
     }
 }

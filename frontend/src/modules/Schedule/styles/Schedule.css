@@ -1,9 +1,8 @@
 @media all and (min-width: 480px) {
-    .ForgotPassword {
+    .Schedule {
       padding: 60px 0;
     }
-  
-    .ForgotPassword  {
+    .Schedule {
       margin: 0 auto;
       margin-top: 5%;
       width: 600px;
@@ -11,13 +10,11 @@
       background: white !important;
       border-radius: 10px;
     }
-    h1{
-        text-align: center;
-        padding-bottom: 40px;
+    h1 {
+      text-align: center;
+      padding-bottom: 40px;
     }
-
     .btn {
-        margin-top: 30px;
+      margin-top: 30px;
     }
   }
-

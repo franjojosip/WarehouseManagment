@@ -2,7 +2,6 @@ import { action, observable } from "mobx";
 import EmailValidator from "email-validator";
 import { toast } from 'react-toastify';
 import { saveUser, getUser, clearUser } from '../../../common/LocalStorage'
-import moment from 'moment';
 
 class AuthenticationViewStore {
     constructor(rootStore) {
@@ -16,6 +15,10 @@ class AuthenticationViewStore {
         this.onLogout = this.onLogout.bind(this);
         this.onForgotPasswordClick = this.onForgotPasswordClick.bind(this);
         this.onForgotPasswordSubmit = this.onForgotPasswordSubmit.bind(this);
+        this.onResetPasswordSubmit = this.onResetPasswordSubmit.bind(this);
+        this.onOldPasswordChange = this.onOldPasswordChange.bind(this);
+        this.onNewPasswordChange = this.onNewPasswordChange.bind(this);
+        this.checkResetPasswordFields = this.checkResetPasswordFields.bind(this);
 
         this.delay = this.delay.bind(this);
         this.showLoader = this.showLoader.bind(this);
@@ -23,16 +26,26 @@ class AuthenticationViewStore {
         this.processData = this.processData.bind(this);
     }
 
-    @observable email = "";
-    @observable password = "";
     @observable isSubmitDisabled = true;
     @observable isLoaderVisible = false;
 
+    @observable email = "";
+    @observable password = "";
     @observable errorMessage = {
         email: null,
         password: null,
         credentials: null
     };
+
+
+    @observable oldPassword = "";
+    @observable newPassword = "";
+    @observable resetPasswordMessage = {
+        oldPassword: null,
+        newPassword: null
+    }
+
+
 
     @action
     showLoader() {
@@ -145,6 +158,14 @@ class AuthenticationViewStore {
     onResetPasswordEmailChange(value) {
         this.email = value;
         let isEmailValid = EmailValidator.validate(value);
+        this.errorMessage = {
+            email: null,
+            password: null
+        };
+
+        if (!isEmailValid) {
+            this.errorMessage.email = "Neispravan oblik email-a, primjer. marko@outlook.com"
+        }
         if (isEmailValid) {
             this.isSubmitDisabled = false
         }
@@ -155,13 +176,118 @@ class AuthenticationViewStore {
 
     @action
     onForgotPasswordClick() {
-        //ROUTE TO FORGOT PASSWORD PAGE
+        this.routerStore.goTo("forgotpassword");
     }
 
     @action
-    onForgotPasswordSubmit() {
-        //SEND RESET PASSWORD OR MAIL WITH PASSWORD
+    async onForgotPasswordSubmit() {
+        this.showLoader();
 
+        let response = await (this.dataStore.requestResetPassword(this.email));
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+            console.clear();
+        }
+        else {
+            toast.success(response.status, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+        }
+        await this.hideLoader();
+    }
+
+    @action
+    onOldPasswordChange(value) {
+        this.oldPassword = value;
+        this.checkResetPasswordFields();
+    }
+
+    @action
+    onNewPasswordChange(value) {
+        this.newPassword = value;
+        this.checkResetPasswordFields();
+    }
+
+    @action
+    checkResetPasswordFields() {
+        this.resetPasswordMessage = {
+            oldPassword: null,
+            newPassword: null
+        }
+        if (this.oldPassword.length < 4) {
+            this.resetPasswordMessage.oldPassword = "Neispravna duljina lozinke!"
+        }
+        if (this.newPassword.length < 4) {
+            this.resetPasswordMessage.newPassword = "Neispravna duljina lozinke!"
+        }
+
+        if (!this.resetPasswordMessage.oldPassword && !this.resetPasswordMessage.newPassword) {
+            this.isSubmitDisabled = false;
+        }
+        else {
+            this.isSubmitDisabled = true;
+        }
+    }
+
+    @action
+    async onResetPasswordSubmit() {
+        let id = window.location.search.split('id=')[1]
+        if (!id || id.length != 24) {
+            toast.error("Provjerite ispravnost linka!", {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+        }
+        this.showLoader();
+
+        let response = await (this.dataStore.resetPassword(
+            {
+                token: id,
+                old_password: this.oldPassword,
+                new_password: this.newPassword
+            }
+        ));
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+            console.clear();
+        }
+        else {
+            toast.success(response.status, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+            this.oldPassword = "";
+            this.newPassword = "";
+            this.isSubmitDisabled = true;
+        }
+        await this.hideLoader();
     }
 
 }

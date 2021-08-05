@@ -1,7 +1,7 @@
 import moment from "moment";
 
 export const saveUser = (user) => {
-    user.logged_date = moment().format("YYYY/MM/DD");
+    user.logged_date = moment().format('DD/MM/YYYY');
     localStorage.setItem('user', JSON.stringify(user))
 }
 
@@ -31,7 +31,7 @@ export const isUserAdmin = () => {
 export const isUserTokenExpired = () => {
     var user = JSON.parse(localStorage.getItem('user'));
     if (user && user.logged_date) {
-        return moment().diff(moment(user.logged_date, "YYYY/MM/DD"), 'days') > 0;
+        return moment().diff(moment(user.logged_date, "DD/MM/YYYY"), 'days') > 0;
     }
     else return true;
 }

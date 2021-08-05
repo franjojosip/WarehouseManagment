@@ -1,8 +1,13 @@
 import { action, observable } from "mobx";
+import { toast } from 'react-toastify';
+import { getUser } from "../../../common/LocalStorage";
+import moment from "moment";
+const { REACT_APP_SUPER_ADMIN_PASSWORD } = process.env;
 
 class NotificationViewStore {
     constructor(rootStore) {
         this.dataStore = rootStore.notificationModuleStore.notificationDataStore;
+        this.scheduleDataStore = rootStore.scheduleModuleStore.scheduleDataStore;
         this.routerStore = rootStore.routerStore;
 
         this.onFind = this.onFind.bind(this);
@@ -22,27 +27,37 @@ class NotificationViewStore {
         this.onDeleteClick = this.onDeleteClick.bind(this);
         this.onNotificationTypeFilterChange = this.onNotificationTypeFilterChange.bind(this);
         this.onResetFilterClick = this.onResetFilterClick.bind(this);
+        this.findNotificationTypes = this.findNotificationTypes.bind(this);
+        this.onEmailChange = this.onEmailChange.bind(this);
+        this.refreshSchedule = this.refreshSchedule.bind(this);
+        
+        this.delay = this.delay.bind(this);
+        this.showLoader = this.showLoader.bind(this);
+        this.hideLoader = this.hideLoader.bind(this);
+        this.processData = this.processData.bind(this);
 
-
+        this.findNotificationTypes();
         this.setPagination();
         this.checkFields();
     }
 
-    @observable isLoaderVisible = false;
+    title = "Popis postavki notifikacija";
+    columns = ['Tip notifikacije', 'Dan U Tjednu', 'Vrijeme', 'Primatelj', 'Izmjena', 'Brisanje'];
 
-    @observable clickedNotificationSetting = {
-        id: -1,
-        day_of_week_id: "",
-        day_of_week_name: "Odaberi dan u tjednu",
-        time: "",
-        email: "email@test.com",
-        notification_name: "",
-        notification_type_id: -1,
-        notification_type_name: "Odaberi tip notifikacije",
-        date_created: ""
-    };
+    @observable isLoaderVisible = false;
     @observable isSubmitDisabled = true;
 
+    @observable clickedNotificationSetting = {
+        id: "",
+        day_of_week_id: "",
+        day_of_week_name: "",
+        time: "",
+        email: "",
+        notification_name: "",
+        notification_type_id: "",
+        notification_type_name: "",
+        date_created: ""
+    };
 
     @observable page = 1;
     @observable pageSize = 5;
@@ -50,19 +65,10 @@ class NotificationViewStore {
     @observable previousEnabled = false;
     @observable nextEnabled = false;
     @observable rows = [];
+    @observable types = [];
 
-    title = "Popis postavki notifikacija";
-    columns = ['Tip notifikacije', 'Dan U Tjednu', 'Vrijeme', 'Primatelj', 'Izmjena', 'Brisanje'];
-
-    //TESTNI PODATCI
-    @observable response = [
-        { id: 1, day_of_week_id: 1, day_of_week_name: "Ponedjeljak", time: "13:00", email: "email@mail.com", notification_name: "notifikacije1", notification_type_id: 1, notification_type_name: "Tjedna notifikacija", date_created: "21.05.2021." },
-        { id: 2, day_of_week_id: 1, day_of_week_name: "Ponedjeljak", time: "17:00", email: "email@mail.com", notification_name: "notifikacije121", notification_type_id: 2, notification_type_name: "Mjesečna notifikacija", date_created: "21.05.2021." }
-    ];
-    allData = [
-        { id: 1, day_of_week_id: 1, day_of_week_name: "Ponedjeljak", time: "13:00", email: "email@mail.com", notification_name: "notifikacije1", notification_type_id: 1, notification_type_name: "Tjedna notifikacija", date_created: "21.05.2021." },
-        { id: 2, day_of_week_id: 1, day_of_week_name: "Ponedjeljak", time: "17:00", email: "email@mail.com", notification_name: "notifikacije121", notification_type_id: 2, notification_type_name: "Mjesečna notifikacija", date_created: "21.05.2021." }
-    ];
+    @observable response = [];
+    @observable allData = [];
 
     days = [
         { id: 1, name: "Ponedjeljak" },
@@ -72,16 +78,7 @@ class NotificationViewStore {
         { id: 5, name: "Petak" }
     ];
 
-    notification_types = [
-        {
-            notification_type_id: 1,
-            notification_type_name: "Tjedna obavijest",
-        },
-        {
-            notification_type_id: 2,
-            notification_type_name: "Mjesečna obavijest",
-        }
-    ];
+    @observable notification_types = [];
 
     @observable notifcationTypeFilter = {
         id: "",
@@ -110,34 +107,178 @@ class NotificationViewStore {
     }
 
     @action
+    showLoader() {
+        this.isLoaderVisible = true;
+    }
+
+    @action
+    async hideLoader() {
+        await this.delay(500);
+        this.isLoaderVisible = false;
+    }
+
+    @action
+    delay(delayInMs) {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve(2);
+            }, delayInMs);
+        });
+    }
+
+    @action
+    async processData(response) {
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+            console.clear();
+        }
+        else {
+            toast.success(response.status, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+            this.refreshSchedule();
+            this.onFind();
+        }
+    }
+
+    @action
     async onFind() {
-        //FIND CITY
+        this.showLoader();
+        let response = await (this.dataStore.getNotificationSetting())
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+            console.clear();
+            this.allData = [{ id: "", notification_type_id: "", notification_type_name: "Nema podataka", time: "", day_of_week: "", email: "" }];
+        }
+        else {
+            if (response.notificationSettings.length > 0) {
+                response.notificationSettings.forEach(item => {
+                    let day = this.days.find(day => day.id == item.day_of_week);
+                    item.day_of_week_id = day.id;
+                    item.day_of_week_name = day.name;
+                    item.time = moment(item.time).format("HH:mm")
+                }
+                );
+                this.allData = response.notificationSettings;
+                this.response = response.notificationSettings;
+            }
+            else {
+                this.allData = [{ id: "", notification_type_id: "", notification_type_name: "Nema podataka", time: "", day_of_week: "", email: "" }];
+            }
+        }
+        this.setPagination();
+        await this.hideLoader();
     };
 
     @action
-    onCreateClick() {
-
+    async refreshSchedule(){
+        this.showLoader();
+        console.log(process.env.REACT_APP_SUPER_ADMIN_PASSWORD)
+        let response = await (this.scheduleDataStore.refreshSchedule(REACT_APP_SUPER_ADMIN_PASSWORD));
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+        }
+        else {
+            toast.success(response.status, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+        }
+        await this.hideLoader();
     }
-    @action
-    onEditClick() {
 
+
+    @action
+    async onDeleteClick() {
+        this.showLoader();
+        let response = await (this.dataStore.deleteNotificationSetting(this.clickedNotificationSetting.id));
+        this.processData(response);
+        await this.hideLoader();
     }
-    @action
-    onDeleteClick() {
 
+    @action
+    async onEditClick() {
+        this.showLoader();
+        let response = await (this.dataStore.updateNotificationSetting(this.clickedNotificationSetting));
+        this.processData(response);
+        await this.hideLoader();
+    }
+
+    @action
+    async onCreateClick() {
+        this.showLoader();
+        let response = await (this.dataStore.createNotificationSetting(this.clickedNotificationSetting));
+        this.processData(response);
+        await this.hideLoader();
+    }
+
+    @action
+    async findNotificationTypes() {
+        let response = await (this.dataStore.getNotificationTypes())
+        if (response.error) {
+            toast.error(response.error, {
+                position: "bottom-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                progress: undefined,
+            });
+            console.clear();
+        }
+        else {
+            if (response.types && response.types.length > 0) {
+                this.notification_types = response.types.map((type) => {
+                    return { notification_type_id: type.id, notification_type_name: type.name }
+                });
+                this.notification_types = this.notification_types.filter(type => type.notification_type_name != "Zaboravljena lozinka");
+                this.onFind();
+            }
+        }
     }
 
     @action
     onNotificationSettingClicked(data, isCreate) {
         if (isCreate) {
+            const user = getUser();
             this.clickedNotificationSetting = {
-                id: -1,
+                id: "",
                 day_of_week_id: "",
                 day_of_week_name: "Odaberi dan u tjednu",
                 time: "",
-                email: "email@test.com",
+                email: user.email,
                 notification_name: "",
-                notification_type_id: -1,
+                notification_type_id: "",
                 notification_type_name: "Odaberi tip notifikacije",
                 date_created: ""
             };
@@ -145,10 +286,10 @@ class NotificationViewStore {
         else {
             this.clickedNotificationSetting = {
                 id: data.id,
-                day_of_week_id: data.day_of_week_id,
-                day_of_week_name: data.day_of_week_name,
+                day_of_week_id: data.day_of_week,
+                day_of_week_name: this.days.find(day => day.id == data.day_of_week).name,
                 time: data.time,
-                email: "email@test.com",
+                email: data.email,
                 notification_name: data.notification_name,
                 notification_type_id: data.notification_type_id,
                 notification_type_name: data.notification_type_name,
@@ -168,19 +309,14 @@ class NotificationViewStore {
             this.totalPages = this.totalPages + 1;
         }
         this.previousEnabled = this.page > 1;
-        this.nextEnabled = Math.floor(this.allData.length / this.pageSize) > this.page;
+        this.nextEnabled = this.page < this.totalPages;
 
-        this.loadPageData()
+        this.loadPageData();
     }
 
     @action
     loadPageData() {
-        if (this.allData.length === 0) {
-            this.rows = [{ id: -1, email: "", notification_name: "Nema obavijesti za odabrane postavke", notification_type: "", date_created: "", products: [] }];
-        }
-        else {
-            this.rows = this.allData.slice((this.page - 1) * this.pageSize, this.page * this.pageSize)
-        }
+        this.rows = this.allData.slice((this.page - 1) * this.pageSize, this.page * this.pageSize)
     }
 
     @action
@@ -221,6 +357,16 @@ class NotificationViewStore {
     onNotificationTypeChange(value) {
         this.clickedNotificationSetting.notification_type_id = value.notification_type_id;
         this.clickedNotificationSetting.notification_type_name = value.notification_type_name;
+        if(value.notification_type_name != "Tjedna obavijest"){
+            this.clickedNotificationSetting.day_of_week_id = 1;
+            this.clickedNotificationSetting.day_of_week_name = "Ponedjeljak";
+        }
+        this.checkFields();
+    }
+
+    @action
+    onEmailChange(value) {
+        this.clickedNotificationSetting.email = value;
         this.checkFields();
     }
 

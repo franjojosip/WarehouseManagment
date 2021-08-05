@@ -29,4 +29,6 @@ export default class RecieptDataStore extends React.Component {
     delete = async (id) => this.httpClient.delete(id, this.httpClient.createBodyWithTokens({}));
 
     submit = async (id) => this.httpClient.submit(id, this.httpClient.createBodyWithTokens({}));
+    
+    report = async (startDate, endDate) => this.httpClient.report(this.httpClient.createBodyWithTokens({ start_date: startDate, end_date: endDate }));
 }
