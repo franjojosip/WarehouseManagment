@@ -4,16 +4,12 @@ const Schema = mongoose.Schema;
 
 let notification_log = new Schema(
   {
-    notification_id: {
+    notification_type_id: {
       type: Schema.Types.ObjectId,
-      ref: "notification",
+      ref: "notification_type",
       required: true,
     },
     subject: {
-      type: String,
-      required: true
-    },
-    title: {
       type: String,
       required: true
     },
@@ -21,7 +17,7 @@ let notification_log = new Schema(
       type: String,
       required: true,
     },
-    html: {
+    data: {
       type: String,
       required: true,
     },

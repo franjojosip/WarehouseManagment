@@ -13,6 +13,7 @@ async function sendEmail(req, res) {
     });
     var mailOptions = {
         from: "upravljanjeskladistem@gmail.com",
+        
         to: "valentina.gotal7@gmail.com",
         subject: req.body.subject,
         attachments: [{
@@ -24,7 +25,7 @@ async function sendEmail(req, res) {
             '<html><head><title>' + req.body.title + '</title>' +
             '</head><body><div>' +
             '<h2>Zatraženi su podatci za resetiranje lozinke.</h2>' +
-            '<p>Trajanje linka je ograničeno na 6 sati od vremena primitka.</p>' +
+            '<p>Trajanje linka je ograničeno na 12 sati od vremena primitka.</p>' +
             '<p>Kliknite na sljedeći <a href="' + link + '">link</a> za postavljanje nove lozinke.</p>' +
             '</div></body></html>'
     };

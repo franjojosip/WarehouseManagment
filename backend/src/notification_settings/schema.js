@@ -12,14 +12,13 @@ let notification_setting = new Schema(
       type: Date,
       required: true,
     },
-    notification_id: {
+    notification_type_id: {
       type: Schema.Types.ObjectId,
-      ref: "notification",
+      ref: "notification_type",
       required: true,
     },
-    user_id: {
-      type: Schema.Types.ObjectId,
-      ref: "user",
+    email: {
+      type: String,
       required: true,
     },
   },
