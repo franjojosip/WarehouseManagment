@@ -143,14 +143,18 @@ class RecieptViewStore {
     onStartDateFilterChange(value) {
         let filteredData = this.response;
         this.dateFilter.startDate = value;
-        if (this.dateFilter.startDate != "" && this.dateFilter.endDate != "" && moment(this.dateFilter.startDate).diff(moment(this.dateFilter.endDate), 'days') <= 0) {
-            filteredData = filteredData.filter(data =>
-                (moment(data.date_created).isAfter(this.dateFilter.startDate) || moment(data.date_created).isSame(this.dateFilter.startDate))
-                && (moment(data.date_created).isBefore(this.dateFilter.endDate) || moment(data.date_created).isSame(this.dateFilter.endDate))
-            );
-        }
-        if (this.cityFilter.city_id != "") {
-            filteredData = filteredData.filter(data => data.city_id === this.cityFilter.city_id);
+        if(this.dateFilter.startDate != "" && this.dateFilter.endDate != ""){
+            let startDate = moment(new Date(this.dateFilter.startDate)).format("DD/MM/YYYY");
+            let endDate = moment(new Date(value)).format("DD/MM/YYYY");
+            if(moment(this.dateFilter.startDate).diff(moment(this.dateFilter.endDate), 'days') <= 0){
+                filteredData = filteredData.filter(data =>
+                    (moment(data.date_created, "DD/MM/YYYY").isAfter(moment(startDate, "DD/MM/YYYY")) || moment(data.date_created, "DD/MM/YYYY").isSame(moment(startDate, "DD/MM/YYYY")))
+                    && (moment(data.date_created, "DD/MM/YYYY").isBefore(moment(endDate, "DD/MM/YYYY")) || moment(data.date_created, "DD/MM/YYYY").isSame(moment(endDate, "DD/MM/YYYY")))
+                );
+                if (this.cityFilter.city_id != "") {
+                    filteredData = filteredData.filter(data => data.city_id === this.cityFilter.city_id);
+                }
+            }
         }
         this.allData = filteredData;
         this.groupData();
@@ -161,14 +165,18 @@ class RecieptViewStore {
     onEndDateFilterChange(value) {
         let filteredData = this.response;
         this.dateFilter.endDate = value;
-        if (this.dateFilter.startDate != "" && this.dateFilter.endDate != "" && moment(this.dateFilter.startDate).diff(moment(this.dateFilter.endDate), 'days') <= 0) {
-            filteredData = filteredData.filter(data =>
-                (moment(data.date_created).isAfter(this.dateFilter.startDate) || moment(data.date_created).isSame(this.dateFilter.startDate))
-                && (moment(data.date_created).isBefore(this.dateFilter.endDate) || moment(data.date_created).isSame(this.dateFilter.endDate))
-            );
-        }
-        if (this.cityFilter.city_id != "") {
-            filteredData = filteredData.filter(data => data.city_id === this.cityFilter.city_id);
+        if(this.dateFilter.startDate != "" && this.dateFilter.endDate != ""){
+            let startDate = moment(new Date(this.dateFilter.startDate)).format("DD/MM/YYYY");
+            let endDate = moment(new Date(value)).format("DD/MM/YYYY");
+            if(moment(this.dateFilter.startDate).diff(moment(this.dateFilter.endDate), 'days') <= 0){
+                filteredData = filteredData.filter(data =>
+                    (moment(data.date_created, "DD/MM/YYYY").isAfter(moment(startDate, "DD/MM/YYYY")) || moment(data.date_created, "DD/MM/YYYY").isSame(moment(startDate, "DD/MM/YYYY")))
+                    && (moment(data.date_created, "DD/MM/YYYY").isBefore(moment(endDate, "DD/MM/YYYY")) || moment(data.date_created, "DD/MM/YYYY").isSame(moment(endDate, "DD/MM/YYYY")))
+                );
+                if (this.cityFilter.city_id != "") {
+                    filteredData = filteredData.filter(data => data.city_id === this.cityFilter.city_id);
+                }
+            }
         }
         this.allData = filteredData;
         this.groupData();
@@ -728,7 +736,7 @@ class RecieptViewStore {
         let startDate = this.dateFilter.startDate;
         let endDate = this.dateFilter.endDate;
         if (startDate != "" && endDate != "" && moment(startDate).diff(moment(endDate), 'days') <= 0) {
-            let response = await (this.dataStore.report(startDate, endDate))
+            let response = await (this.dataStore.report(startDate, endDate));
             if (response.error) {
                 toast.error(response.error, {
                     position: "bottom-right",

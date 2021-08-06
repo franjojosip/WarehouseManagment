@@ -153,7 +153,7 @@ class Entry extends React.Component {
                 <TextField
                     id="startDate"
                     type="date"
-                    format="dd/MM/yyyy"
+                    format="DD/MM/YYYY"
                     value={dateFilter.startDate}
                     className={classes.textField}
                     onChange={(e) => onStartDateFilterChange(e.target.value)}
@@ -166,10 +166,9 @@ class Entry extends React.Component {
                 <TextField
                     id="endDate"
                     type="date"
-                    format="dd/MM/yyyy"
+                    format="DD/MM/YYYY"
                     value={dateFilter.endDate}
                     className={classes.textField}
-                    onChange={onEndDateFilterChange}
                     onChange={(e) => onEndDateFilterChange(e.target.value)}
                     InputLabelProps={{
                         shrink: true,

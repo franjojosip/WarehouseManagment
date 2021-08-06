@@ -1,21 +1,46 @@
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import logo from "./warehouse_logo_pdf2.png";
 
 const generateStocktakingPDF = (data, startDate, endDate) => {
   let tableRows = [];
   let head = [];
-  let y = 40;
+  let y = 95;
 
   const doc = new jsPDF('p', 'mm');
   let pageHeight = doc.internal.pageSize.height;
   let startDateArray = startDate.split("-").reverse();
   let endDateArray = endDate.split("-").reverse();
 
-  doc.setFontSize(18);
-  doc.text("Izvještaj za inventuru", 75, 18);
-  doc.text("Period od " + startDateArray.join(".") + "." + " do " + endDateArray.join(".") + ".", 55, 28);
-  doc.setFontSize(16);
+  //Logo slika
+  doc.addImage(logo, 15, 20, 41, 35);
 
+  //PDF naslov
+  doc.setFont('Comic Sans');
+  doc.setFontSize(22);
+  doc.text("INVENTURA", 143, 22);
+
+  //Naziv stranice
+  doc.setFontSize(15);
+  doc.text("Upravljanje skladištima", 140, 32);
+  doc.setFontSize(13);
+  doc.line(130, 36, 200, 36);
+
+  //Url
+  doc.text("www.upravljanjeskladistima.hr", 136, 42);
+
+  //Period izvještaja
+  doc.text("Izvještaj za period " + startDateArray.join(".") + "." + " do " + endDateArray.join(".") + ".", 115.1, 68);
+
+
+  //Prijelom linija
+  doc.setLineWidth(1.1);
+  doc.setDrawColor(181, 181, 181);
+  doc.line(0, 75, 220, 75);
+
+  //Postavi font za tablicu
+  doc.setFontSize(16);
+  doc.setDrawColor(0, 0, 0);
   data.forEach((warehouse, i) => {
     head = [
       [

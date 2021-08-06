@@ -192,7 +192,6 @@ class NotificationViewStore {
     @action
     async refreshSchedule(){
         this.showLoader();
-        console.log(process.env.REACT_APP_SUPER_ADMIN_PASSWORD)
         let response = await (this.scheduleDataStore.refreshSchedule(REACT_APP_SUPER_ADMIN_PASSWORD));
         if (response.error) {
             toast.error(response.error, {

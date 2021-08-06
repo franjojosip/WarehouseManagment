@@ -153,7 +153,7 @@ class Reciept extends React.Component {
                 <TextField
                     id="startDate"
                     type="date"
-                    format="dd/MM/yyyy"
+                    format="DD/MM/yyyy"
                     value={dateFilter.startDate}
                     className={classes.textField}
                     onChange={(e) => onStartDateFilterChange(e.target.value)}
@@ -166,7 +166,7 @@ class Reciept extends React.Component {
                 <TextField
                     id="endDate"
                     type="date"
-                    format="dd/MM/yyyy"
+                    format="DD/MM/yyyy"
                     value={dateFilter.endDate}
                     className={classes.textField}
                     onChange={onEndDateFilterChange}

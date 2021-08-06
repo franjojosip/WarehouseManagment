@@ -189,7 +189,6 @@ class NotificationViewStore {
 
     @action
     onNotificationClicked(data) {
-        console.log(data);
         this.clickedNotificationLog = {
             id: data.id,
             email: data.email,
