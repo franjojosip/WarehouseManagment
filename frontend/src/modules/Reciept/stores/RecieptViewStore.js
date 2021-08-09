@@ -1,7 +1,7 @@
 import { action, observable } from "mobx";
 import { toast } from 'react-toastify';
 import moment from "moment";
-import { getUser } from "../../../common/LocalStorage";
+import { getUser } from "../../../common/components/LocalStorage";
 import generateRecieptPdf from "../../../common/components/PDFGenerator/RecieptReportGenerator";
 
 class RecieptViewStore {

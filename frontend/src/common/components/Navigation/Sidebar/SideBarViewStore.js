@@ -7,6 +7,7 @@ class SideBarViewStore {
 
         let selectedRoute = window.location.pathname.substring(1, window.location.pathname.length);
         this.route = "";
+        this.subroute = "";
 
         if (selectedRoute === "warehouse" || selectedRoute === "stock" || selectedRoute === "entry") {
             this.route = "warehouses";
@@ -32,6 +33,7 @@ class SideBarViewStore {
         else {
             this.route = "home";
         }
+        this.subroute = selectedRoute;
     }
 
     @action

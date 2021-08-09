@@ -58,7 +58,7 @@ export default function ModalCity({ modalTarget, onSubmit, name, zip_code, onNam
                 onChange={(e) => onNameChange(e.target.value)}
                 disabled={isDisabled}
               />
-              <div hidden={isDisabled || !isSubmitDisabled} style={{ paddingTop: 5 }}>
+              <div className="errorRow" hidden={isDisabled || !isSubmitDisabled} style={{ paddingTop: 5 }}>
                 <p style={{ color: "red" }}>
                   {errorMessage.name ?
                     errorMessage.name
@@ -80,7 +80,7 @@ export default function ModalCity({ modalTarget, onSubmit, name, zip_code, onNam
                 placeholder="Unesite poštanski broj"
                 disabled={isDisabled}
               />
-              <div hidden={isDisabled || !isSubmitDisabled} style={{ paddingTop: 5 }}>
+              <div className="errorRow" hidden={isDisabled || !isSubmitDisabled} style={{ paddingTop: 5 }}>
                 <p style={{ color: "red" }}>
                   {errorMessage.zip_code ?
                     errorMessage.zip_code
@@ -89,7 +89,7 @@ export default function ModalCity({ modalTarget, onSubmit, name, zip_code, onNam
                 </p>
               </div>
             </Form.Group>
-            <div className="modal-footer" style={{ padding: 0 }}>
+            <div className="modal-footer" style={{ paddingBottom: 0, paddingBlockStart: 0, paddingBlockEnd: 0, paddingTop: 10 }}>
               <Button className="btn btn-primary" data-dismiss="modal">Odustani</Button>
               <Button type="submit" data-dismiss="modal" disabled={isSubmitDisabled && !isDisabled} className={submitClassName} onClick={(e) => { e.preventDefault(); onSubmit() }}>{submitText}</Button>
             </div>

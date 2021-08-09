@@ -1,6 +1,6 @@
 import { action, observable } from "mobx";
 import { toast } from 'react-toastify';
-import { getUser } from "../../../common/LocalStorage";
+import { getUser } from "../../../common/components/LocalStorage";
 import moment from "moment";
 const { REACT_APP_SUPER_ADMIN_PASSWORD } = process.env;
 

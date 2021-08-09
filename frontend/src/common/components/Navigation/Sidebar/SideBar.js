@@ -1,9 +1,9 @@
 import React from 'react';
-import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
+import SideNav, { NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
 import { inject } from 'mobx-react';
 import SideBarViewStore from "./SideBarViewStore";
-import "./SideBar.css"
 import { getUser } from '../../LocalStorage';
+import "./styles/SideBar.css"
 
 @inject(
     i => ({
@@ -12,7 +12,7 @@ import { getUser } from '../../LocalStorage';
 )
 class SideBar extends React.Component {
     render() {
-        const { route, onNavigate } = this.props.viewStore;
+        const { route, subroute, onNavigate } = this.props.viewStore;
         const loggedUser = getUser();
         let isLoggedAdmin = loggedUser && loggedUser.role.toLowerCase() == "administrator";
 
@@ -33,7 +33,7 @@ class SideBar extends React.Component {
                 <SideNav.Nav defaultSelected={route} style={{ marginTop: 20 }}>
                     <NavItem eventKey="home">
                         <NavIcon style={{ paddingTop: 5 }}>
-                            <i className="fa fa-fw fa-home" style={{ fontSize: '1.75em' }} />
+                            <i className="fa fa-fw fa-home"/>
                         </NavIcon>
                         <NavText style={textStyle}>
                             Naslovnica
@@ -41,26 +41,26 @@ class SideBar extends React.Component {
                     </NavItem>
                     <NavItem eventKey="warehouses">
                         <NavIcon style={{ paddingTop: 5 }}>
-                            <i className="fa fa-fw fa-warehouse" style={{ fontSize: '1.75em' }} />
+                            <i className="fa fa-fw fa-warehouse"/>
                         </NavIcon>
                         <NavText style={textStyle}>
                             Skladište
                         </NavText>
                         {
                             isLoggedAdmin ?
-                                <NavItem eventKey="warehouse">
+                                <NavItem eventKey="warehouse" className={subroute == "warehouse" ? "active" : null}>
                                     <NavText style={textStyle}>
                                         Pregled skladišta
                                     </NavText>
                                 </NavItem>
                                 : null
                         }
-                        <NavItem eventKey="stock">
+                        <NavItem eventKey="stock" className={subroute == "stock" ? "active" : null}>
                             <NavText style={textStyle}>
                                 Stanje skladišta
                             </NavText>
                         </NavItem>
-                        <NavItem eventKey="entry">
+                        <NavItem eventKey="entry" className={subroute == "entry" ? "active" : null}>
                             <NavText style={textStyle}>
                                 Unos u skladište
                             </NavText>
@@ -70,27 +70,27 @@ class SideBar extends React.Component {
                         isLoggedAdmin ?
                             <NavItem eventKey="products">
                                 <NavIcon style={{ paddingTop: 5 }}>
-                                    <i className="fa fa-fw fa-boxes" style={{ fontSize: '1.75em' }} />
+                                    <i className="fa fa-fw fa-boxes"/>
                                 </NavIcon>
                                 <NavText style={textStyle}>
                                     Proizvodi
                                 </NavText>
-                                <NavItem eventKey="product">
+                                <NavItem eventKey="product" className={subroute == "product" ? "active" : null}>
                                     <NavText style={textStyle}>
                                         Pregled proizvoda
                                     </NavText>
                                 </NavItem>
-                                <NavItem eventKey="category">
+                                <NavItem eventKey="category" className={subroute == "category" ? "active" : null}>
                                     <NavText style={textStyle}>
                                         Kategorije
                                     </NavText>
                                 </NavItem>
-                                <NavItem eventKey="subcategory">
+                                <NavItem eventKey="subcategory" className={subroute == "subcategory" ? "active" : null}>
                                     <NavText style={textStyle}>
                                         Potkategorije
                                     </NavText>
                                 </NavItem>
-                                <NavItem eventKey="packaging">
+                                <NavItem eventKey="packaging" className={subroute == "packaging" ? "active" : null}>
                                     <NavText style={textStyle}>
                                         Ambalaža
                                     </NavText>
@@ -102,17 +102,17 @@ class SideBar extends React.Component {
                         isLoggedAdmin ?
                             <NavItem eventKey="cities">
                                 <NavIcon style={{ paddingTop: 5 }}>
-                                    <i className="fa fa-fw fa-city" style={{ fontSize: '1.75em' }} />
+                                    <i className="fa fa-fw fa-city"/>
                                 </NavIcon>
                                 <NavText style={textStyle}>
                                     Gradovi
                                 </NavText>
-                                <NavItem eventKey="city">
+                                <NavItem eventKey="city" className={subroute == "city" ? "active" : null}>
                                     <NavText style={textStyle}>
                                         Pregled gradova
                                     </NavText>
                                 </NavItem>
-                                <NavItem eventKey="location">
+                                <NavItem eventKey="location" className={subroute == "location" ? "active" : null}>
                                     <NavText style={textStyle}>
                                         Lokacije
                                     </NavText>
@@ -124,26 +124,27 @@ class SideBar extends React.Component {
                         isLoggedAdmin ?
                             <NavItem eventKey="users">
                                 <NavIcon style={{ paddingTop: 5 }}>
-                                    <i className="fa fa-fw fa-users" style={{ fontSize: '1.75em' }} />
+                                    <i className="fa fa-fw fa-users"/>
                                 </NavIcon>
                                 <NavText style={textStyle}>
                                     Korisnici
                                 </NavText>
-                                <NavItem eventKey="user">
+                                <NavItem eventKey="user" className={subroute == "user" ? "active" : null}>
                                     <NavText style={textStyle}>
                                         Pregled korisnika
                                     </NavText>
                                 </NavItem>
                             </NavItem>
                             : null
-                    }<NavItem eventKey="reciepts">
+                    }
+                    <NavItem eventKey="reciepts">
                         <NavIcon style={{ paddingTop: 5 }}>
-                            <i className="fa fa-fw fa-receipt" style={{ fontSize: '1.75em' }} />
+                            <i className="fa fa-fw fa-receipt"/>
                         </NavIcon>
                         <NavText style={textStyle}>
                             Preuzimanja
                         </NavText>
-                        <NavItem eventKey="reciept">
+                        <NavItem eventKey="reciept" className={subroute == "reciept" ? "active" : null}>
                             <NavText style={textStyle}>
                                 Pregled preuzimanja
                             </NavText>
@@ -151,12 +152,12 @@ class SideBar extends React.Component {
                     </NavItem>
                     <NavItem eventKey="stocktakings">
                         <NavIcon style={{ paddingTop: 5 }}>
-                            <i className="fa fa-fw fa-cubes" style={{ fontSize: '1.75em' }} />
+                            <i className="fa fa-fw fa-cubes"/>
                         </NavIcon>
                         <NavText style={textStyle}>
                             Inventure
                         </NavText>
-                        <NavItem eventKey="stocktaking">
+                        <NavItem eventKey="stocktaking" className={subroute == "stocktaking" ? "active" : null}>
                             <NavText style={textStyle}>
                                 Pregled inventura
                             </NavText>
@@ -166,22 +167,22 @@ class SideBar extends React.Component {
                         isLoggedAdmin ?
                             <NavItem eventKey="notifications">
                                 <NavIcon style={{ paddingTop: 5 }}>
-                                    <i className="fa fa-fw fa-bell" style={{ fontSize: '1.75em' }} />
+                                    <i className="fa fa-fw fa-bell"/>
                                 </NavIcon>
                                 <NavText style={textStyle}>
                                     Obavijesti
                                 </NavText>
-                                <NavItem eventKey="notificationlog">
+                                <NavItem eventKey="notificationlog" className={subroute == "notificationlog" ? "active" : null}>
                                     <NavText style={textStyle}>
                                         Dnevnik obavijesti
                                     </NavText>
                                 </NavItem>
-                                <NavItem eventKey="notificationsettings">
+                                <NavItem eventKey="notificationsettings" className={subroute == "notificationsettings" ? "active" : null}>
                                     <NavText style={textStyle}>
                                         Postavke obavijesti
                                     </NavText>
                                 </NavItem>
-                                <NavItem eventKey="schedule">
+                                <NavItem eventKey="schedule" className={subroute == "schedule" ? "active" : null}>
                                     <NavText style={textStyle}>
                                         Osvježenje obavijesti
                                     </NavText>

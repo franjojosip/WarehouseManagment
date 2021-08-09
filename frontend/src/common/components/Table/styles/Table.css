@@ -1,0 +1,272 @@
+.hiddenRow {
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+}
+
+.hiddenNestedRow {
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+}
+
+.pageSize {
+    width: 70px !important;
+}
+
+#filterTitle {
+    font-size: 22px !important;
+}
+
+.col-md-3 {
+    margin: 0 auto !important;
+}
+
+.filterCard {
+    padding: 10px;
+    margin-top: 45px;
+    border-radius: 5px;
+    background-color: rgba(12, 12, 12, 0.137);
+}
+
+.card {
+    background-color: rgba(255, 255, 255, 0.965) !important;
+}
+
+.filterDropdown {
+    margin-bottom: 10px !important;
+}
+
+.filterColumn {
+    justify-content: center !important;
+    vertical-align: middle !important;
+    margin: auto !important;
+}
+
+.basicCard {
+    margin-left: 300px;
+    margin-right: 300px;
+}
+
+.table-responsive {
+    display: inline-block;
+}
+
+.pagination {
+    justify-content: center;
+}
+
+.vertical-center {
+    margin: 0 auto;
+    position: absolute;
+    top: 50%;
+}
+
+.dropdown-item {
+    max-width: 100% !important;
+    white-space: normal !important;
+    /* For Firefox: */
+    text-overflow: ellipsis !important;
+}
+
+.dropdown-menu.pagesize.show {
+    width: 130px !important;
+    min-width: 130px !important;
+    word-break: break-all !important;
+}
+
+#dropdownMenuPageSize {
+    font-size: 18px !important;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    margin-top: 10px !important;
+    justify-content: center;
+    width: 130px !important;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+.filterDropdown {
+    padding: 0 !important;
+    font-size: 13px !important;
+    width: fit-content !important;
+}
+
+.row {
+    width: 100% !important;
+}
+
+.filterDropdown.dropdown {
+    padding: 15px !important;
+}
+
+.filterColumn {
+    width: 300px !important;
+}
+
+.dropdown {
+    font-size: 18px;
+}
+
+.dropdown-item {
+    font-size: 18px;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(26, 26, 26, 0.188) !important;
+}
+
+.cell {
+    vertical-align: middle !important;
+    font-size: 18px;
+}
+
+td {
+    vertical-align: middle !important;
+}
+
+.cellHeader {
+    vertical-align: middle !important;
+    font-size: 18px;
+}
+
+.btnAction {
+    font-size: 13px !important;
+}
+
+.resetBtn {
+    padding: 15px !important;
+    width: 150px !important;
+    font-size: 13px !important;
+}
+
+.btnCell {
+    width: 100px;
+}
+
+.text-success {
+    text-align: end;
+}
+
+.row {
+    width: 100% !important;
+    margin: 0 !important;
+}
+
+.dropdown-toggle {
+    width: fit-content !important;
+}
+
+.btnAdd {
+    margin-left: auto !important;
+    float: right !important;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+    width: fit-content !important;
+}
+
+.page-link {
+    font-size: 17px !important;
+}
+
+@media all and (max-width: 1700px) {
+    .basicCard {
+        margin-left: 200px;
+        margin-right: 200px;
+    }
+}
+
+@media all and (max-width: 1500px) {
+    .dropdown-toggle {
+        font-size: 14px !important;
+    }
+    .basicCard {
+        margin-left: 100px;
+        margin-right: 100px;
+    }
+}
+
+@media all and (max-width: 1300px) {
+    .basicCard {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+@media (max-width: 850px) {
+    .card {
+        padding: 0px !important;
+    }
+}
+
+@media (max-width: 650px) {
+    .table-responsive {
+        display: block;
+    }
+    .card-body {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+    .cellHeader {
+        font-size: 15px;
+    }
+    #dropdownMenuPageSize {
+        font-size: 15px !important;
+    }
+    .dropdown {
+        font-size: 15px;
+    }
+    .dropdown-item {
+        font-size: 15px;
+    }
+    .cell {
+        font-size: 15px;
+    }
+    .btnAction {
+        font-size: 12px !important;
+    }
+    .filterDropdown {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 600px) {
+    .dropdown-toggle {
+        font-size: 13px !important;
+    }
+    .filterDropdown {
+        padding: 0 !important;
+        font-size: 13px !important;
+        width: max-content;
+    }
+    .resetBtn {
+        width: 200px;
+        margin-bottom: 10px !important;
+    }
+}
+
+@media (max-width: 450px) {
+    .pagination {
+        padding: 0px !important;
+        width: 100% !important;
+    }
+    .page-link {
+        width: fit-content !important;
+    }
+    .cellHeader {
+        font-size: 13px;
+    }
+    #dropdownMenuPageSize {
+        font-size: 13px !important;
+    }
+    .dropdown {
+        font-size: 13px;
+    }
+    .dropdown-item {
+        font-size: 13px;
+    }
+    .cell {
+        font-size: 14px;
+    }
+    .btnAction {
+        font-size: 10px !important;
+    }
+}

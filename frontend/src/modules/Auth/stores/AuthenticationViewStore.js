@@ -1,7 +1,7 @@
 import { action, observable } from "mobx";
 import EmailValidator from "email-validator";
 import { toast } from 'react-toastify';
-import { saveUser, getUser, clearUser } from '../../../common/LocalStorage'
+import { saveUser, getUser, clearUser } from '../../../common/components/LocalStorage'
 
 class AuthenticationViewStore {
     constructor(rootStore) {

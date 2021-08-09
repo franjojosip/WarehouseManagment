@@ -1,8 +1,8 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import Layout from "../../../common/layouts/Layout"
+import Layout from "../../../common/components/Layout"
 import CityViewStore from '../stores/CityViewStore'
-import Table from '../../../common/layouts/Table';
+import Table from '../../../common/components/Table/Table';
 import ModalCity from '../components/ModalCity';
 import { ToastContainer } from 'react-toastify';
 
@@ -21,28 +21,24 @@ class City extends React.Component {
 
         let tableRows = rows.map((element, i) => {
             return (<tr key={i}>
-                <td className="pt-3-half">{element.name}</td>
-                <td className="pt-3-half">{element.zip_code}</td>
-                <td>
+                <td className="cell">{element.name}</td>
+                <td className="cell">{element.zip_code}</td>
+                <td className="cell btnCell">
                     {
                         element.id !== "" ?
-                            <span className="table-edit">
-                                <button type="button" onClick={() => onCityClicked(element, false)} data-toggle="modal" data-target="#modalTargetEdit" className="btn btn-primary btn-rounded btn-sm my-0">
-                                    Izmijeni
-                                </button>
-                            </span>
+                            <button type="button" onClick={() => onCityClicked(element, false)} data-toggle="modal" data-target="#modalTargetEdit" className="btn btn-primary btnAction btn-rounded btn-sm my-0">
+                                Izmijeni
+                            </button>
                             :
                             null
                     }
                 </td>
-                <td>
+                <td className="cell btnCell">
                     {
                         element.id !== "" ?
-                            <span className="table-remove">
-                                <button type="button" onClick={() => onCityClicked(element, false)} data-toggle="modal" data-target="#modalTargetDelete" className="btn btn-danger btn-rounded btn-sm my-0">
-                                    Obriši
-                                </button>
-                            </span>
+                            <button type="button" onClick={() => onCityClicked(element, false)} data-toggle="modal" data-target="#modalTargetDelete" className="btn btn-danger btnAction btn-rounded btn-sm my-0">
+                                Obriši
+                            </button>
                             :
                             null
                     }

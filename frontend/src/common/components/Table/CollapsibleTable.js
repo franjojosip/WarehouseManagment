@@ -1,10 +1,9 @@
 import React from 'react';
 import Pagination from './Pagination';
 
-import "./Table.css";
+import "./styles/Table.css";
 
-export default function Table({ title, filterRow, hideAddButton, columns, tableRows, page, pageSize, totalPages, previousEnabled, nextEnabled, onActionClicked, onPageClick, onChangePageSize, onPreviousPageClick, onNextPageClick }) {
-
+export default function CollapsibleTable({ filterRow, isAdmin, tableParentColumns, tableNestedRows, title, page, pageSize, totalPages, previousEnabled, nextEnabled, onActionClicked, onPageClick, onChangePageSize, onPreviousPageClick, onNextPageClick }) {
   return (
     <div className="card col-8 mx-auto mt-5 mb-5">
       <div className="card-body">
@@ -26,29 +25,25 @@ export default function Table({ title, filterRow, hideAddButton, columns, tableR
                 </div>
               </div>
             </div>
-            {
-              hideAddButton != null ?
-                null
-                :
-                <div className="col-3">
+            <div className="col-3">
+              {
+                isAdmin ?
                   <span className="table-add float-right mb-3 mt-3 mr-3">
                     <a className="text-success"><i className="fas fa-plus fa-2x" aria-hidden="true" data-toggle="modal" data-target="#modalTargetAdd" onClick={() => onActionClicked(null, true)}></i></a>
                   </span>
-                </div>
-            }
+                  : null
+              }
+            </div>
           </div>
           {filterRow ? filterRow : null}
-          <table className="table table-bordered table-responsive-md table-striped text-center">
+          <table className="table table-bordered table-responsive-md text-center">
             <thead>
               <tr>
-                {columns.map((element, i) => {
-                  return <th key={i} className="text-center">{element}</th>
-                })}
+                <th></th>
+                {tableParentColumns}
               </tr>
             </thead>
-            <tbody>
-              {tableRows}
-            </tbody>
+            {tableNestedRows}
           </table>
           <Pagination totalPages={totalPages} page={page} previousEnabled={previousEnabled} onPageClick={onPageClick} nextEnabled={nextEnabled} onPreviousPageClick={onPreviousPageClick} onNextPageClick={onNextPageClick} />
         </div>

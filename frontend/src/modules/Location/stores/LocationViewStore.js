@@ -37,7 +37,7 @@ class LocationViewStore {
     }
 
     title = "Lokacije";
-    columns = ['Naziv ulice', 'Naziv grada', 'Izmjena', 'Brisanje'];
+    columns = ['Naziv ulice', 'Naziv grada', '', ''];
 
     @observable clickedLocation = {
         id: "",
@@ -80,6 +80,9 @@ class LocationViewStore {
         }
         else {
             this.allData = this.response;
+        }
+        if (this.allData.length == 0) {
+            this.allData = [{ id: "", name: "Nema podataka", city_id: "", city_name: "" }];
         }
         this.setPagination(1);
     }

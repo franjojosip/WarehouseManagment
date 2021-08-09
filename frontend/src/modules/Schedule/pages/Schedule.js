@@ -1,6 +1,6 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import Layout from "../../../common/layouts/Layout"
+import Layout from "../../../common/components/Layout"
 import ScheduleViewStore from '../stores/ScheduleViewStore'
 import { ToastContainer } from 'react-toastify';
 

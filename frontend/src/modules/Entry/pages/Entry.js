@@ -1,12 +1,12 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import Layout from "../../../common/layouts/Layout"
+import Layout from "../../../common/components/Layout"
 import EntryViewStore from '../stores/EntryViewStore'
-import CollapsibleTable from '../../../common/layouts/CollapsibleTable';
+import CollapsibleTable from '../../../common/components/Table/CollapsibleTable';
 import ModalEntry from '../components/ModalEntry';
 import ModalEntrySubmit from '../components/ModalEntrySubmit';
 import { ToastContainer } from 'react-toastify';
-import { getUser } from '../../../common/LocalStorage';
+import { getUser } from '../../../common/components/LocalStorage';
 import { Button, Dropdown, DropdownButton } from 'react-bootstrap';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';

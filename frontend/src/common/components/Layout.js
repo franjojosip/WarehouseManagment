@@ -1,7 +1,7 @@
 import React from 'react';
-import TopNavigationBar from '../Navigation/Navbar/TopNavigationBar';
-import SideBar from '../Navigation/Sidebar/SideBar';
-import Loading from './Loading';
+import TopNavigationBar from './Navigation/Navbar/TopNavigationBar';
+import SideBar from './Navigation/Sidebar/SideBar';
+import Loading from './Loading/Loading';
 
 export default (props) => {
     return (
@@ -9,7 +9,7 @@ export default (props) => {
             <SideBar />
             <TopNavigationBar />
             <Loading visible={props.isLoaderVisible} />
-            <div className="layout" style={{ marginLeft: 60, marginTop: 60 }}>
+            <div id="layout">
                 {props.children}
             </div>
         </React.Fragment>

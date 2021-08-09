@@ -1,0 +1,95 @@
+.navbar {
+    height: 60px;
+    background: rgba(0, 0, 0, 0.753) !important;
+    padding-left: 60px !important;
+}
+
+a.nav-link {
+    color: white;
+    width: fit-content;
+}
+
+.nav-link {
+    font-size: 20px;
+}
+
+#welcomeMessage{
+    pointer-events: none;
+}
+
+.navbar-brand {
+    float: left;
+    margin-left: 60px;
+}
+
+#link {
+    position: relative;
+    float: right;
+}
+
+.navbar-expand {
+    justify-content: space-between !important;
+}
+
+.nav-link:focus, .nav-link:hover{
+    color: rgba(240, 142, 15, 0.719) !important;
+}
+
+img {
+    width: 40px;
+    height: 30px;
+    fill: #000;
+    padding-left: 10px;
+}
+
+#layout{
+    margin-left: 70px;
+    margin-right: 8px;
+}
+
+@media all and (max-width: 600px) {
+    #logout {
+        display: none;
+    }
+}
+
+@media all and (max-width: 510px) {
+    .navbar {
+        padding: 0 !important;
+    }
+    #link {
+        padding-left: 0;
+    }
+    img {
+        padding-left: 0;
+        width: 30px;
+    }
+}
+
+
+@media all and (max-width: 700px) {
+    #layout{
+        margin-left: 70px;
+        margin-right: 6px;
+    }
+}
+
+
+@media all and (max-width: 400px) {
+    #logout {
+        display: none;
+    }
+    #welcomeMessage {
+        font-size: 4.8vw !important;
+    }
+}
+
+@media all and (max-width: 320px) {
+    #welcomeMessage {
+        font-size: 4.6vw !important;
+    }
+    img {
+        height: 20px;
+        width: 20px;
+    }
+}

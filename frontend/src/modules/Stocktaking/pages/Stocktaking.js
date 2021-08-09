@@ -1,8 +1,8 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import Layout from "../../../common/layouts/Layout"
+import Layout from "../../../common/components/Layout"
 import StocktakingViewStore from '../stores/StocktakingViewStore'
-import CollapsibleTable from '../../../common/layouts/CollapsibleTable';
+import CollapsibleTable from '../../../common/components/Table/CollapsibleTable';
 import ModalStocktaking from '../components/ModalStocktaking';
 import ModalStocktakingSubmit from '../components/ModalStocktakingSubmit';
 import { ToastContainer } from 'react-toastify';

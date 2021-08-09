@@ -1,8 +1,8 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import Layout from "../../../common/layouts/Layout"
+import Layout from "../../../common/components/Layout"
 import NotificationViewStore from '../stores/NotificationViewStore'
-import Table from '../../../common/layouts/Table';
+import Table from '../../../common/components/Table/Table';
 import ModalNotificationLog from '../components/ModalNotificationLog';
 import ModalNotificationLogShow from '../components/ModalNotificationLogShow';
 import { ToastContainer } from 'react-toastify';

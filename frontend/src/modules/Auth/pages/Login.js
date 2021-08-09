@@ -2,7 +2,7 @@ import React from "react";
 import { inject, observer } from 'mobx-react';
 import AuthenticationViewStore from '../stores/AuthenticationViewStore';
 import LoginForm from "../components/LoginForm";
-import Loading from '../../../common/layouts/Loading';
+import Loading from '../../../common/components/Loading/Loading';
 import { ToastContainer } from 'react-toastify';
 
 import "../../../common/styles/Form.css"

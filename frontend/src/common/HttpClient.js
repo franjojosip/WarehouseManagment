@@ -1,5 +1,5 @@
 import React from 'react';
-import { getUser } from './LocalStorage';
+import { getUser } from './components/LocalStorage';
 
 export default class HttpClient extends React.Component {
     constructor(name) {

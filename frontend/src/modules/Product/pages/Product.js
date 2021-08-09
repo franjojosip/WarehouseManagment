@@ -1,8 +1,8 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import Layout from "../../../common/layouts/Layout"
+import Layout from "../../../common/components/Layout"
 import ProductViewStore from '../stores/ProductViewStore'
-import Table from '../../../common/layouts/Table';
+import Table from '../../../common/components/Table/Table';
 import ModalProduct from '../components/ModalProduct';
 import { ToastContainer } from 'react-toastify';
 import { Button, Dropdown, DropdownButton } from 'react-bootstrap';

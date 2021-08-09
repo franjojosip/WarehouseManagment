@@ -1,4 +1,4 @@
-import { isUserLoggedIn, isUserAdmin, getUser, clearUser, isUserTokenExpired } from './LocalStorage';
+import { isUserLoggedIn, isUserAdmin, getUser, clearUser, isUserTokenExpired } from './components/LocalStorage';
 import { RouterState } from 'mobx-state-router';
 
 
