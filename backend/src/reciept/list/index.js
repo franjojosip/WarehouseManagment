@@ -52,7 +52,7 @@ async function list(req, res) {
         isSubmitted: reciept.isSubmitted
       };
     });
-    return res.status(200).json({ reciepts: reciepts.sort(compare).sort(deepCompare) });
+    return res.status(200).json({ reciepts });
   } catch (err) {
     return res.status(500).json({ error: "Dogodila se pogreška, molimo kontaktirajte administratora!" });
   }

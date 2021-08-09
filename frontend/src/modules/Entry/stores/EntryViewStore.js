@@ -2,7 +2,7 @@ import { action, observable } from "mobx";
 import { toast } from 'react-toastify';
 import moment from "moment";
 import { getUser } from "../../../common/LocalStorage";
-import generateEntryPDF from "../../../common/components/EntryReportGenerator";
+import generateEntryPDF from "../../../common/components/PDFGenerator/EntryReportGenerator";
 
 class EntryViewStore {
     constructor(rootStore) {

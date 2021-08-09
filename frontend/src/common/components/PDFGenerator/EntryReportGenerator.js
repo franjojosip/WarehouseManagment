@@ -1,11 +1,11 @@
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
-import logo from "./warehouse_logo_pdf2.png";
+import logo from "./images/warehouse_logo_pdf2.png";
 
 const generateEntryPDF = (data, startDate, endDate) => {
   let tableRows = [];
   let head = [];
-  let y = 105;
+  let y = 85;
 
   const doc = new jsPDF('p', 'mm');
   let pageHeight = doc.internal.pageSize.height;
@@ -13,7 +13,7 @@ const generateEntryPDF = (data, startDate, endDate) => {
   let endDateArray = endDate.split("-").reverse();
 
   //Logo slika
-  doc.addImage(logo, 15, 20, 41, 35);
+  doc.addImage(logo, 15, 15, 41, 35);
 
   //PDF naslov
   doc.setFont('Comic Sans');
@@ -30,13 +30,13 @@ const generateEntryPDF = (data, startDate, endDate) => {
   doc.text("www.upravljanjeskladistima.hr", 136, 42);
 
   //Period izvještaja
-  doc.text("Izvještaj za period " + startDateArray.join(".") + "." + " do " + endDateArray.join(".") + ".", 115.1, 68);
+  doc.text("Izvještaj za period " + startDateArray.join(".") + "." + " do " + endDateArray.join(".") + ".", 115.1, 60);
 
 
   //Prijelom linija
   doc.setLineWidth(1.1);
   doc.setDrawColor(181, 181, 181);
-  doc.line(0, 75, 220, 75);
+  doc.line(0, 65, 220, 65);
 
   //Postavi font za tablicu
   doc.setFontSize(16);

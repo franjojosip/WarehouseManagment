@@ -21,7 +21,7 @@ class TopNavigationBar extends React.Component {
                 <Nav.Link style={{ float: "left", color: "white" }} href="">Dobrodošao nazad, {user.fname} {user.lname}!</Nav.Link>
                 <Nav.Link id="link" onClick={() => onLogout()}>
                     Odjavi se
-                    <img src={logo}></img>
+                    <img src={logo}/>
                 </Nav.Link>
             </Navbar>
         );

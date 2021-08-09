@@ -2,7 +2,7 @@ import { action, observable } from "mobx";
 import { toast } from 'react-toastify';
 import moment from "moment";
 import { getUser } from "../../../common/LocalStorage";
-import generateStocktakingPdf from "../../../common/components/StocktakingReportGenerator";
+import generateStocktakingPdf from "../../../common/components/PDFGenerator/StocktakingReportGenerator";
 
 class StocktakingViewStore {
     constructor(rootStore) {

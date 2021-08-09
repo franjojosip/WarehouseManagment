@@ -5,7 +5,7 @@ import LoginForm from "../components/LoginForm";
 import Loading from '../../../common/layouts/Loading';
 import { ToastContainer } from 'react-toastify';
 
-import "../styles/Login.css";
+import "../../../common/styles/Form.css"
 
 @inject(
   i => ({
@@ -21,7 +21,9 @@ class Login extends React.Component {
       <React.Fragment>
         <Loading visible={isLoaderVisible} />
         <ToastContainer style={{ fontSize: 15 }} />
-        <LoginForm errorMessage={errorMessage} email={email} password={password} onForgotPasswordClick={onForgotPasswordClick} onSubmit={onLogin} onEmailChange={onEmailChange} onPasswordChange={onPasswordChange} isSubmitDisabled={isSubmitDisabled} />
+        <div className="formContainer">
+          <LoginForm errorMessage={errorMessage} email={email} password={password} onForgotPasswordClick={onForgotPasswordClick} onSubmit={onLogin} onEmailChange={onEmailChange} onPasswordChange={onPasswordChange} isSubmitDisabled={isSubmitDisabled} />
+        </div>
       </React.Fragment>
     );
   };

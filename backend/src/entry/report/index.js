@@ -41,7 +41,6 @@ async function report(req, res) {
                 entry.subcategory_id = { id: "", name: "" };
                 product.subcategory_id = { id: "", name: "" };
             }
-            console.log(entry);
             reportEntries.push({
                 warehouse_id: entry.warehouse_id.id,
                 warehouse_name: replaceUtf8(entry.warehouse_id.name),
@@ -66,7 +65,6 @@ async function report(req, res) {
             reportEntries = reportEntries.sort(compareCategories).sort(deepCompareProducts)
         }
         let grouppedReportEntries = [];
-        console.log(reportEntries);
 
         reportEntries.forEach(entry => {
             let filteredEntries = grouppedReportEntries.filter(grouppedEntry => grouppedEntry.warehouse_id == entry.warehouse_id);
