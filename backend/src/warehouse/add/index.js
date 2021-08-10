@@ -32,6 +32,8 @@ async function add(req, res) {
       return res.status(400).json({ error: "Provjerite korisnike!" });
     }
 
+    console.log(result.value.users);
+
     const newWarehouse = new Warehouse();
     newWarehouse.name = result.value.name;
     newWarehouse.location_id = result.value.location_id;
