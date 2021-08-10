@@ -55,8 +55,8 @@ class RecieptViewStore {
     }
 
     title = "Preuzimanja";
-    parentColumns = ['Naziv skladišta', 'Lokacija', 'Grad', 'Datum kreiranja'];
-    childColumns = ['Naziv proizvoda', 'Kategorija', 'Potkategorija', 'Ambalaža', 'Količina', 'Izmijeni', 'Obriši', 'Potvrda'];
+    parentColumns = ['Skladište', 'Lokacija', 'Grad', 'Datum kreiranja'];
+    childColumns = ['Proizvod', 'Kategorija', 'Potkategorija', 'Ambalaža', 'Količina', 'Izmijeni', 'Obriši', 'Potvrdi'];
 
     @observable clickedReciept = {
         id: "",
@@ -123,6 +123,8 @@ class RecieptViewStore {
     @action
     onCityFilterChange(value) {
         let filteredData = this.response;
+        this.cityFilter.city_id = value.city_id;
+        this.cityFilter.city_name = value.city_name;
         if (value.city_id != "") {
             filteredData = filteredData.filter(data => data.city_id === value.city_id);
             this.cityFilter.city_id = value.city_id;
@@ -190,6 +192,7 @@ class RecieptViewStore {
         this.dateFilter.startDate = "";
         this.dateFilter.endDate = "";
         this.allData = this.response;
+        this.onChangePageSize(5);
         this.groupData();
         this.setPagination(1);
     }

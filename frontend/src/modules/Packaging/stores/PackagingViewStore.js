@@ -49,7 +49,7 @@ class PackagingViewStore {
     @observable rows = [];
 
     title = "Ambalaže";
-    columns = ['Naziv ambalaže', 'Izmjena', 'Brisanje'];
+    columns = ['Naziv', '', ''];
 
     @observable allData = [];
 

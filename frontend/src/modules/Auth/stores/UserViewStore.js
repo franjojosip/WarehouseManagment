@@ -74,7 +74,7 @@ class UserViewStore {
     @observable rows = [];
 
     title = "Korisnici";
-    columns = ['Ime i prezime korisnika', 'Email', 'Mobitel', 'Uloga', 'Izmjena', 'Brisanje'];
+    columns = ['Ime i prezime', 'Email', 'Mobitel', 'Uloga', '', ''];
 
     @observable allData = [];
     @observable roles = [];
@@ -103,6 +103,7 @@ class UserViewStore {
         this.roleFilter.id = "";
         this.roleFilter.name = "";
         this.allData = this.response;
+        this.onChangePageSize(5);
         this.setPagination(1);
     }
 

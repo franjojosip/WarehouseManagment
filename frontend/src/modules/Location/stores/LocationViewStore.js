@@ -37,7 +37,7 @@ class LocationViewStore {
     }
 
     title = "Lokacije";
-    columns = ['Naziv ulice', 'Naziv grada', '', ''];
+    columns = ['Ulica', 'Grad', 'Poštanski broj', '', ''];
 
     @observable clickedLocation = {
         id: "",
@@ -82,7 +82,7 @@ class LocationViewStore {
             this.allData = this.response;
         }
         if (this.allData.length == 0) {
-            this.allData = [{ id: "", name: "Nema podataka", city_id: "", city_name: "" }];
+            this.allData = [{ id: "", name: "Nema podataka", city_id: "", city_name: "", zip_code: "" }];
         }
         this.setPagination(1);
     }
@@ -92,6 +92,7 @@ class LocationViewStore {
         this.cityFilter.id = "";
         this.cityFilter.name = "";
         this.allData = this.response;
+        this.onChangePageSize(5);
         this.setPagination(1);
     }
 
@@ -179,7 +180,7 @@ class LocationViewStore {
                 progress: undefined,
             });
             console.clear();
-            this.allData = [{ id: "", name: "Nema podataka", city_id: "", city_name: "" }];
+            this.allData = [{ id: "", name: "Nema podataka", city_id: "", city_name: "", zip_code: "" }];
         }
         else {
             if (response.locations.length > 0) {
@@ -187,7 +188,7 @@ class LocationViewStore {
                 this.response = response.locations;
             }
             else {
-                this.allData = [{ id: "", name: "Nema podataka", city_id: "", city_name: "" }];
+                this.allData = [{ id: "", name: "Nema podataka", city_id: "", city_name: "", zip_code: "" }];
             }
         }
         this.setPagination();

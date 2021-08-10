@@ -29,7 +29,7 @@ class NotificationViewStore {
     }
 
     title = "Popis notifikacija";
-    columns = ['Naziv notifikacije', 'Tip notifikacije', 'Primatelj', 'Datum slanja', 'Detalji', 'Obriši', 'Informacije'];
+    columns = ['Naziv', 'Tip notifikacije', 'Primatelj', 'Datum slanja', 'Detalji', '', ''];
 
     @observable isLoaderVisible = false;
     @observable isSubmitDisabled = true;
@@ -68,6 +68,9 @@ class NotificationViewStore {
         else {
             this.allData = this.response;
         }
+        if (this.allData.length == 0) {
+            this.allData = [{ id: "", notification_type_id: "", subject: "Nema podataka", notification_type_name: "", email: "", date_created: "", data: "" }];
+        }
         this.setPagination(1);
     }
 
@@ -76,6 +79,7 @@ class NotificationViewStore {
         this.notificationTypeFilter.id = "";
         this.notificationTypeFilter.name = "";
         this.allData = this.response;
+        this.onChangePageSize(5);
         this.setPagination(1);
     }
 

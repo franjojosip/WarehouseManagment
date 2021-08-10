@@ -19,3 +19,11 @@ button.dropdown-item {
 .dropdown {
     width: fit-content;
 }
+
+input{
+    font-size: 17px !important;
+}
+
+.dateText {
+    margin-top: 10px;
+}

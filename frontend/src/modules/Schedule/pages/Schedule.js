@@ -4,7 +4,6 @@ import Layout from "../../../common/components/Layout"
 import ScheduleViewStore from '../stores/ScheduleViewStore'
 import { ToastContainer } from 'react-toastify';
 
-import "../styles/Schedule.css";
 import ScheduleForm from '../components/ScheduleForm';
 
 @inject(

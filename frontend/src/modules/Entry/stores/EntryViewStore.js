@@ -55,8 +55,8 @@ class EntryViewStore {
     }
 
     title = "Unos proizvoda na stanje";
-    parentColumns = ['Naziv skladišta', 'Lokacija', 'Grad', 'Datum kreiranja'];
-    childColumns = ['Naziv proizvoda', 'Kategorija', 'Potkategorija', 'Ambalaža', 'Količina', 'Izmijeni', 'Obriši', 'Potvrdi'];
+    parentColumns = ['Skladište', 'Lokacija', 'Grad', 'Datum kreiranja'];
+    childColumns = ['Proizvod', 'Kategorija', 'Potkategorija', 'Ambalaža', 'Količina', 'Izmijeni', 'Obriši', 'Potvrdi'];
 
     @observable clickedEntry = {
         id: "",
@@ -124,6 +124,8 @@ class EntryViewStore {
     @action
     onCityFilterChange(value) {
         let filteredData = this.response;
+        this.cityFilter.city_id = value.city_id;
+        this.cityFilter.city_name = value.city_name;
         if (value.city_id != "") {
             filteredData = filteredData.filter(data => data.city_id === value.city_id);
             this.cityFilter.city_id = value.city_id;
@@ -144,10 +146,10 @@ class EntryViewStore {
     onStartDateFilterChange(value) {
         let filteredData = this.response;
         this.dateFilter.startDate = value;
-        if(this.dateFilter.startDate != "" && this.dateFilter.endDate != ""){
+        if (this.dateFilter.startDate != "" && this.dateFilter.endDate != "") {
             let startDate = moment(new Date(this.dateFilter.startDate)).format("DD/MM/YYYY");
             let endDate = moment(new Date(value)).format("DD/MM/YYYY");
-            if(moment(this.dateFilter.startDate).diff(moment(this.dateFilter.endDate), 'days') <= 0){
+            if (moment(this.dateFilter.startDate).diff(moment(this.dateFilter.endDate), 'days') <= 0) {
                 filteredData = filteredData.filter(data =>
                     (moment(data.date_created, "DD/MM/YYYY").isAfter(moment(startDate, "DD/MM/YYYY")) || moment(data.date_created, "DD/MM/YYYY").isSame(moment(startDate, "DD/MM/YYYY")))
                     && (moment(data.date_created, "DD/MM/YYYY").isBefore(moment(endDate, "DD/MM/YYYY")) || moment(data.date_created, "DD/MM/YYYY").isSame(moment(endDate, "DD/MM/YYYY")))
@@ -166,10 +168,10 @@ class EntryViewStore {
     onEndDateFilterChange(value) {
         let filteredData = this.response;
         this.dateFilter.endDate = value;
-        if(this.dateFilter.startDate != "" && this.dateFilter.endDate != ""){
+        if (this.dateFilter.startDate != "" && this.dateFilter.endDate != "") {
             let startDate = moment(new Date(this.dateFilter.startDate)).format("DD/MM/YYYY");
             let endDate = moment(new Date(value)).format("DD/MM/YYYY");
-            if(moment(this.dateFilter.startDate).diff(moment(this.dateFilter.endDate), 'days') <= 0){
+            if (moment(this.dateFilter.startDate).diff(moment(this.dateFilter.endDate), 'days') <= 0) {
                 filteredData = filteredData.filter(data =>
                     (moment(data.date_created, "DD/MM/YYYY").isAfter(moment(startDate, "DD/MM/YYYY")) || moment(data.date_created, "DD/MM/YYYY").isSame(moment(startDate, "DD/MM/YYYY")))
                     && (moment(data.date_created, "DD/MM/YYYY").isBefore(moment(endDate, "DD/MM/YYYY")) || moment(data.date_created, "DD/MM/YYYY").isSame(moment(endDate, "DD/MM/YYYY")))
@@ -186,15 +188,16 @@ class EntryViewStore {
 
     @action
     onResetFilterClick() {
-        this.cityFilter.id = "";
-        this.cityFilter.name = "";
+        this.cityFilter.city_id = "";
+        this.cityFilter.city_name = "";
         this.dateFilter.startDate = "";
         this.dateFilter.endDate = "";
         this.allData = this.response;
+        this.onChangePageSize(5);
         this.groupData();
         this.setPagination(1);
     }
-    
+
     @action
     showLoader() {
         this.isLoaderVisible = true;

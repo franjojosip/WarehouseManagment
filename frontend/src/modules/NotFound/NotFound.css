@@ -1,3 +1,19 @@
-body {
-    padding: 16
+#notFoundTitle {
+    margin-top: 200px !important;
+    width: fit-content;
+    font-size: 45px;
+    background: rgba(0, 0, 0, 0.827) !important;
+    padding: 30px;
+    border-radius: 10px;
+    color: white;
+    width:500px;
+    margin: 0 auto;
+    background: gray;
+    text-align: center;
+}
+
+.notFoundCard{
+    margin: 0 auto;
+    justify-content: center;
+    align-content: center;
 }

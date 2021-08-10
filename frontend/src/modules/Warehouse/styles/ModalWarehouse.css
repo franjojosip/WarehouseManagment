@@ -56,5 +56,6 @@
 }
 
 .chip{
+  font-size: 25px !important;
   font-weight: normal;
 }

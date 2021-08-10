@@ -24,19 +24,19 @@ class Stocktaking extends React.Component {
         const { errorMessage, onGeneratePdfClick, cityFilter, dateFilter, onCityFilterChange, onStartDateFilterChange, onEndDateFilterChange, onResetFilterClick, cities, filteredLocations, filteredWarehouses, products, onSubmitClick, clickedStocktaking, onClickedRow, parentColumns, childColumns, paginatedData, onStocktakingClicked, onWarehouseChange, onCityChange, onLocationChange, onProductChange, onQuantityChange, isLoaderVisible, title, page, pageSize, totalPages, previousEnabled, nextEnabled, isSubmitDisabled, onPageClick, onChangePageSize, onPreviousPageClick, onNextPageClick, onEditClick, onDeleteClick, onCreateClick } = this.props.viewStore;
 
         let tableParentColumns = parentColumns.map((element, i) => {
-            return <th key={"parentColumn" + i} className="text-center">{element}</th>
+            return <th key={"parentColumn" + i} className="text-center cellHeader">{element}</th>
         });
         let tableChildColumns = childColumns.map((element, i) => {
-            return <td key={"childColumn" + i} className="text-center">{element}</td>
+            return <th key={"childColumn" + i} className="text-center cellHeaderTwo">{element}</th>
         });
 
         let tableNestedRows = (<tbody>
             <tr key="tableNestedRows">
                 <td>Nema podataka</td>
-                <td className="pt-3-half"></td>
-                <td className="pt-3-half"></td>
-                <td className="pt-3-half"></td>
-                <td className="pt-3-half"></td>
+                <td className="cell"></td>
+                <td className="cell"></td>
+                <td className="cell"></td>
+                <td className="cell"></td>
             </tr>
         </tbody>);
 
@@ -50,11 +50,11 @@ class Stocktaking extends React.Component {
                 return (
                     <tbody key={"tbody" + i}>
                         <tr key={i} onClick={() => onClickedRow(nestedIndex)} className="accordion-toggle collapsed" style={{ backgroundColor: "#F2F2F2" }} id="accordion1" data-toggle="collapse" data-parent="#accordion1" data-target={"#row" + nestedIndex}>
-                            <td><Button style={{ margin: 0, padding: 8 }}>Prikaži proizvode</Button></td>
-                            <td className="pt-3-half">{parentRow[0]}</td>
-                            <td className="pt-3-half">{element.data[0].location_name}</td>
-                            <td className="pt-3-half">{element.data[0].city_name}</td>
-                            <td className="pt-3-half">{parentRow[2]}</td>
+                            <td className="complexCell"><Button className="btnAction">Prikaži</Button></td>
+                            <td className="complexCell">{parentRow[0]}</td>
+                            <td className="complexCell">{element.data[0].location_name}</td>
+                            <td className="complexCell">{element.data[0].city_name}</td>
+                            <td className="complexCell">{parentRow[2]}</td>
                         </tr>
                         <tr>
                             <td colSpan="12" className="hiddenRow">
@@ -70,45 +70,39 @@ class Stocktaking extends React.Component {
                                                 element.data.map((item, i) => {
                                                     return (
                                                         <tr key={"element_data" + i}>
-                                                            <td>{item.product_name}</td>
-                                                            <td>{item.category_name}</td>
-                                                            <td>{item.subcategory_name}</td>
-                                                            <td>{item.packaging_name}</td>
-                                                            <td>{item.quantity}</td>
-                                                            <td>
+                                                            <td className="cell">{item.product_name}</td>
+                                                            <td className="cell">{item.category_name}</td>
+                                                            <td className="cell">{item.subcategory_name}</td>
+                                                            <td className="cell">{item.packaging_name}</td>
+                                                            <td className="cell">{item.quantity}</td>
+                                                            <td className="nestedComplexCell">
                                                                 {
                                                                     item.isSubmitted ?
                                                                         null
                                                                         :
-                                                                        <span className="table-edit">
-                                                                            <button type="button" onClick={() => onStocktakingClicked(item, false)} data-toggle="modal" data-target="#modalTargetEdit" className="btn btn-primary btn-rounded btn-sm my-0">
-                                                                                Izmijeni
-                                                                            </button>
-                                                                        </span>
+                                                                        <button type="button" onClick={() => onStocktakingClicked(item, false)} data-toggle="modal" data-target="#modalTargetEdit" className="btn btnAction btn-primary btn-rounded btn-sm my-0">
+                                                                            Izmijeni
+                                                                        </button>
                                                                 }
                                                             </td>
-                                                            <td>
+                                                            <td className="nestedComplexCell">
                                                                 {
                                                                     item.isSubmitted ?
                                                                         null
                                                                         :
-                                                                        <span className="table-remove">
-                                                                            <button type="button" onClick={() => onStocktakingClicked(item, false)} data-toggle="modal" data-target="#modalTargetDelete" className="btn btn-danger btn-rounded btn-sm my-0">
-                                                                                Obriši
-                                                                            </button>
-                                                                        </span>
+                                                                        <button type="button" onClick={() => onStocktakingClicked(item, false)} data-toggle="modal" data-target="#modalTargetDelete" className="btn btnAction btn-danger btn-rounded btn-sm my-0">
+                                                                            Obriši
+                                                                        </button>
                                                                 }
                                                             </td>
-                                                            <td>
+                                                            <td className="nestedComplexCell">
                                                                 {
                                                                     item.isSubmitted ?
                                                                         <i className="fa fa-fw fa-check" style={{ fontSize: '1.4em' }} />
                                                                         :
-                                                                        <span className="table-submit">
-                                                                            <button type="button" onClick={() => onStocktakingClicked(item, false)} data-toggle="modal" data-target="#modalTargetSubmit" className="btn btn-info btn-rounded btn-sm my-0">
-                                                                                Potvrdi
-                                                                            </button>
-                                                                        </span>
+                                                                        <button type="button" onClick={() => onStocktakingClicked(item, false)} data-toggle="modal" data-target="#modalTargetSubmit" className="btn btnAction btn-info btn-rounded btn-sm my-0">
+                                                                            Potvrdi
+                                                                        </button>
                                                                 }
                                                             </td>
                                                         </tr>
@@ -134,57 +128,78 @@ class Stocktaking extends React.Component {
             textField: {
                 marginLeft: theme.spacing(1),
                 marginRight: theme.spacing(1),
-                width: 200,
+                width: 100,
             },
         }));
-
-        let cityFilterDropdown = (<DropdownButton id="customDropdown" variant="secondary" title={cityFilter.city_name ? cityFilter.city_name : "Svi gradovi"} style={{ marginBottom: 10 }}>
-            <Dropdown.Item key="default_city" onSelect={() => onCityFilterChange({ city_id: "", city_name: "" })}>Svi gradovi</Dropdown.Item>
-            {cities.map((city) => {
-                return <Dropdown.Item key={city.city_id} onSelect={() => onCityFilterChange(city)}>{city.city_name}</Dropdown.Item>;
-            })
-            }
-        </DropdownButton>);
-
-
-        let filterRow = (<div className="row" style={{ alignItems: "center" }}>
-            <div className="col-3">{cityFilterDropdown}</div>
-            <div className="col-3">
-                <TextField
-                    id="startDate"
-                    type="date"
-                    format="DD/MM/YYYY"
-                    value={dateFilter.startDate}
-                    className={classes.textField}
-                    onChange={(e) => onStartDateFilterChange(e.target.value)}
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                />
-            </div>
-            <div className="col-3">
-                <TextField
-                    id="endDate"
-                    type="date"
-                    format="DD/MM/YYYY"
-                    value={dateFilter.endDate}
-                    className={classes.textField}
-                    onChange={(e) => onEndDateFilterChange(e.target.value)}
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                />
-            </div>
-            <div className="col-3"><Button className="btn btn-dark" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button></div>
-
-            <button
-                className="btn btn-primary"
-                onClick={(e) => { e.preventDefault(); onGeneratePdfClick() }}
-            >
-                GENERIRAJ IZVJEŠĆE
-            </button>
-
-        </div >);
+        let filterRow = (
+            <div className="filterCard" style={{ marginBottom: 10 }}>
+                <div className="row firstRow">
+                    <div className="col-md-2 filterColumn">
+                        <span id="filterTitle">FILTERI</span>
+                    </div>
+                    <div className="col-md-3 filterColumn">
+                        <button className="btn btn-light dropdown-toggle" type="button" id="dropdownMenuPageSizeSecond" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {pageSize}
+                        </button>
+                        <div className="dropdown-menu pagesize" aria-labelledby="dropdownMenuPageSizeSecond">
+                            <button className="dropdown-item" onClick={() => onChangePageSize(5)} type="button">5</button>
+                            <button className="dropdown-item" onClick={() => onChangePageSize(10)} type="button">10</button>
+                            <button className="dropdown-item" onClick={() => onChangePageSize(15)} type="button">15</button>
+                        </div>
+                    </div>
+                    <div className='col-md-3 filterColumn'>
+                        <div className="dateText">
+                            POČETNI DATUM
+                        </div>
+                        <TextField
+                            id="startDate"
+                            type="date"
+                            format="DD/MM/YYYY"
+                            value={dateFilter.startDate}
+                            className={classes.textField}
+                            onChange={(e) => onStartDateFilterChange(e.target.value)}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                    </div>
+                    <div className='col-md-3 filterColumn'>
+                        <div className="dateText">
+                            KRAJNJI DATUM
+                        </div>
+                        <TextField
+                            id="endDate"
+                            type="date"
+                            format="DD/MM/YYYY"
+                            value={dateFilter.endDate}
+                            className={classes.textField}
+                            onChange={(e) => onEndDateFilterChange(e.target.value)}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                    </div>
+                </div>
+                <div className="row">
+                    <div className='col-md-2 filterColumn'>
+                    </div>
+                    <div className='col-md-3 filterColumn'>
+                        <DropdownButton style={{ margin: "auto" }} className="vertical-center" variant="light" title={cityFilter.city_name ? cityFilter.city_name : "Svi gradovi"} style={{ marginBottom: 10 }}>
+                            <Dropdown.Item key="default_city" onSelect={() => onCityFilterChange({ city_id: "", city_name: "" })}>Svi gradovi</Dropdown.Item>
+                            {cities.map((city) => {
+                                return <Dropdown.Item key={city.city_id} onSelect={() => onCityFilterChange(city)}>{city.city_name}</Dropdown.Item>;
+                            })
+                            }
+                        </DropdownButton>
+                    </div>
+                    <div className='col-md-3 filterColumn'>
+                        <Button className="btn btn-primary btnAction btnGenerate" onClick={(e) => { e.preventDefault(); onGeneratePdfClick() }}>Generiraj izvješće</Button>
+                    </div>
+                    <div className='col-md-3 filterColumn'>
+                        <Button className="btn btn-dark btnAction resetBtn" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button>
+                    </div>
+                </div>
+            </div>);
 
         return (
             <Layout isLoaderVisible={isLoaderVisible}>

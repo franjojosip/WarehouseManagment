@@ -29,30 +29,26 @@ class User extends React.Component {
                 phoneNumber = element.phone.slice(0, 3) + "-" + element.phone.slice(3, element.phone.length)
             }
             return (<tr key={i}>
-                <td className="pt-3-half">{element.fname} {element.lname}</td>
-                <td className="pt-3-half">{element.email}</td>
-                <td className="pt-3-half">{phoneNumber}</td>
-                <td className="pt-3-half">{element.role_name}</td>
-                <td>
+                <td className="cell">{element.fname} {element.lname}</td>
+                <td className="cell">{element.email}</td>
+                <td className="cell">{phoneNumber}</td>
+                <td className="cell">{element.role_name}</td>
+                <td className="cell btnCell">
                     {
                         element.id !== "" ?
-                            <span className="table-edit">
-                                <button type="button" onClick={() => onUserClicked(element, false)} data-toggle="modal" data-target="#modalTargetEdit" className="btn btn-primary btn-rounded btn-sm my-0">
-                                    Izmijeni
-                                </button>
-                            </span>
+                            <button type="button" onClick={() => onUserClicked(element, false)} data-toggle="modal" data-target="#modalTargetEdit" className="btn btn-primary btnAction btn-rounded btn-sm my-0">
+                                Izmijeni
+                            </button>
                             :
                             null
                     }
                 </td>
-                <td>
+                <td className="cell btnCell">
                     {
                         element.id !== "" ?
-                            <span className="table-remove">
-                                <button type="button" onClick={() => onUserClicked(element, false)} data-toggle="modal" data-target="#modalTargetDelete" className="btn btn-danger btn-rounded btn-sm my-0">
-                                    Obriši
-                                </button>
-                            </span>
+                            <button type="button" onClick={() => onUserClicked(element, false)} data-toggle="modal" data-target="#modalTargetDelete" className="btn btn-danger btnAction btn-rounded btn-sm my-0">
+                                Obriši
+                            </button>
                             :
                             null
                     }
@@ -61,18 +57,33 @@ class User extends React.Component {
         });
 
         let filterRow = (
-            <div className="row" style={{ alignItems: "center" }}>
-                <div className="col-4">
-                    <DropdownButton id="customDropdown" variant="secondary" title={roleFilter.name ? roleFilter.name : "Sve uloge"} style={{ marginBottom: 10 }}>
-                        <Dropdown.Item key="default_role" onSelect={() => onRoleFilterChange({ role_id: "", role_name: "" })}>Sve uloge</Dropdown.Item>
-                        {roles.map((role) => {
-                            return <Dropdown.Item key={role.role_id} onSelect={() => onRoleFilterChange(role)}>{role.role_name}</Dropdown.Item>;
-                        })
-                        }
-                    </DropdownButton>
-                </div>
-                <div className="col-3">
-                    <Button className="btn btn-dark" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button>
+            <div className="filterCard" style={{ marginBottom: 10 }}>
+                <div className="row">
+                    <div className="col-md-2 filterColumn">
+                        <span id="filterTitle">FILTERI</span>
+                    </div>
+                    <div className="col-md-3 filterColumn">
+                        <button className="btn btn-light dropdown-toggle" type="button" id="dropdownMenuPageSizeSecond" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {pageSize}
+                        </button>
+                        <div className="dropdown-menu pagesize" aria-labelledby="dropdownMenuPageSizeSecond">
+                            <button className="dropdown-item" onClick={() => onChangePageSize(5)} type="button">5</button>
+                            <button className="dropdown-item" onClick={() => onChangePageSize(10)} type="button">10</button>
+                            <button className="dropdown-item" onClick={() => onChangePageSize(15)} type="button">15</button>
+                        </div>
+                    </div>
+                    <div className='col-md-4 filterColumn'>
+                        <DropdownButton style={{ margin: "auto" }} className="vertical-center roleDropdown lowerDropdown" variant="light" title={roleFilter.name ? roleFilter.name : "Sve uloge"} style={{ marginBottom: 10 }}>
+                            <Dropdown.Item key="default_role" onSelect={() => onRoleFilterChange({ role_id: "", role_name: "" })}>Sve uloge</Dropdown.Item>
+                            {roles.map((role) => {
+                                return <Dropdown.Item key={role.role_id} onSelect={() => onRoleFilterChange(role)}>{role.role_name}</Dropdown.Item>;
+                            })
+                            }
+                        </DropdownButton>
+                    </div>
+                    <div className='col-md-3 filterColumn'>
+                        <Button className="btn btn-dark btnAction resetBtn" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button>
+                    </div>
                 </div>
             </div>);
         return (

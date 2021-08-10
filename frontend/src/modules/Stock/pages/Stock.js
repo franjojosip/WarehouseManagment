@@ -25,21 +25,21 @@ class Stock extends React.Component {
         let isLoggedAdmin = loggedUser && loggedUser.role.toLowerCase() == "administrator";
 
         let tableParentColumns = parentColumns.map((element, i) => {
-            return <th key={"parentColumn" + i} className="text-center">{element}</th>
+            return <th key={"parentColumn" + i} className="text-center cellHeader">{element}</th>
         });
         let tableChildColumns = childColumns.map((element, i) => {
-            return <td key={"childColumn" + i} className="text-center">{element}</td>
+            return <th key={"childColumn" + i} className="text-center complexHeader">{element}</th>
         });
         let tableNestedChildColumns = nestedChildColumns.map((element, i) => {
-            return <td key={"nestedChildColumn" + i} className="text-center">{element}</td>
+            return <th key={"nestedChildColumn" + i} className="text-center secondComplexHeader">{element}</th>
         });
 
         let tableNestedRows = (<tbody>
             <tr>
-                <td className="pt-3-half"></td>
+                <td className="cell"></td>
                 <td>Nema podataka</td>
-                <td className="pt-3-half"></td>
-                <td className="pt-3-half"></td>
+                <td className="cell"></td>
+                <td className="cell"></td>
             </tr>
         </tbody>);
 
@@ -54,86 +54,86 @@ class Stock extends React.Component {
                 let parentIndex = i;
                 return (
                     <tbody key={"tbody" + i}>
-                        <tr key={i} onClick={() => onClickedRow(parentIndex)} className="accordion-toggle collapsed" style={{ backgroundColor: "#F2F2F2" }} id="accordion1" data-toggle="collapse" data-parent="#accordion1" data-target={"#row" + parentIndex}>
-                            <td><Button style={{ margin: 0, padding: 8 }}>Prikaži kategorije</Button></td>
-                            <td className="pt-3-half">{parentRow.warehouse_name}</td>
-                            <td className="pt-3-half">{parentRow.location_name}</td>
-                            <td className="pt-3-half">{parentRow.city_name}</td>
+                        <tr key={i} onClick={() => onClickedRow(parentIndex)} className="accordion-toggle collapsed" style={{ backgroundColor: "#F2F2F2" }} className="complexAccordion" id="accordion1" data-toggle="collapse" data-parent="#accordion1" data-target={"#row" + parentIndex}>
+                            <td className="complexCell"><Button className="btnAction">Prikaži</Button></td>
+                            <td className="complexCell">{parentRow.warehouse_name}</td>
+                            <td className="complexCell">{parentRow.location_name}</td>
+                            <td className="complexCell">{parentRow.city_name}</td>
                         </tr>
                         <tr>
                             <td colSpan="12" className="hiddenRow">
                                 <div className="collapse" id={"row" + i}>
-                                    <table className="table table-bordered table-responsive-md table-striped text-center mb-0">
-                                        <thead>
-                                            <tr className="info">
-                                                <th>Prikaz proizvoda</th>
-                                                {tableChildColumns}
-                                            </tr>
-                                        </thead>
-                                        {
-                                            element.grouppedCategoryData.map((categoryData, nestedKey) => {
-                                                let categoryRow = categoryData.data.find(item => item.category_id.toString() === categoryData.name.toString());
-                                                return (
-                                                    <tbody key={"nestedBody-" + nestedKey + "-" + parentRow.id}>
-                                                        <tr key={"nestedKey-" + parentRow.id} onClick={() => onClickedNestedRow(parentRow.id)} className="accordion-toggle collapsed" style={{ backgroundColor: "#F2F2F2" }} id="accordion1" data-toggle="collapse" data-parent="#accordion1" data-target={"#nestedrow-" + nestedKey + "-" + parentRow.id}>
-                                                            <td><Button style={{ margin: 0, padding: 8 }}>Prikaži proizvode</Button></td>
-                                                            <td>{categoryRow.category_name}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td colSpan="12" className="hiddenNestedRow">
-                                                                <div className="collapse" id={"nestedrow-" + nestedKey + "-" + parentRow.id}>
-                                                                    <table className="table table-bordered table-responsive-md table-striped text-center mb-0">
-                                                                        <thead>
-                                                                            <tr className="info">
-                                                                                {
-                                                                                    tableNestedChildColumns
-                                                                                }
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            {categoryData.data.map((product, i) => {
-                                                                                return (
-                                                                                    <tr key={"categoryData" + i + "-" + parentRow.id}>
-                                                                                        <td>{product.product_name}</td>
-                                                                                        <td>{product.subcategory_name}</td>
-                                                                                        <td>{product.packaging_name}</td>
-                                                                                        <td>{product.quantity}</td>
-                                                                                        <td>{product.min_quantity}</td>
+                                    <div className=" table-responsive ">
+                                        <table className="table table-bordered table-striped text-center mb-0">
+                                            <thead>
+                                                <tr className="info">
+                                                    <th className="complexHeader"></th>
+                                                    {tableChildColumns}
+                                                </tr>
+                                            </thead>
+                                            {
+                                                element.grouppedCategoryData.map((categoryData, nestedKey) => {
+                                                    let categoryRow = categoryData.data.find(item => item.category_id.toString() === categoryData.name.toString());
+                                                    return (
+                                                        <tbody key={"nestedBody-" + nestedKey + "-" + parentRow.id}>
+                                                            <tr key={"nestedKey-" + parentRow.id} onClick={() => onClickedNestedRow(parentRow.id)} className="accordion-toggle collapsed" style={{ backgroundColor: "#F2F2F2" }} id="accordion1" data-toggle="collapse" data-parent="#accordion1" data-target={"#nestedrow-" + nestedKey + "-" + parentRow.id}>
+                                                                <td className="complexCell"><Button className="btnAction">Prikaži proizvode</Button></td>
+                                                                <td className="complexCell">{categoryRow.category_name}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colSpan="12" className="hiddenNestedRow cell">
+                                                                    <div className="collapse" id={"nestedrow-" + nestedKey + "-" + parentRow.id}>
+                                                                        <div className="table-responsive">
+                                                                            <table className="table table-bordered table-striped text-center mb-0">
+                                                                                <thead>
+                                                                                    <tr className="info">
                                                                                         {
-                                                                                            isLoggedAdmin ?
-                                                                                                <td>
-                                                                                                    <span className="table-remove">
-                                                                                                        <button type="button" onClick={() => onStockClicked(categoryData, false)} data-toggle="modal" data-target="#modalTargetEdit" className="btn btn-primary btn-rounded btn-sm my-0">
-                                                                                                            Izmijeni
-                                                                                                        </button>
-                                                                                                    </span>
-                                                                                                </td>
-                                                                                                : null
-                                                                                        }
-                                                                                        {
-                                                                                            isLoggedAdmin ?
-                                                                                                <td>
-                                                                                                    <span className="table-remove">
-                                                                                                        <button type="button" onClick={() => onStockClicked(categoryData, false)} data-toggle="modal" data-target="#modalTargetDelete" className="btn btn-danger btn-rounded btn-sm my-0">
-                                                                                                            Obriši
-                                                                                                        </button>
-                                                                                                    </span>
-                                                                                                </td>
-                                                                                                : null
+                                                                                            tableNestedChildColumns
                                                                                         }
                                                                                     </tr>
-                                                                                );
-                                                                            })}
-                                                                        </tbody>
-                                                                    </table>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                );
-                                            })
-                                        }
-                                    </table>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    {categoryData.data.map((product, i) => {
+                                                                                        return (
+                                                                                            <tr key={"categoryData" + i + "-" + parentRow.id}>
+                                                                                                <td className="nestedComplexCell">{product.product_name}</td>
+                                                                                                <td className="nestedComplexCell">{product.subcategory_name}</td>
+                                                                                                <td className="nestedComplexCell">{product.packaging_name}</td>
+                                                                                                <td className="nestedComplexCell">{product.quantity}</td>
+                                                                                                <td className="nestedComplexCell">{product.min_quantity}</td>
+                                                                                                {
+                                                                                                    isLoggedAdmin ?
+                                                                                                        <td className="nestedComplexCell">
+                                                                                                            <button type="button" onClick={() => onStockClicked(categoryData, false)} data-toggle="modal" data-target="#modalTargetEdit" className="btn btn-primary btnAction btn-rounded btn-sm">
+                                                                                                                Izmijeni
+                                                                                                            </button>
+                                                                                                        </td>
+                                                                                                        : null
+                                                                                                }
+                                                                                                {
+                                                                                                    isLoggedAdmin ?
+                                                                                                        <td className="nestedComplexCell">
+                                                                                                            <button type="button" onClick={() => onStockClicked(categoryData, false)} data-toggle="modal" data-target="#modalTargetDelete" className="btn btn-danger btnAction btn-rounded btn-sm">
+                                                                                                                Obriši
+                                                                                                            </button>
+                                                                                                        </td>
+                                                                                                        : null
+                                                                                                }
+                                                                                            </tr>
+                                                                                        );
+                                                                                    })}
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    );
+                                                })
+                                            }
+                                        </table>
+                                    </div>
                                 </div>
                             </td>
                         </tr>
@@ -141,21 +141,36 @@ class Stock extends React.Component {
                 );
             })
         }
-
         let filterRow = (
-            <div className="row" style={{ alignItems: "center" }}>
-                <div className="col-3">
-                    <DropdownButton id="customDropdown" variant="secondary" title={cityFilter.name ? cityFilter.name : "Svi gradovi"} style={{ marginBottom: 10 }}>
-                        <Dropdown.Item key="default_city" onSelect={() => onCityFilterChange({ city_id: "", city_name: "" })}>Svi gradovi</Dropdown.Item>
-                        {cities.map((city) => {
-                            return <Dropdown.Item key={city.city_id} onSelect={() => onCityFilterChange(city)}>{city.city_name}</Dropdown.Item>;
-                        })
-                        }
-                    </DropdownButton>
+            <div className="filterCard" style={{ marginBottom: 10 }}>
+                <div className="row">
+                    <div className="col-md-2 filterColumn">
+                        <span id="filterTitle">FILTERI</span>
+                    </div>
+                    <div className="col-md-3 filterColumn">
+                        <button className="btn btn-light dropdown-toggle" type="button" id="dropdownMenuPageSizeSecond" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {pageSize}
+                        </button>
+                        <div className="dropdown-menu pagesize" aria-labelledby="dropdownMenuPageSizeSecond">
+                            <button className="dropdown-item" onClick={() => onChangePageSize(5)} type="button">5</button>
+                            <button className="dropdown-item" onClick={() => onChangePageSize(10)} type="button">10</button>
+                            <button className="dropdown-item" onClick={() => onChangePageSize(15)} type="button">15</button>
+                        </div>
+                    </div>
+                    <div className='col-md-4 filterColumn'>
+                        <DropdownButton style={{ margin: "auto" }} className="vertical-center" variant="light" title={cityFilter.name ? cityFilter.name : "Svi gradovi"}>
+                            <Dropdown.Item key="default_city" onSelect={() => onCityFilterChange({ city_id: "", city_name: "" })}>Svi gradovi</Dropdown.Item>
+                            {cities.map((city) => {
+                                return <Dropdown.Item key={city.city_id} onSelect={() => onCityFilterChange(city)}>{city.city_name}</Dropdown.Item>;
+                            })
+                            }
+                        </DropdownButton>
+                    </div>
+                    <div className='col-md-3 filterColumn'>
+                        <Button className="btn btn-dark btnAction resetBtn" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button>
+                    </div>
                 </div>
-                <div className="col-3"><Button className="btn btn-dark" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button></div>
             </div>);
-
         return (
             <Layout isLoaderVisible={isLoaderVisible}>
                 <ModalStock modalTarget="modalTargetAdd" errorMessage={errorMessage} warehouses={filteredWarehouses} locations={filteredLocations} cities={cities} products={products} onSubmit={onCreateClick} warehouse_name={clickedStock.warehouse_name} product_name={clickedStock.product_name} location_name={clickedStock.location_name} city_name={clickedStock.city_name} quantity={clickedStock.quantity} min_quantity={clickedStock.min_quantity} onWarehouseChange={onWarehouseChange} onProductChange={onProductChange} onCityChange={onCityChange} onLocationChange={onLocationChange} onMinimumQuantityChange={onMinimumQuantityChange} onQuantityChange={onQuantityChange} isSubmitDisabled={isSubmitDisabled} />

@@ -22,37 +22,33 @@ class Product extends React.Component {
 
         let tableRows = rows.map((element, i) => {
             return (<tr key={i}>
-                <td className="pt-3-half">{element.name}</td>
-                <td className="pt-3-half">{element.category_name}</td>
-                <td className="pt-3-half">{element.subcategory_name}</td>
-                <td className="pt-3-half">{element.packaging_name}</td>
-                <td>
+                <td className="cell">{element.name}</td>
+                <td className="cell">{element.category_name}</td>
+                <td className="cell">{element.subcategory_name}</td>
+                <td className="cell">{element.packaging_name}</td>
+                <td className="cell btnCell">
                     {
                         element.id !== "" ?
-                            <span className="table-edit">
-                                <button type="button" onClick={() => onProductClicked(element, false)} data-toggle="modal" data-target="#modalTargetEdit" className="btn btn-primary btn-rounded btn-sm my-0">
-                                    Izmijeni
-                                </button>
-                            </span>
+                            <button type="button" onClick={() => onProductClicked(element, false)} data-toggle="modal" data-target="#modalTargetEdit" className="btn btn-primary btnAction btn-rounded btn-sm my-0">
+                                Izmijeni
+                            </button>
                             :
                             null
                     }
                 </td>
-                <td>
+                <td className="cell btnCell">
                     {
                         element.id !== "" ?
-                            <span className="table-remove">
-                                <button type="button" onClick={() => onProductClicked(element, false)} data-toggle="modal" data-target="#modalTargetDelete" className="btn btn-danger btn-rounded btn-sm my-0">
-                                    Obriši
-                                </button>
-                            </span>
+                            <button type="button" onClick={() => onProductClicked(element, false)} data-toggle="modal" data-target="#modalTargetDelete" className="btn btn-danger btnAction btn-rounded btn-sm my-0">
+                                Obriši
+                            </button>
                             :
                             null
                     }
                 </td>
             </tr>);
         });
-        let categoryFilterDropdown = (<DropdownButton id="customDropdown" variant="secondary" title={productFilter.category_name ? productFilter.category_name : "Sve kategorije"} style={{ marginBottom: 10 }}>
+        let categoryFilterDropdown = (<DropdownButton style={{ margin: "auto" }} className="vertical-center" variant="light" title={productFilter.category_name ? productFilter.category_name : "Sve kategorije"} style={{ marginBottom: 10 }}>
             <Dropdown.Item key="default_category" onSelect={() => onCategoryFilterChange({ category_id: "", category_name: "" })}>Sve kategorije</Dropdown.Item>
             {categories.map((category) => {
                 return <Dropdown.Item key={category.category_id} onSelect={() => onCategoryFilterChange(category)}>{category.category_name}</Dropdown.Item>;
@@ -60,7 +56,7 @@ class Product extends React.Component {
             }
         </DropdownButton>);
 
-        let subcategoryFilterDropdown = (<DropdownButton id="customDropdown" variant="secondary" title={productFilter.subcategory_name ? productFilter.subcategory_name : "Sve potkategorije"} style={{ marginBottom: 10 }}>
+        let subcategoryFilterDropdown = (<DropdownButton style={{ margin: "auto" }} className="vertical-center" variant="light" title={productFilter.subcategory_name ? productFilter.subcategory_name : "Sve potkategorije"} style={{ marginBottom: 10 }}>
             <Dropdown.Item key="default_subcategory" onSelect={() => onSubcategoryFilterChange({ subcategory_id: "", subcategory_name: "" })}>Sve potkategorije</Dropdown.Item>
             {subcategories.map((subcategory) => {
                 return <Dropdown.Item key={subcategory.subcategory_id} onSelect={() => onSubcategoryFilterChange(subcategory)}>{subcategory.subcategory_name}</Dropdown.Item>;
@@ -68,7 +64,7 @@ class Product extends React.Component {
             }
         </DropdownButton>);
 
-        let packagingFilterDropdown = (<DropdownButton id="customDropdown" variant="secondary" title={productFilter.packaging_name ? productFilter.packaging_name : "Sve ambalaže"} style={{ marginBottom: 10 }}>
+        let packagingFilterDropdown = (<DropdownButton style={{ margin: "auto" }} className="vertical-center" variant="light" title={productFilter.packaging_name ? productFilter.packaging_name : "Sve ambalaže"} style={{ marginBottom: 10 }}>
             <Dropdown.Item key="default_packaging" onSelect={() => onPackagingFilterChange({ packaging_id: "", packaging_name: "" })}>Sve ambalaže</Dropdown.Item>
             {packagings.map((packaging) => {
                 return <Dropdown.Item key={packaging.packaging_id} onSelect={() => onPackagingFilterChange(packaging)}>{packaging.packaging_name}</Dropdown.Item>;
@@ -76,14 +72,33 @@ class Product extends React.Component {
             }
         </DropdownButton>);
 
-
         let filterRow = (
-            <div className="row" style={{ alignItems: "center" }}>
-                <div className="col-4">{categoryFilterDropdown}</div>
-                <div className="col-4">{subcategoryFilterDropdown}</div>
-                <div className="col-4">{packagingFilterDropdown}</div>
-                <div className="col-3">
-                    <Button className="btn btn-dark" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button>
+            <div className="filterCard" style={{ marginBottom: 10 }}>
+                <div className="row">
+                    <div className="col-md-3 filterColumn">
+                        <button className="btn btn-light dropdown-toggle" type="button" id="dropdownMenuPageSize" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {pageSize}
+                        </button>
+                        <div className="dropdown-menu pagesize" aria-labelledby="dropdownMenuPageSize">
+                            <button className="dropdown-item" onClick={() => onChangePageSize(5)} type="button">5</button>
+                            <button className="dropdown-item" onClick={() => onChangePageSize(10)} type="button">10</button>
+                            <button className="dropdown-item" onClick={() => onChangePageSize(15)} type="button">15</button>
+                        </div>
+                    </div>
+                    <div className='col-md-3 filterColumn'>
+                        {categoryFilterDropdown}
+                    </div>
+                    <div className='col-md-3 filterColumn'>
+                        {subcategoryFilterDropdown}
+                    </div>
+                    <div className='col-md-3 filterColumn'>
+                        {packagingFilterDropdown}
+                    </div>
+                </div>
+                <div className="row">
+                    <div className='col-md-3 filterColumn'>
+                        <Button className="btn btn-dark btnAction resetBtn" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button>
+                    </div>
                 </div>
             </div>);
 

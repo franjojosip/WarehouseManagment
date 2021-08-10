@@ -30,7 +30,7 @@ class NotificationViewStore {
         this.findNotificationTypes = this.findNotificationTypes.bind(this);
         this.onEmailChange = this.onEmailChange.bind(this);
         this.refreshSchedule = this.refreshSchedule.bind(this);
-        
+
         this.delay = this.delay.bind(this);
         this.showLoader = this.showLoader.bind(this);
         this.hideLoader = this.hideLoader.bind(this);
@@ -42,7 +42,7 @@ class NotificationViewStore {
     }
 
     title = "Popis postavki notifikacija";
-    columns = ['Tip notifikacije', 'Dan U Tjednu', 'Vrijeme', 'Primatelj', 'Izmjena', 'Brisanje'];
+    columns = ['Tip notifikacije', 'Dan U Tjednu', 'Vrijeme', 'Primatelj', '', ''];
 
     @observable isLoaderVisible = false;
     @observable isSubmitDisabled = true;
@@ -95,6 +95,9 @@ class NotificationViewStore {
         else {
             this.allData = this.response;
         }
+        if (this.allData.length == 0) {
+            this.allData = [{ id: "", notification_type_id: "", notification_type_name: "Nema podataka", time: "", day_of_week: "", email: "" }];
+        }
         this.setPagination(1);
     }
 
@@ -103,6 +106,7 @@ class NotificationViewStore {
         this.notifcationTypeFilter.id = "";
         this.notifcationTypeFilter.name = "";
         this.allData = this.response;
+        this.onChangePageSize(5);
         this.setPagination(1);
     }
 
@@ -190,7 +194,7 @@ class NotificationViewStore {
     };
 
     @action
-    async refreshSchedule(){
+    async refreshSchedule() {
         this.showLoader();
         let response = await (this.scheduleDataStore.refreshSchedule(REACT_APP_SUPER_ADMIN_PASSWORD));
         if (response.error) {
@@ -356,7 +360,7 @@ class NotificationViewStore {
     onNotificationTypeChange(value) {
         this.clickedNotificationSetting.notification_type_id = value.notification_type_id;
         this.clickedNotificationSetting.notification_type_name = value.notification_type_name;
-        if(value.notification_type_name != "Tjedna obavijest"){
+        if (value.notification_type_name != "Tjedna obavijest") {
             this.clickedNotificationSetting.day_of_week_id = 1;
             this.clickedNotificationSetting.day_of_week_name = "Ponedjeljak";
         }

@@ -24,6 +24,7 @@ class Location extends React.Component {
             return (<tr key={i}>
                 <td className="cell">{element.name}</td>
                 <td className="cell">{element.city_name}</td>
+                <td className="cell zipCode">{element.zip_code}</td>
                 <td className="cell btnCell">
                     {
                         element.id !== "" ?
@@ -50,21 +51,21 @@ class Location extends React.Component {
         let filterRow = (
             <div className="filterCard" style={{ marginBottom: 10 }}>
                 <div className="row">
-                    <div className="col-md-2 filterColumn">
+                    <div className="col-md-3 filterColumn">
                         <span id="filterTitle">FILTERI</span>
                     </div>
                     <div className="col-md-3 filterColumn">
-                        <button className="btn btn-light dropdown-toggle" type="button" id="dropdownMenuPageSize" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button className="btn btn-light dropdown-toggle" type="button" id="dropdownMenuPageSizeSecond"data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {pageSize}
                         </button>
-                        <div className="dropdown-menu pagesize" aria-labelledby="dropdownMenuPageSize">
+                        <div className="dropdown-menu pagesize" aria-labelledby="dropdownMenuPageSizeSecond">
                             <button className="dropdown-item" onClick={() => onChangePageSize(5)} type="button">5</button>
                             <button className="dropdown-item" onClick={() => onChangePageSize(10)} type="button">10</button>
                             <button className="dropdown-item" onClick={() => onChangePageSize(15)} type="button">15</button>
                         </div>
                     </div>
-                    <div className='col-md-4 filterColumn'>
-                        <DropdownButton className="vertical-center filterDrop" variant="light" title={cityFilter.name ? cityFilter.name : "Svi gradovi"}>
+                    <div className='col-md-3 filterColumn'>
+                        <DropdownButton style={{ margin: "auto" }} variant="light" title={cityFilter.name ? cityFilter.name : "Svi gradovi"}>
                             <Dropdown.Item key="default_city" onSelect={() => onCityFilterChange({ city_id: "", city_name: "" })}>Svi gradovi</Dropdown.Item>
                             {cities.map((city) => {
                                 return <Dropdown.Item key={city.city_id} onSelect={() => onCityFilterChange(city)}>{city.city_name}</Dropdown.Item>;

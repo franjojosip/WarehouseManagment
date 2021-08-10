@@ -21,27 +21,23 @@ class Category extends React.Component {
 
         let tableRows = rows.map((element, i) => {
             return (<tr key={i}>
-                <td className="pt-3-half">{element.name}</td>
-                <td>
+                <td className="cell">{element.name}</td>
+                <td className="cell btnCell">
                     {
                         element.id !== "" ?
-                            <span className="table-edit">
-                                <button type="button" onClick={() => onCategoryClicked(element, false)} data-toggle="modal" data-target="#modalTargetEdit" className="btn btn-primary btn-rounded btn-sm my-0">
-                                    Izmijeni
-                                </button>
-                            </span>
+                            <button type="button" onClick={() => onCategoryClicked(element, false)} data-toggle="modal" data-target="#modalTargetEdit" className="btn btn-primary btnAction btn-rounded btn-sm my-0">
+                                Izmijeni
+                            </button>
                             :
                             null
                     }
                 </td>
-                <td>
+                <td className="cell btnCell">
                     {
                         element.id !== "" ?
-                            <span className="table-remove">
-                                <button type="button" onClick={() => onCategoryClicked(element, false)} data-toggle="modal" data-target="#modalTargetDelete" className="btn btn-danger btn-rounded btn-sm my-0">
-                                    Obriši
-                                </button>
-                            </span>
+                            <button type="button" onClick={() => onCategoryClicked(element, false)} data-toggle="modal" data-target="#modalTargetDelete" className="btn btn-danger btnAction btn-rounded btn-sm my-0">
+                                Obriši
+                            </button>
                             :
                             null
                     }

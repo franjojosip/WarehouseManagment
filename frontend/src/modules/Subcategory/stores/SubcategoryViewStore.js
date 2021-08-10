@@ -37,7 +37,7 @@ class SubcategoryViewStore {
     }
 
     title = "Potkategorije";
-    columns = ['Naziv potkategorije', 'Naziv kategorije', 'Izmjena', 'Brisanje'];
+    columns = ['Naziv potkategorije', 'Naziv kategorije', '', ''];
 
     @observable clickedSubcategory = {
         id: "",
@@ -94,6 +94,7 @@ class SubcategoryViewStore {
         this.categoryFilter.id = "";
         this.categoryFilter.name = "";
         this.allData = this.response;
+        this.onChangePageSize(5);
         this.setPagination(1);
     }
 

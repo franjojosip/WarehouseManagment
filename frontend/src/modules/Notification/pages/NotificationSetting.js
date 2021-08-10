@@ -22,47 +22,58 @@ class NotificationSetting extends React.Component {
 
         let tableRows = rows.map((element, i) => {
             return (<tr key={i}>
-                <td className="pt-3-half">{element.notification_type_name}</td>
-                <td className="pt-3-half">{element.notification_type_name == "Tjedna obavijest" ? element.day_of_week_name : null}</td>
-                <td className="pt-3-half">{element.time}</td>
-                <td className="pt-3-half">{element.email}</td>
-                <td>
+                <td className="cell">{element.notification_type_name}</td>
+                <td className="cell">{element.notification_type_name == "Tjedna obavijest" ? element.day_of_week_name : null}</td>
+                <td className="cell">{element.time}</td>
+                <td className="cell">{element.email}</td>
+                <td className="cell btnCell">
                     {
                         element.id ?
-                            <span className="table-edit">
-                                <button type="button" onClick={() => onNotificationSettingClicked(element, false)} data-toggle="modal" data-target="#modalTargetEdit" className="btn btn-primary btn-rounded btn-sm my-0">
-                                    Edit
-                                </button>
-                            </span>
+                            <button type="button" onClick={() => onNotificationSettingClicked(element, false)} data-toggle="modal" data-target="#modalTargetEdit" className="btn btnAction btn-primary btn-rounded btn-sm my-0">
+                                Edit
+                            </button>
                             : null
                     }
                 </td>
-                <td>
+                <td className="cell btnCell">
                     {
                         element.id ?
-                            <span className="table-remove">
-                                <button type="button" onClick={() => onNotificationSettingClicked(element, false)} data-toggle="modal" data-target="#modalTargetDelete" className="btn btn-danger btn-rounded btn-sm my-0">
-                                    Obriši
-                                </button>
-                            </span>
+                            <button type="button" onClick={() => onNotificationSettingClicked(element, false)} data-toggle="modal" data-target="#modalTargetDelete" className="btn btnAction btn-danger btn-rounded btn-sm my-0">
+                                Obriši
+                            </button>
                             : null
                     }
                 </td>
             </tr>);
         });
         let filterRow = (
-            <div className="row" style={{ alignItems: "center" }}>
-                <div className="col-4">
-                    <DropdownButton id="customDropdown" variant="secondary" title={notifcationTypeFilter.name ? notifcationTypeFilter.name : "Svi tipovi notifikacije"} style={{ marginBottom: 10 }}>
-                        <Dropdown.Item key="default_notification_setting" onSelect={() => onNotificationTypeFilterChange({ notification_type_id: "", notification_type_name: "" })}>Svi tipovi notifikacije</Dropdown.Item>
-                        {notification_types.map((notification_type) => {
-                            return <Dropdown.Item key={notification_type.notification_type_id} onSelect={() => onNotificationTypeFilterChange(notification_type)}>{notification_type.notification_type_name}</Dropdown.Item>;
-                        })
-                        }
-                    </DropdownButton>
-                </div>
-                <div className="col-3">
-                    <Button className="btn btn-dark" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button>
+            <div className="filterCard" style={{ marginBottom: 10 }}>
+                <div className="row">
+                    <div className="col-md-2 filterColumn">
+                        <span id="filterTitle">FILTERI</span>
+                    </div>
+                    <div className="col-md-3 filterColumn">
+                        <button className="btn btn-light dropdown-toggle" type="button" id="dropdownMenuPageSizeSecond" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {pageSize}
+                        </button>
+                        <div className="dropdown-menu pagesize" aria-labelledby="dropdownMenuPageSizeSecond">
+                            <button className="dropdown-item" onClick={() => onChangePageSize(5)} type="button">5</button>
+                            <button className="dropdown-item" onClick={() => onChangePageSize(10)} type="button">10</button>
+                            <button className="dropdown-item" onClick={() => onChangePageSize(15)} type="button">15</button>
+                        </div>
+                    </div>
+                    <div className='col-md-4 filterColumn'>
+                        <DropdownButton style={{ margin: "auto" }} className="vertical-center lowerDropdown" variant="light" title={notifcationTypeFilter.name ? notifcationTypeFilter.name : "Svi tipovi notifikacije"} style={{ marginBottom: 10 }}>
+                            <Dropdown.Item key="default_notification_setting" onSelect={() => onNotificationTypeFilterChange({ notification_type_id: "", notification_type_name: "" })}>Svi tipovi notifikacije</Dropdown.Item>
+                            {notification_types.map((notification_type) => {
+                                return <Dropdown.Item key={notification_type.notification_type_id} onSelect={() => onNotificationTypeFilterChange(notification_type)}>{notification_type.notification_type_name}</Dropdown.Item>;
+                            })
+                            }
+                        </DropdownButton>
+                    </div>
+                    <div className='col-md-3 filterColumn'>
+                        <Button className="btn btn-dark btnAction resetBtn" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button>
+                    </div>
                 </div>
             </div>);
         return (

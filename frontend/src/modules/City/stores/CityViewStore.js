@@ -53,7 +53,7 @@ class CityViewStore {
     @observable rows = [];
 
     title = "Gradovi";
-    columns = ['Naziv grada', 'Poštanski broj', '', ''];
+    columns = ['Naziv', 'Poštanski broj', '', ''];
 
     @observable allData = [];
 

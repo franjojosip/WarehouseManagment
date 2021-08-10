@@ -49,7 +49,7 @@ class ProductViewStore {
     }
 
     title = "Proizvodi";
-    columns = ['Naziv proizvoda', 'Naziv kategorije', 'Naziv potkategorije', 'Naziv ambalaže', 'Izmjena', 'Brisanje'];
+    columns = ['Naziv', 'Kategorija', 'Potkategorija', 'Ambalaža', '', ''];
 
     @observable clickedProduct = {
         id: "",
@@ -126,6 +126,9 @@ class ProductViewStore {
         }
         if (this.productFilter.packaging_id != "") {
             filteredData = filteredData.filter(data => data.packaging_id === this.productFilter.packaging_id);
+        }
+        if(filteredData.length == 0){
+            filteredData = [{ id: "", name: "Nema podataka", category_id: "", category_name: "", subcategory_id: "", subcategory_name: "", packaging_id: "", packaging_name: "" }];
         }
         this.allData = filteredData;
         this.setPagination(1);

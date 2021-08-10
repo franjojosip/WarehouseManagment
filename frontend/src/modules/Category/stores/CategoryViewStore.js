@@ -51,7 +51,7 @@ class CategoryViewStore {
     @observable rows = [];
 
     title = "Kategorije";
-    columns = ['Naziv kategorije', 'Izmjena', 'Brisanje'];
+    columns = ['Naziv', '', ''];
 
     @observable allData = [];
 

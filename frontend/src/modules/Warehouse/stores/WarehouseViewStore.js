@@ -64,6 +64,8 @@ class WarehouseViewStore {
         users: []
     };
 
+    @observable clickedUsers = [];
+
     @observable errorMessage = {
         name: null,
         city: null,
@@ -99,11 +101,14 @@ class WarehouseViewStore {
     onCityFilterChange(value) {
         this.cityFilter.id = value.city_id;
         this.cityFilter.name = value.city_name;
-        if (value.city_id != "") {
+        if (value.city_id !== "") {
             this.allData = this.response.filter(data => data.city_id === value.city_id);
         }
         else {
             this.allData = this.response;
+        }
+        if (this.allData.length === 0) {
+            this.allData = [{ id: "", name: "Nema podataka", city_id: "", city_name: "", location_id: "", location_name: "", users: [] }];
         }
         this.setPagination(1);
     }
@@ -113,6 +118,7 @@ class WarehouseViewStore {
         this.cityFilter.id = "";
         this.cityFilter.name = "";
         this.allData = this.response;
+        this.onChangePageSize(5);
         this.setPagination(1);
     }
 
@@ -292,6 +298,7 @@ class WarehouseViewStore {
 
     @action
     onWarehouseClicked(data, isCreate) {
+        this.clickedUsers = [];
         this.errorMessage = {
             name: null,
             city: null,
@@ -308,6 +315,7 @@ class WarehouseViewStore {
                 users: []
             };
             this.filteredLocations = [];
+            this.clickedUsers = [];
             this.isSubmitDisabled = true;
         }
         else {
@@ -320,6 +328,7 @@ class WarehouseViewStore {
                 city_name: data.city_name,
                 users: data.users ? data.users : []
             };
+            this.clickedUsers = data.users ? data.users : [];
             this.filteredLocations = this.locations.filter(location => location.city_id === data.city_id);
             this.checkFields();
         }
@@ -378,9 +387,9 @@ class WarehouseViewStore {
     onCityChange(value) {
         this.clickedWarehouse.city_id = value.city_id;
         this.clickedWarehouse.city_name = value.city_name;
-        this.filteredLocations = this.locations.filter(element => element.city_id == this.clickedWarehouse.city_id);
+        this.filteredLocations = this.locations.filter(element => element.city_id === this.clickedWarehouse.city_id);
 
-        let location = this.locations.find(location => location.location_id == this.clickedWarehouse.location_id);
+        let location = this.locations.find(location => location.location_id === this.clickedWarehouse.location_id);
         if (this.filteredLocations.length === 0 || location && location.city_id != this.clickedWarehouse.city_id) {
             this.clickedWarehouse.location_id = "";
             this.clickedWarehouse.location_name = "";
@@ -410,13 +419,13 @@ class WarehouseViewStore {
         if (this.clickedWarehouse.name.length < 5) {
             this.errorMessage.name = "Neispravna duljina naziva skladišta!";
         }
-        if (this.clickedWarehouse.city_id.toString() == "") {
+        if (this.clickedWarehouse.city_id.toString() === "") {
             this.errorMessage.city = "Odaberite grad!";
         }
-        if (this.clickedWarehouse.location_id.toString() == "") {
+        if (this.clickedWarehouse.location_id.toString() === "") {
             this.errorMessage.location = "Odaberite lokaciju!";
         }
-        if (this.errorMessage.name == null && this.errorMessage.city == null && this.errorMessage.location == null) {
+        if (this.errorMessage.name === null && this.errorMessage.city === null && this.errorMessage.location === null) {
             this.isSubmitDisabled = false;
         }
         else {
@@ -428,18 +437,20 @@ class WarehouseViewStore {
     warehouseNameExist() {
         if (this.clickedWarehouse.name.length > 0) {
             let filteredWarehouses = this.allData.filter(product => product.id !== this.clickedWarehouse.id);
-            return filteredWarehouses.findIndex(warehouse => warehouse.name.toLowerCase() == this.clickedWarehouse.name.toLowerCase()) !== -1;
+            return filteredWarehouses.findIndex(warehouse => warehouse.name.toLowerCase() === this.clickedWarehouse.name.toLowerCase()) !== -1;
         }
         return false;
     }
 
     @action
     onUserSelect(selectedList, selectedItem) {
+        this.clickedUsers = selectedList;
         this.clickedWarehouse.users = selectedList;
     }
 
     @action
     onUserRemove(selectedList, removedItem) {
+        this.clickedUsers = selectedList;
         this.clickedWarehouse.users = selectedList;
     }
 

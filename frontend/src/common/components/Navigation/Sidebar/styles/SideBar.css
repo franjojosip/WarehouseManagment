@@ -1,6 +1,7 @@
 .sideNavbar {
   margin-top: 60px;
   background: rgba(0, 0, 0, 0.753) !important;
+  height: 100% !important;
 }
 
 .active {
@@ -39,7 +40,7 @@ i {
     width: 45px !important;
   }
   .sidenav---sidenav-subnav---1EN61 {
-    left: 47px !important;
+    left: 45px !important;
   }
   i {
     font-size: 1.7em;

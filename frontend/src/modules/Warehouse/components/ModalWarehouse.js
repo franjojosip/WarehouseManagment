@@ -140,6 +140,7 @@ export default function ModalWarehouse({ modalTarget, errorMessage, users, citie
                     onSelect={onSelect}
                     onRemove={onRemove}
                     placeholder="Odaberite radnike"
+                    emptyRecordMsg= "Nema radnika za odabrati"
                     displayValue="name"
                     closeIcon="circle2"
                     style={multiSelectDropdownStyle}

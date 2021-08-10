@@ -54,9 +54,9 @@ class StockViewStore {
     }
 
     title = "Stanje proizvoda u skladištima";
-    parentColumns = ['Naziv Skladišta', 'Lokacija Skladišta', 'Grad'];
-    childColumns = ['Naziv Kategorije'];
-    nestedChildColumns = ['Naziv Proizvoda', 'Naziv Potkategorije', 'Naziv Ambalaže', 'Količina', 'Minimalna Količina', 'Izmjena', 'Brisanje'];
+    parentColumns = ['Skladište', 'Lokacija', 'Grad'];
+    childColumns = ['Kategorija'];
+    nestedChildColumns = ['Proizvod', 'Potkategorija', 'Ambalaža', 'Količina', 'Min. Količina', 'Izmijeni', 'Obriši'];
 
     @observable clickedStock = {
         id: "",
@@ -126,6 +126,9 @@ class StockViewStore {
         else {
             this.allData = this.response;
         }
+        if (this.allData.length == 0) {
+            this.allData = [{ id: "", name: "Nema podataka", city_id: "", city_name: "", location_id: "", location_name: "", warehouse_id: "", warehouse_name: "", product_id: "", product_name: "", subcategory_id: "", subcategory_name: "", packaging_id: "", packaging_name: "", quantity: 0, min_quantity: 1 }];
+        }
         this.groupData();
         this.setPagination(1);
     }
@@ -135,6 +138,7 @@ class StockViewStore {
         this.cityFilter.id = "";
         this.cityFilter.name = "";
         this.allData = this.response;
+        this.onChangePageSize(5);
         this.groupData();
         this.setPagination(1);
     }

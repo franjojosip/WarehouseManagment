@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button } from 'react-bootstrap';
 import Pagination from './Pagination';
 
 import "./styles/Table.css";
@@ -15,23 +16,31 @@ export default function Table({ title, filterRow, hideAddButton, columns, tableR
           hideAddButton != null ?
             null
             :
-            <div className="row" style={{ float: 'right' }}>
-              <a className="text-success"><i className="fas fa-plus fa-2x" aria-hidden="true" data-toggle="modal" data-target="#modalTargetAdd" onClick={() => onActionClicked(null, true)}></i></a>
+            <div className="row" style={{ justifyContent: "flex-end" }}>
+              <a className="text-success" style={{ width: "fit-content" }}><i className="fas fa-plus fa-2x" aria-hidden="true" data-toggle="modal" data-target="#modalTargetAdd" onClick={() => onActionClicked(null, true)}></i></a>
             </div>
         }
         <br />
         {
           filterRow ?
             filterRow :
-            <div className="row">
-              <div className="dropdown mb-3 col-md-3 filterColumn">
-                <button className="btn btn-light dropdown-toggle" type="button" id="dropdownMenuPageSize" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  {pageSize}
-                </button>
-                <div className="dropdown-menu" aria-labelledby="dropdownMenuPageSize">
-                  <button className="dropdown-item" onClick={() => onChangePageSize(5)} type="button">5</button>
-                  <button className="dropdown-item" onClick={() => onChangePageSize(10)} type="button">10</button>
-                  <button className="dropdown-item" onClick={() => onChangePageSize(15)} type="button">15</button>
+            <div className="filterCard" style={{ marginBottom: 10 }}>
+              <div className="row">
+                <div className="col-md-2 filterColumn">
+                  <span id="filterTitle">FILTERI</span>
+                </div>
+                <div className="col-md-4 filterColumn">
+                  <button className="btn btn-light dropdown-toggle" type="button" id="dropdownMenuPageSizeSecond" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {pageSize}
+                  </button>
+                  <div className="dropdown-menu pagesize" aria-labelledby="dropdownMenuPageSizeSecond">
+                    <button className="dropdown-item" onClick={() => onChangePageSize(5)} type="button">5</button>
+                    <button className="dropdown-item" onClick={() => onChangePageSize(10)} type="button">10</button>
+                    <button className="dropdown-item" onClick={() => onChangePageSize(15)} type="button">15</button>
+                  </div>
+                </div>
+                <div className='col-md-6 filterColumn'>
+                  <Button className="btn btn-dark resetBtn" onClick={(e) => { e.preventDefault(); onChangePageSize(5) }}>Resetiraj</Button>
                 </div>
               </div>
             </div>
@@ -41,7 +50,7 @@ export default function Table({ title, filterRow, hideAddButton, columns, tableR
             <thead>
               <tr>
                 {columns.map((element, i) => {
-                  return <th key={i} className="text-center cellHeader" style={{ fontWeight: "bold" }}>{element}</th>
+                  return <th key={i} className="text-center cellHeader">{element}</th>
                 })}
               </tr>
             </thead>

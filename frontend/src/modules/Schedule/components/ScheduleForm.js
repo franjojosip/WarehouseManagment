@@ -1,14 +1,15 @@
 import React from "react";
 import { Form, Button } from 'react-bootstrap';
 
-import '../styles/Schedule.css';
+import "../../../common/styles/Form.css"
 
 
 const ScheduleForm = (props) => {
   return (
     <div className="Schedule">
       <Form style={{ margin: 15 }}>
-        <h1>Osvježi automatske obavijesti</h1>
+        <h1 className="scheduleTitle">Osvježi automatske obavijesti</h1>
+        <br />
         <Form.Group size="md" controlId="password">
           <Form.Label>Lozinka</Form.Label>
           <Form.Control
@@ -19,7 +20,7 @@ const ScheduleForm = (props) => {
             placeholder="Unesite super admin lozinku"
             onChange={(e) => props.onPasswordChange(e.target.value)}
           />
-          <div hidden={!props.isSubmitDisabled}>
+          <div className="errorRow" hidden={!props.isSubmitDisabled}>
             <p style={{ color: "red", paddingTop: 5 }}>
               {props.errorMessage ?
                 props.errorMessage
@@ -28,7 +29,7 @@ const ScheduleForm = (props) => {
             </p>
           </div>
         </Form.Group>
-        <div className="modal-footer" style={{ padding: 0 }}>
+        <div className="modal-footer" style={{ padding: 0, paddingTop: 5 }}>
           <Button type="submit" disabled={props.isSubmitDisabled} className="btn btn-success" onClick={(e) => { e.preventDefault(); props.onSubmit() }}>Osvježi</Button>
         </div>
       </Form>
