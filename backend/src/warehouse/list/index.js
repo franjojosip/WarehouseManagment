@@ -19,7 +19,7 @@ async function list(req, res) {
         location_name: warehouse.location_id.street,
         city_id: warehouse.location_id.city_id,
         city_name: cities.find(city => city.id == warehouse.location_id.city_id).name,
-        users: warehouse.user_ids.length > 0 ? users : null
+        users: warehouse.user_ids.length > 0 ? users : []
       };
     });
     return res.status(200).json({ warehouses });
