@@ -7,7 +7,7 @@ import "./styles/Table.css";
 export default function Table({ title, filterRow, hideAddButton, columns, tableRows, page, pageSize, totalPages, previousEnabled, nextEnabled, onActionClicked, onPageClick, onChangePageSize, onPreviousPageClick, onNextPageClick }) {
 
   return (
-    <div className="card mt-3 mb-3 basicCard">
+    <div className="card mt-5 mb-3 basicCard">
       <div className="card-body">
         <h1 className="text-center font-weight-bold tableTitle">
           {title}

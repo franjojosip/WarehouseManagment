@@ -43,7 +43,7 @@ img {
 }
 
 #layout {
-    margin-top: 60px;
+    margin-top: 50px !important;
     overflow: scroll;
     margin-left: 70px;
     margin-right: 8px;

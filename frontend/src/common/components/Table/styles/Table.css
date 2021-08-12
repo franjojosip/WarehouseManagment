@@ -22,7 +22,7 @@
     background-color: rgba(77, 75, 75, 0.097);
 }
 
-#layout{
+#layout {
     margin-top: 6%;
 }
 
@@ -35,6 +35,7 @@
 }
 
 .filterColumn {
+    text-align: center !important;
     justify-content: center !important;
     vertical-align: middle !important;
     margin: auto !important;
@@ -154,7 +155,7 @@
 
 .cell {
     vertical-align: middle !important;
-    font-size: 17px;
+    font-size: 18px;
     padding-top: 10px !important;
     padding-bottom: 10px !important;
 }
@@ -165,13 +166,18 @@ td {
 
 .cellHeader {
     vertical-align: middle !important;
-    font-size: 18px;
+    font-size: 20px;
 }
 
 .cellHeaderTwo {
     background: rgba(128, 128, 128, 0.20) !important;
     vertical-align: middle !important;
     font-size: 18px;
+}
+
+.tableTitle {
+    margin-top: 10px;
+    font-size: 35px;
 }
 
 .btnAction {
@@ -316,8 +322,14 @@ td {
         margin-left: 0;
         margin-right: 0;
     }
-    #layout{
+    #layout {
         margin-top: 80px;
+    }
+    .cell {
+        font-size: 16px !important;
+    }
+    .cellHeader {
+        font-size: 18px !important;
     }
 }
 

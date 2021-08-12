@@ -1,10 +1,10 @@
 import React from "react";
 import HttpClient from "../../../common/HttpClient";
 
-export default class EntryDataStore extends React.Component {
+export default class HomeDataStore extends React.Component {
     constructor() {
         super();
-        this.httpClient = new HttpClient("");
+        this.httpClient = new HttpClient("home");
     }
-
+    get = async () => this.httpClient.get();
 }

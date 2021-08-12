@@ -33,7 +33,7 @@ class SideBar extends React.Component {
                 <SideNav.Nav defaultSelected={route} style={{ marginTop: 20 }}>
                     <NavItem eventKey="home">
                         <NavIcon style={{ paddingTop: 5 }}>
-                            <i className="fa fa-fw fa-home"/>
+                            <i className="fa fa-fw fa-home" />
                         </NavIcon>
                         <NavText style={textStyle}>
                             Naslovnica
@@ -41,7 +41,7 @@ class SideBar extends React.Component {
                     </NavItem>
                     <NavItem eventKey="warehouses">
                         <NavIcon style={{ paddingTop: 5 }}>
-                            <i className="fa fa-fw fa-warehouse"/>
+                            <i className="fa fa-fw fa-warehouse" />
                         </NavIcon>
                         <NavText style={textStyle}>
                             Skladište
@@ -55,11 +55,15 @@ class SideBar extends React.Component {
                                 </NavItem>
                                 : null
                         }
-                        <NavItem eventKey="stock" className={subroute == "stock" ? "active" : null}>
-                            <NavText style={textStyle}>
-                                Stanje skladišta
-                            </NavText>
-                        </NavItem>
+                        {
+                            isLoggedAdmin ?
+                                <NavItem eventKey="stock" className={subroute == "stock" ? "active" : null}>
+                                    <NavText style={textStyle}>
+                                        Stanje skladišta
+                                    </NavText>
+                                </NavItem>
+                                : null
+                        }
                         <NavItem eventKey="entry" className={subroute == "entry" ? "active" : null}>
                             <NavText style={textStyle}>
                                 Unos u skladište
@@ -70,7 +74,7 @@ class SideBar extends React.Component {
                         isLoggedAdmin ?
                             <NavItem eventKey="products">
                                 <NavIcon style={{ paddingTop: 5 }}>
-                                    <i className="fa fa-fw fa-boxes"/>
+                                    <i className="fa fa-fw fa-boxes" />
                                 </NavIcon>
                                 <NavText style={textStyle}>
                                     Proizvodi
@@ -102,7 +106,7 @@ class SideBar extends React.Component {
                         isLoggedAdmin ?
                             <NavItem eventKey="cities">
                                 <NavIcon style={{ paddingTop: 5 }}>
-                                    <i className="fa fa-fw fa-city"/>
+                                    <i className="fa fa-fw fa-city" />
                                 </NavIcon>
                                 <NavText style={textStyle}>
                                     Gradovi
@@ -124,7 +128,7 @@ class SideBar extends React.Component {
                         isLoggedAdmin ?
                             <NavItem eventKey="users">
                                 <NavIcon style={{ paddingTop: 5 }}>
-                                    <i className="fa fa-fw fa-users"/>
+                                    <i className="fa fa-fw fa-users" />
                                 </NavIcon>
                                 <NavText style={textStyle}>
                                     Korisnici
@@ -139,7 +143,7 @@ class SideBar extends React.Component {
                     }
                     <NavItem eventKey="reciepts">
                         <NavIcon style={{ paddingTop: 5 }}>
-                            <i className="fa fa-fw fa-receipt"/>
+                            <i className="fa fa-fw fa-receipt" />
                         </NavIcon>
                         <NavText style={textStyle}>
                             Preuzimanja
@@ -152,7 +156,7 @@ class SideBar extends React.Component {
                     </NavItem>
                     <NavItem eventKey="stocktakings">
                         <NavIcon style={{ paddingTop: 5 }}>
-                            <i className="fa fa-fw fa-cubes"/>
+                            <i className="fa fa-fw fa-cubes" />
                         </NavIcon>
                         <NavText style={textStyle}>
                             Inventure
@@ -167,7 +171,7 @@ class SideBar extends React.Component {
                         isLoggedAdmin ?
                             <NavItem eventKey="notifications">
                                 <NavIcon style={{ paddingTop: 5 }}>
-                                    <i className="fa fa-fw fa-bell"/>
+                                    <i className="fa fa-fw fa-bell" />
                                 </NavIcon>
                                 <NavText style={textStyle}>
                                     Obavijesti

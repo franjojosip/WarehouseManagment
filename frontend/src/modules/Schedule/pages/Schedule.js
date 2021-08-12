@@ -18,7 +18,9 @@ class Schedule extends React.Component {
         const { isLoaderVisible, errorMessage, onRefreshClick, isSubmitDisabled, onPasswordChange, password } = this.props.viewStore;
         return (
             <Layout isLoaderVisible={isLoaderVisible}>
-                <ScheduleForm errorMessage={errorMessage} password={password} onSubmit={onRefreshClick} onPasswordChange={onPasswordChange} isSubmitDisabled={isSubmitDisabled} />
+                <div style={{ marginTop: 90 }}>
+                    <ScheduleForm errorMessage={errorMessage} password={password} onSubmit={onRefreshClick} onPasswordChange={onPasswordChange} isSubmitDisabled={isSubmitDisabled} />
+                </div>
                 <ToastContainer style={{ fontSize: 15 }} />
             </Layout >
         )

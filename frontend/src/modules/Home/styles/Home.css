@@ -1,41 +1,200 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@600;700&display=swap');
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.homeRow {
+  margin-top: 50px !important;
+  margin-right: 50px !important;
+}
+
+.homeCard{
+  padding-left: 0px !important;
+  min-width: 400px;
+}
+
+.page-contain {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  background: #e7f3f1;
+  border: 0.75em solid white;
+  padding: 2em;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.data-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 27.75em;
+  min-height: 25.75em;
+  overflow: hidden;
+  border-radius: 0.5em;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.91);
+  margin: 0.7em;
+  padding: 2.75em 2.5em;
+  box-shadow: 0 1.5em 2.5em -0.5em rgba(0, 0, 0, .1);
+}
+
+.data-card h3 {
+  color: #2e3c40;
+  font-size: 3.5em;
+  font-weight: 600;
+  line-height: 1;
+  padding-bottom: 0.5em;
+  margin: 0 0 0.142857143em;
+  border-bottom: 2px solid #190d29;
+  transition: color 0.45s ease, border 0.45s ease;
+}
+
+.data-card h4 {
+  color: #627084;
+  text-transform: uppercase;
+  font-size: 1.125em;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  margin: 0 0 1.777777778em;
+  transition: color 0.45s ease;
+}
+
+.data-card p {
+  opacity: 0;
+  color: #fff;
+  font-weight: 600;
+  line-height: 1.8;
+  margin: 0 0 1.25em;
+  transform: translateY(-1em);
+  transition: opacity 0.45s ease, transform 0.5s ease;
+}
+
+.data-card .link-text {
+  display: block;
+  color: #2e3c40;
+  font-size: 1.125em;
+  font-weight: 600;
+  line-height: 1.2;
+  margin: auto 0 0;
+  transition: color 0.45s ease;
+}
+
+.data-card .link-text svg {
+  margin-left: 0.5em;
+  transition: transform 0.6s ease;
+}
+
+.data-card .link-text svg path {
+  transition: fill 0.45s ease;
+}
+
+.data-card:hover {
+  background: #aa9f7b;
+  transform: scale(1.02);
+}
+
+.data-card:hover h3 {
+  color: #fff;
+  border-bottom-color: #fff;
+}
+
+.data-card:hover h4 {
+  color: #fff;
+}
+
+.data-card:hover p {
+  opacity: 1;
+  transform: none;
+}
+
+.data-card:hover .link-text {
+  color: #fff;
+}
+
+.data-card:hover .link-text svg {
+  animation: point 1.25s infinite alternate;
+}
+
+.data-card:hover .link-text svg path {
+  fill: #fff;
+}
+
+@keyframes point {
+  0% {
+    transform: translateX(0);
   }
-  
-  body {
-    font-family: Arial, Helvetica, sans-serif;
+  100% {
+    transform: translateX(0.55em);
   }
-  
-  /* Float four columns side by side */
-  .column {
-    float: left;
-    width: 25%;
-    padding: 0 10px;
+}
+
+@media all and (max-width: 876px) {
+  .data-card {
+    width: 100% !important;
+    margin: 0 auto !important;
   }
-  
-  /* Remove extra left and right margins, due to padding */
-  .row {margin: 0 -5px;}
-  
-  /* Clear floats after the columns */
-  .row:after {
-    content: "";
-    display: table;
-    clear: both;
+  .homeCard {
+    margin: 0 auto !important;
+    margin-bottom: 30px!important;
   }
-  
-  /* Responsive columns */
-  @media screen and (max-width: 600px) {
-    .column {
-      width: 100%;
-      display: block;
-      margin-bottom: 20px;
-    }
+}
+
+@media all and (max-width: 550px) {
+  .data-card {
+    width: 350px !important;
+    height: 350px !important;
+    min-height: 350px !important;
   }
-  
-  /* Style the counter cards */
-  .card {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    padding: 16px;
-    text-align: center;
-    background-color: #f1f1f1;
+  .data-card h3 {
+    font-size: 35px;
   }
+  .homeCard {
+    margin-bottom: 20px!important;
+  }
+}
+
+@media all and (max-width: 438px) {
+  .data-card {
+    width: 300px !important;
+    height: 300px !important;
+    min-height: 300px !important;
+    padding-top: 30px;
+    padding-bottom: 20px;
+  }
+  .data-card h3 {
+    font-size: 35px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+  }
+  .data-card h4 {
+    margin-bottom: 30px;
+  }
+  .data-card p {
+    line-height: 1.2;
+  }
+}
+
+@media all and (max-width: 390px) {
+  .data-card {
+    width: 270px !important;
+    height: 270px !important;
+    min-height: 270px !important;
+    padding-top: 30px;
+    padding-bottom: 20px;
+  }
+}
+
+@media all and (max-width: 356px) {
+  .data-card {
+    width: 100% !important;
+    height: 270px !important;
+    min-height: 270px !important;
+    padding-top: 30px;
+    padding-bottom: 20px;
+  }
+  .link-text {
+    font-size: 15px !important;
+  }
+}
