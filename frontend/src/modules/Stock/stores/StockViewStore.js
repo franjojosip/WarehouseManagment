@@ -356,7 +356,7 @@ class StockViewStore {
     }
 
     @action
-    onStockClicked(clickedData, isCreate) {
+    onStockClicked(product, isCreate) {
         this.errorMessage = {
             city: null,
             location: null,
@@ -386,7 +386,7 @@ class StockViewStore {
             this.filteredWarehouses = [];
         }
         else {
-            let data = clickedData.data[0];
+            let data = product;
             this.clickedWarehouseProductId = data.product_id;
             this.clickedStock = {
                 id: data.id,

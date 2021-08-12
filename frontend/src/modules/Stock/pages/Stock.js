@@ -104,7 +104,7 @@ class Stock extends React.Component {
                                                                                                 {
                                                                                                     isLoggedAdmin ?
                                                                                                         <td className="nestedComplexCell">
-                                                                                                            <button type="button" onClick={() => onStockClicked(categoryData, false)} data-toggle="modal" data-target="#modalTargetEdit" className="btn btn-primary btnAction btn-rounded btn-sm">
+                                                                                                            <button type="button" onClick={() => onStockClicked(product, false)} data-toggle="modal" data-target="#modalTargetEdit" className="btn btn-primary btnAction btn-rounded btn-sm">
                                                                                                                 Izmijeni
                                                                                                             </button>
                                                                                                         </td>
@@ -113,7 +113,7 @@ class Stock extends React.Component {
                                                                                                 {
                                                                                                     isLoggedAdmin ?
                                                                                                         <td className="nestedComplexCell">
-                                                                                                            <button type="button" onClick={() => onStockClicked(categoryData, false)} data-toggle="modal" data-target="#modalTargetDelete" className="btn btn-danger btnAction btn-rounded btn-sm">
+                                                                                                            <button type="button" onClick={() => onStockClicked(product, false)} data-toggle="modal" data-target="#modalTargetDelete" className="btn btn-danger btnAction btn-rounded btn-sm">
                                                                                                                 Obriši
                                                                                                             </button>
                                                                                                         </td>
