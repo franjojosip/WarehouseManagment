@@ -2,7 +2,7 @@ const NotificationType = require("../schema");
 
 async function list(req, res) {
   try {
-    let types = await NotificationType.find({});
+    let types = await NotificationType.find({}).sort({ name: 'asc'});
     types = types.map((type) => {
       return {
         id: type.id,

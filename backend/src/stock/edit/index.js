@@ -11,6 +11,7 @@ const serializer = Joi.object({
 });
 
 async function edit(req, res) {
+  console.log(req.body);
   try {
     const result = serializer.validate(req.body);
     if (result.error) {
