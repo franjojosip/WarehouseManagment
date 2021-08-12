@@ -2,6 +2,7 @@
   margin-top: 60px;
   background: rgba(0, 0, 0, 0.753) !important;
   height: 100% !important;
+  position: fixed !important;
 }
 
 .active {
@@ -48,7 +49,6 @@ i {
   .sidenav---sidenav-subnavitem---1cD47 {
     font-size: 15px !important;
   }
-  
   .sidenav---navtext---1AE_f {
     font-size: 13px !important;
   }

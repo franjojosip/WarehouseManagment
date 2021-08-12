@@ -22,6 +22,10 @@
     background-color: rgba(77, 75, 75, 0.097);
 }
 
+#layout{
+    margin-top: 6%;
+}
+
 .card {
     background-color: rgba(255, 255, 255, 0.965) !important;
 }
@@ -311,6 +315,9 @@ td {
     .basicCard {
         margin-left: 0;
         margin-right: 0;
+    }
+    #layout{
+        margin-top: 80px;
     }
 }
 

@@ -5,23 +5,24 @@ html {
 }
 
 ::-webkit-scrollbar {
-    width: 0;  /* Remove scrollbar space */
-    background: transparent;  /* Optional: just make scrollbar invisible */
+    width: 0;
+    background: transparent;
 }
+
 body {
-    height: 100%;
     background-image: url("./common/images/warehouse_main_background.png");
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-    background-position:center;
+    background-position: center;
     background-attachment: fixed;
 }
 
 .dateText {
     margin-top: 10px;
 }
-.startDateText{
+
+.startDateText {
     margin-top: 15px;
 }

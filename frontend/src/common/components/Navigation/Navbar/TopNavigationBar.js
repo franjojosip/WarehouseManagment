@@ -17,7 +17,7 @@ class TopNavigationBar extends React.Component {
         const { onLogout } = this.props.viewStore;
         let user = getUser();
         return (
-            <div className="navbar navbar-light">
+            <div className="navbar navbar-light fixed-top">
                 <Nav.Link id="welcomeMessage" style={{ float: "left", color: "white" }} href="">Dobrodošao nazad, {user.fname} {user.lname}!</Nav.Link>
                 <Nav.Link id="link" onClick={() => onLogout()}>
                     <span id="logout">Odjavi se</span>
