@@ -189,8 +189,8 @@ class StocktakingViewStore {
 
     @action
     onResetFilterClick() {
-        this.cityFilter.id = "";
-        this.cityFilter.name = "";
+        this.cityFilter.city_id = "";
+        this.cityFilter.city_name = "";
         this.dateFilter.startDate = "";
         this.dateFilter.endDate = "";
         this.allData = this.response;

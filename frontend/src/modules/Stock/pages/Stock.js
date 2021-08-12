@@ -55,7 +55,7 @@ class Stock extends React.Component {
                 return (
                     <tbody key={"tbody" + i}>
                         <tr key={i} onClick={() => onClickedRow(parentIndex)} className="accordion-toggle collapsed" style={{ backgroundColor: "#F2F2F2" }} className="complexAccordion" id="accordion1" data-toggle="collapse" data-parent="#accordion1" data-target={"#row" + parentIndex}>
-                            <td className="complexCell"><Button className="btnAction">Prikaži</Button></td>
+                            <td className="complexCell"><Button className="btnShowMore">Prikaži</Button></td>
                             <td className="complexCell">{parentRow.warehouse_name}</td>
                             <td className="complexCell">{parentRow.location_name}</td>
                             <td className="complexCell">{parentRow.city_name}</td>
@@ -77,7 +77,7 @@ class Stock extends React.Component {
                                                     return (
                                                         <tbody key={"nestedBody-" + nestedKey + "-" + parentRow.id}>
                                                             <tr key={"nestedKey-" + parentRow.id} onClick={() => onClickedNestedRow(parentRow.id)} className="accordion-toggle collapsed" style={{ backgroundColor: "#F2F2F2" }} id="accordion1" data-toggle="collapse" data-parent="#accordion1" data-target={"#nestedrow-" + nestedKey + "-" + parentRow.id}>
-                                                                <td className="complexCell"><Button className="btnAction">Prikaži proizvode</Button></td>
+                                                                <td className="complexCell"><Button className="btnShowMore">Prikaži proizvode</Button></td>
                                                                 <td className="complexCell">{categoryRow.category_name}</td>
                                                             </tr>
                                                             <tr>
@@ -167,7 +167,7 @@ class Stock extends React.Component {
                         </DropdownButton>
                     </div>
                     <div className='col-md-3 filterColumn'>
-                        <Button className="btn btn-dark btnAction resetBtn" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button>
+                        <Button className="btn btn-dark btnReset" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button>
                     </div>
                 </div>
             </div>);

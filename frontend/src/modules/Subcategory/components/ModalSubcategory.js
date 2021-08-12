@@ -78,7 +78,7 @@ export default function ModalSubcategory({ modalTarget, errorMessage, categories
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="customDropdown" variant="secondary" title={category_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                  <DropdownButton className="modalFormDropdown" variant="light" title={category_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
                     {categories.map((category) => {
                       return <Dropdown.Item key={category.category_id} onSelect={() => onCategoryChange(category)}>{category.category_name}</Dropdown.Item>;
                     })}

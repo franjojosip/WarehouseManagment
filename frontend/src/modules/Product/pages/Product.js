@@ -76,6 +76,9 @@ class Product extends React.Component {
             <div className="filterCard" style={{ marginBottom: 10 }}>
                 <div className="row">
                     <div className="col-md-3 filterColumn">
+                        <span id="filterTitle">FILTERI</span>
+                    </div>
+                    <div className="col-md-3 filterColumn">
                         <button className="btn btn-light dropdown-toggle" type="button" id="dropdownMenuPageSize" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {pageSize}
                         </button>
@@ -91,13 +94,15 @@ class Product extends React.Component {
                     <div className='col-md-3 filterColumn'>
                         {subcategoryFilterDropdown}
                     </div>
-                    <div className='col-md-3 filterColumn'>
-                        {packagingFilterDropdown}
-                    </div>
                 </div>
                 <div className="row">
                     <div className='col-md-3 filterColumn'>
-                        <Button className="btn btn-dark btnAction resetBtn" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button>
+                        {packagingFilterDropdown}
+                    </div>
+                    <div className='col-md-6 filterColumn'>
+                    </div>
+                    <div className='col-md-3 filterColumn'>
+                        <Button className="btn btn-dark btnReset" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button>
                     </div>
                 </div>
             </div>);

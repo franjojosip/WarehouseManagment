@@ -62,7 +62,7 @@ export default function ModalNotificationSetting({ modalTarget, onSubmit, days, 
                         value={day_of_week_name}
                         disabled={isDisabled}
                       /> :
-                      <DropdownButton id="customDropdown" variant="secondary" title={day_of_week_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                      <DropdownButton className="modalFormDropdown" variant="light" title={day_of_week_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
                         {days.map((day) => {
                           return <Dropdown.Item key={day.id} onSelect={() => onDayOfWeekChange(day)}>{day.name}</Dropdown.Item>;
                         })}
@@ -107,7 +107,7 @@ export default function ModalNotificationSetting({ modalTarget, onSubmit, days, 
                     value={notification_type_name}
                     disabled={isDisabled}
                   /> :
-                  <DropdownButton id="customDropdown" variant="secondary" title={notification_type_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                  <DropdownButton className="modalFormDropdown" variant="light" title={notification_type_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
                     {notification_types.map((type) => {
                       return <Dropdown.Item key={type.notification_type_id} onSelect={() => onNotificationTypeChange(type)}>{type.notification_type_name}</Dropdown.Item>;
                     })}

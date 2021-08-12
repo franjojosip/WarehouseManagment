@@ -155,7 +155,7 @@ export default function ModalUser({ modalTarget, roles, onSubmit, fname, lname, 
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="customDropdown" variant="secondary" title={role_name ? role_name : "Odaberi ulogu"} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                  <DropdownButton className="modalFormDropdown" variant="light" title={role_name ? role_name : "Odaberi ulogu"} style={{ marginBottom: 10 }} disabled={isDisabled} required>
                     {roles.map((role) => {
                       return <Dropdown.Item key={role.role_id} onSelect={() => onRoleChange(role)}>{role.role_name}</Dropdown.Item>;
                     })}

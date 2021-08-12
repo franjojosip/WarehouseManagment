@@ -8,7 +8,7 @@ export default function CollapsibleTable({ filterRow, isAdmin, tableParentColumn
   return (
     <div className="card mt-5 mb-5 basicCard">
       <div className="card-body">
-        <h2 className="text-center font-weight-bold py-4">
+        <h2 className="text-center font-weight-bold tableTitle">
           {title}
         </h2>
         {
@@ -40,7 +40,7 @@ export default function CollapsibleTable({ filterRow, isAdmin, tableParentColumn
                   </div>
                 </div>
                 <div className='col-md-3 filterColumn'>
-                  <Button className="btn btn-dark btnAction resetBtn" onClick={(e) => { e.preventDefault(); onChangePageSize(5) }}>Resetiraj</Button>
+                  <Button className="btn btn-dark btnReset" onClick={(e) => { e.preventDefault(); onChangePageSize(5) }}>Resetiraj</Button>
                 </div>
               </div>
             </div>

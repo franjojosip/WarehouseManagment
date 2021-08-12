@@ -57,7 +57,7 @@ export default function ModalEntry({ errorMessage, modalTarget, warehouses, citi
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="customDropdown" variant="secondary" title={city_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                  <DropdownButton className="modalFormDropdown" variant="light" title={city_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
                     {cities.map((city) => {
                       return <Dropdown.Item key={city.city_id} onSelect={() => onCityChange(city)}>{city.city_name}</Dropdown.Item>;
                     })}
@@ -82,7 +82,7 @@ export default function ModalEntry({ errorMessage, modalTarget, warehouses, citi
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="customDropdown" variant="secondary" title={location_name} style={{ marginBottom: 10 }} disabled={isDisabled || locations.length == 0} required>
+                  <DropdownButton className="modalFormDropdown" variant="light" title={location_name} style={{ marginBottom: 10 }} disabled={isDisabled || locations.length == 0} required>
                     {locations.map((location) => {
                       return <Dropdown.Item key={location.location_id} onSelect={() => onLocationChange(location)}>{location.location_name}</Dropdown.Item>;
                     })}
@@ -107,7 +107,7 @@ export default function ModalEntry({ errorMessage, modalTarget, warehouses, citi
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="customDropdown" variant="secondary" title={warehouse_name} style={{ marginBottom: 10 }} disabled={isDisabled || warehouses.length == 0} required>
+                  <DropdownButton className="modalFormDropdown" variant="light" title={warehouse_name} style={{ marginBottom: 10 }} disabled={isDisabled || warehouses.length == 0} required>
                     {warehouses.map((warehouse) => {
                       return <Dropdown.Item key={warehouse.warehouse_id} onSelect={() => onWarehouseChange(warehouse)}>{warehouse.warehouse_name}</Dropdown.Item>;
                     })}
@@ -132,7 +132,7 @@ export default function ModalEntry({ errorMessage, modalTarget, warehouses, citi
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="customDropdown" variant="secondary" title={product_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                  <DropdownButton className="modalFormDropdown" variant="light" title={product_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
                     {products.map((product) => {
                       return <Dropdown.Item key={product.product_id} onSelect={() => onProductChange(product)}>{product.product_name}</Dropdown.Item>;
                     })}

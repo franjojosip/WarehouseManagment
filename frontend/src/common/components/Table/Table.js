@@ -7,9 +7,9 @@ import "./styles/Table.css";
 export default function Table({ title, filterRow, hideAddButton, columns, tableRows, page, pageSize, totalPages, previousEnabled, nextEnabled, onActionClicked, onPageClick, onChangePageSize, onPreviousPageClick, onNextPageClick }) {
 
   return (
-    <div className="card mt-5 mb-5 basicCard">
+    <div className="card mt-3 mb-3 basicCard">
       <div className="card-body">
-        <h1 className="text-center font-weight-bold py-4">
+        <h1 className="text-center font-weight-bold tableTitle">
           {title}
         </h1>
         {
@@ -29,7 +29,7 @@ export default function Table({ title, filterRow, hideAddButton, columns, tableR
                 <div className="col-md-2 filterColumn">
                   <span id="filterTitle">FILTERI</span>
                 </div>
-                <div className="col-md-4 filterColumn">
+                <div className="col-md-3 filterColumn">
                   <button className="btn btn-light dropdown-toggle" type="button" id="dropdownMenuPageSizeSecond" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {pageSize}
                   </button>
@@ -39,8 +39,10 @@ export default function Table({ title, filterRow, hideAddButton, columns, tableR
                     <button className="dropdown-item" onClick={() => onChangePageSize(15)} type="button">15</button>
                   </div>
                 </div>
-                <div className='col-md-6 filterColumn'>
-                  <Button className="btn btn-dark resetBtn" onClick={(e) => { e.preventDefault(); onChangePageSize(5) }}>Resetiraj</Button>
+                <div className='col-md-4 filterColumn'>
+                </div>
+                <div className='col-md-3 filterColumn'>
+                  <Button className="btn btn-dark btnReset" onClick={(e) => { e.preventDefault(); onChangePageSize(5) }}>Resetiraj</Button>
                 </div>
               </div>
             </div>

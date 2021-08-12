@@ -69,7 +69,7 @@ export default function ModalProduct({ modalTarget, errorMessage, categories, su
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="customDropdown" variant="secondary" title={category_name ? category_name : "Odaberi kategoriju"} style={{ marginBottom: 10 }} disabled={isDisabled}>
+                  <DropdownButton className="modalFormDropdown" variant="light" title={category_name ? category_name : "Odaberi kategoriju"} style={{ marginBottom: 10 }} disabled={isDisabled}>
                     {categories.map((category) => {
                       return <Dropdown.Item key={"category-" + category.category_id} onSelect={() => onCategoryChange(category)}>{category.category_name}</Dropdown.Item>;
                     })}
@@ -97,7 +97,7 @@ export default function ModalProduct({ modalTarget, errorMessage, categories, su
                       disabled={isDisabled}
                     />
                     :
-                    <DropdownButton id="customDropdown" variant="secondary" title={subcategory_name ? subcategory_name : "Odaberi potkategoriju"} style={{ marginBottom: 10 }} disabled={isDisabled || subcategories.length == 0}>
+                    <DropdownButton className="modalFormDropdown" variant="light" title={subcategory_name ? subcategory_name : "Odaberi potkategoriju"} style={{ marginBottom: 10 }} disabled={isDisabled || subcategories.length == 0}>
                       {subcategories.map((subcategory) => {
                         return <Dropdown.Item key={"subcategory-" + subcategory.subcategory_id} onSelect={() => onSubcategoryChange(subcategory)}>{subcategory.subcategory_name}</Dropdown.Item>;
                       })}
@@ -116,7 +116,7 @@ export default function ModalProduct({ modalTarget, errorMessage, categories, su
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="customDropdown" variant="secondary" title={packaging_name ? packaging_name : "Odaberi ambalažu"} style={{ marginBottom: 10 }} disabled={isDisabled}>
+                  <DropdownButton className="modalFormDropdown" variant="light" title={packaging_name ? packaging_name : "Odaberi ambalažu"} style={{ marginBottom: 10 }} disabled={isDisabled}>
                     {packagings.map((packaging) => {
                       return <Dropdown.Item key={"packaging-" + packaging.packaging_id} onSelect={() => onPackagingChange(packaging)}>{packaging.packaging_name}</Dropdown.Item>;
                     })}

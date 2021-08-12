@@ -18,3 +18,10 @@ body {
     background-position:center;
     background-attachment: fixed;
 }
+
+.dateText {
+    margin-top: 10px;
+}
+.startDateText{
+    margin-top: 15px;
+}

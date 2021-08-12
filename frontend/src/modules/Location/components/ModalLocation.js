@@ -69,7 +69,7 @@ export default function ModalLocation({ modalTarget, errorMessage, cities, onSub
                     disabled={isDisabled}
                   />
                   :
-                  <DropdownButton id="customDropdown" variant="secondary" title={city_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
+                  <DropdownButton className="modalFormDropdown" variant="light" title={city_name} style={{ marginBottom: 10 }} disabled={isDisabled} required>
                     {cities.map((city) => {
                       return <Dropdown.Item key={city.city_id} onSelect={() => onCityChange(city)}>{city.city_name}</Dropdown.Item>;
                     })}

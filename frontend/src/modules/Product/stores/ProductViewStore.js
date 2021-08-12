@@ -143,6 +143,7 @@ class ProductViewStore {
         this.productFilter.packaging_id = "";
         this.productFilter.packaging_name = "";
         this.allData = this.response;
+        this.onChangePageSize(5);
         this.setPagination(1);
     }
 

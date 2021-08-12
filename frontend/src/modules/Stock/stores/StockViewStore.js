@@ -1,5 +1,6 @@
 import { action, observable } from "mobx";
 import { toast } from 'react-toastify';
+import { getUser } from "../../../common/components/LocalStorage";
 
 class StockViewStore {
     constructor(rootStore) {
@@ -44,7 +45,7 @@ class StockViewStore {
         this.findLocations = this.findLocations.bind(this);
         this.findWarehouses = this.findWarehouses.bind(this);
         this.findProducts = this.findProducts.bind(this);
-
+        this.filterValuesForLoggedUser = this.filterValuesForLoggedUser.bind(this);
         this.setPagination();
         this.findCities();
         this.findLocations();
@@ -230,6 +231,7 @@ class StockViewStore {
             this.allData = [{ id: "", name: "Nema podataka", city_id: "", city_name: "", location_id: "", location_name: "", warehouse_id: "", warehouse_name: "", product_id: "", product_name: "", subcategory_id: "", subcategory_name: "", packaging_id: "", packaging_name: "", quantity: 0, min_quantity: 1 }];
         }
         else {
+            this.filterValuesForLoggedUser();
             if (response.stocks.length > 0) {
                 this.allData = response.stocks;
                 this.response = response.stocks;
@@ -317,7 +319,8 @@ class StockViewStore {
                         location_id: warehouse.location_id,
                         location_name: warehouse.location_name,
                         city_id: warehouse.city_id,
-                        city_name: warehouse.city_name
+                        city_name: warehouse.city_name,
+                        users: warehouse.users ? warehouse.users.map(user => user.name) : []
                     }
                 });
             }
@@ -446,6 +449,18 @@ class StockViewStore {
         if (this.pageSize != pageSize) {
             this.pageSize = pageSize;
             this.setPagination(1);
+        }
+    }
+
+    @action
+    filterValuesForLoggedUser() {
+        let loggedUser = getUser();
+        if (loggedUser.role.toLowerCase() != "administrator") {
+            let name = loggedUser.fname + " " + loggedUser.lname;
+            this.warehouses = this.warehouses.filter(warehouse => warehouse.users.indexOf(name) != -1)
+            let warehouseCityIds = this.warehouses.map(warehouse => warehouse.city_id);
+            this.locations = this.locations.filter(location => warehouseCityIds.indexOf(location.city_id) != -1);
+            this.cities = this.cities.filter(city => warehouseCityIds.indexOf(city.city_id) != -1);
         }
     }
 

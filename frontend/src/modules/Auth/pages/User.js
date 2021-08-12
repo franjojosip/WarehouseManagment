@@ -82,7 +82,7 @@ class User extends React.Component {
                         </DropdownButton>
                     </div>
                     <div className='col-md-3 filterColumn'>
-                        <Button className="btn btn-dark btnAction resetBtn" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button>
+                        <Button className="btn btn-dark btnReset" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button>
                     </div>
                 </div>
             </div>);

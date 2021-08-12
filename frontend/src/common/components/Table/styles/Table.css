@@ -1,9 +1,4 @@
-.hiddenRow {
-    padding-top: 10px !important;
-    padding-bottom: 10px !important;
-}
-
-.hiddenNestedRow {
+.hiddenRow, .hiddenNestedRow {
     padding-top: 10px !important;
     padding-bottom: 10px !important;
 }
@@ -21,10 +16,10 @@
 }
 
 .filterCard {
-    padding: 15px 10px 10px 10px;
-    margin-top: 45px;
+    padding: 10px;
+    margin-top: 10px;
     border-radius: 5px;
-    background-color: rgba(77, 75, 75, 0.137);
+    background-color: rgba(77, 75, 75, 0.097);
 }
 
 .card {
@@ -104,7 +99,7 @@
 }
 
 .dropdown-menu.show {
-    margin-top: 3px !important;
+    margin-top: 5px !important;
     padding: 0 !important;
     width: 100% !important;
     left: 50% !important;
@@ -156,6 +151,8 @@
 .cell {
     vertical-align: middle !important;
     font-size: 17px;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
 }
 
 td {
@@ -166,6 +163,7 @@ td {
     vertical-align: middle !important;
     font-size: 18px;
 }
+
 .cellHeaderTwo {
     background: rgba(128, 128, 128, 0.20) !important;
     vertical-align: middle !important;
@@ -173,8 +171,17 @@ td {
 }
 
 .btnAction {
-    height: 43px !important;
+    height: fit-content !important;
     font-size: 13px !important;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+    border-radius: 3px !important;
+}
+
+.btnShowMore {
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+    border-radius: 3px !important;
 }
 
 .table-striped>tbody>tr:nth-of-type(odd) {
@@ -202,6 +209,7 @@ td {
     background: rgba(146, 146, 146, 0.219) !important;
     font-size: 18px;
 }
+
 .secondComplexHeader {
     padding: 14px !important;
     border-top: rgb(158, 158, 158) solid 1x !important;
@@ -221,10 +229,20 @@ td {
     border-top: rgb(158, 158, 158) solid 3px !important;
 }
 
-.resetBtn {
+.btnReset {
     padding: 11px !important;
-    width: 150px !important;
+    width: fit-content !important;
     height: 50px !important;
+    border-radius: 5px !important;
+    font-size: 15px !important;
+}
+
+.btnGenerate {
+    padding: 11px !important;
+    width: fit-content !important;
+    min-height: 50px;
+    height: fit-content;
+    border-radius: 5px !important;
     font-size: 15px !important;
 }
 
@@ -283,9 +301,6 @@ td {
 }
 
 @media all and (max-width: 1500px) {
-    .dropdown-toggle {
-        font-size: 14px !important;
-    }
     .basicCard {
         margin-left: 100px;
         margin-right: 100px;
@@ -296,6 +311,12 @@ td {
     .basicCard {
         margin-left: 0;
         margin-right: 0;
+    }
+}
+
+@media all and (max-width: 1013px) {
+    .btnGenerate {
+        font-size: 14px !important;
     }
 }
 
@@ -326,9 +347,9 @@ td {
     }
 }
 
-@media (max-width: 767px) {
-    .MuiFormControl-root {
-        width: 180px !important;
+@media (max-width: 830px) {
+    .dropdown-menu.pagesize.show {
+        transform: translate(-41%, 45%) !important;
     }
 }
 
@@ -337,17 +358,79 @@ td {
         margin-top: 5px !important;
         margin-bottom: 20px !important;
     }
-}
-
-@media (max-width: 830px) {
-    .dropdown-menu.pagesize.show {
-        transform: translate(-41%, 45%) !important;
+    #dropdownMenuPageSize {
+        margin-bottom: 15px !important;
     }
 }
 
 @media (max-width: 768px) {
     .dropdown-menu.pagesize.show {
         transform: translate(-50%, 45%) !important;
+    }
+    .cellHeader, .complexHeader {
+        font-size: 15px;
+    }
+    .secondComplexHeader, .dropdown, .dropdown-item, .cell, .nestedComplexCell {
+        font-size: 14px;
+    }
+    .btnReset, .btnShowMore, .btnGenerate {
+        font-size: 14px !important;
+    }
+    .tableTitle {
+        font-size: 35px;
+    }
+}
+
+@media (max-width: 767px) {
+    .MuiFormControl-root {
+        width: 180px !important;
+    }
+}
+
+@media (max-width: 738px) {
+    .btnGenerate {
+        margin-bottom: 13px !important;
+    }
+    .dropdown-toggle {
+        padding-top: 10px !important;
+        padding-bottom: 10px !important;
+        font-size: 14px !important;
+    }
+    #filterTitle {
+        font-size: 20px !important;
+    }
+    #dropdownMenuPageSizeSecond {
+        font-size: 16px !important;
+        height: 42px !important;
+        padding: 0 !important;
+        width: 100px !important;
+        min-width: 100px !important;
+    }
+    #dropdownMenuPageSize {
+        font-size: 16px !important;
+        height: 42px !important;
+        padding: 0 !important;
+        width: 100px !important;
+        min-width: 100px !important;
+    }
+    .dateText {
+        margin: 0 !important;
+    }
+    .startDateText {
+        margin-top: 10px !important;
+    }
+    .btnReset {
+        height: 40px !important;
+        margin-bottom: 10px !important;
+    }
+    .btnGenerate {
+        padding-top: 2px !important;
+        padding-bottom: 2px !important;
+        margin-top: 10px !important;
+        margin-bottom: 10px !important;
+    }
+    .btnGenerate, .btnReset {
+        font-size: 13px !important;
     }
 }
 
@@ -362,29 +445,15 @@ td {
         padding-left: 10px !important;
         padding-right: 10px !important;
     }
-    .cellHeader {
-        font-size: 15px;
-    }
-    .complexHeader {
-        font-size: 15px;
-    }
-    .secondComplexHeader {
-        font-size: 15px;
+    .page-link {
+        width: fit-content !important;
+        font-size: 15px !important;
     }
     #dropdownMenuPageSize {
-        font-size: 17px !important;
+        font-size: 16px !important;
     }
     #dropdownMenuPageSizeSecond {
-        font-size: 17px !important;
-    }
-    .dropdown {
-        font-size: 15px;
-    }
-    .dropdown-item {
-        font-size: 15px;
-    }
-    .cell {
-        font-size: 15px;
+        font-size: 16px !important;
     }
     .complexCell {
         font-size: 15px;
@@ -400,6 +469,40 @@ td {
         font-size: 12px;
     }
     .dropdown-toggle {
+        padding-top: 10px !important;
+        padding-bottom: 10px !important;
+        font-size: 14px !important;
+    }
+    #filterTitle {
+        font-size: 18px !important;
+    }
+    #dropdownMenuPageSizeSecond {
+        height: 42px !important;
+        width: 100px !important;
+        min-width: 100px !important;
+    }
+    #dropdownMenuPageSize {
+        height: 42px !important;
+        width: 100px !important;
+        min-width: 100px !important;
+    }
+    .dateText {
+        margin: 0 !important;
+    }
+    .startDateText {
+        margin-top: 10px !important;
+    }
+    .btnReset {
+        height: 40px !important;
+        margin-bottom: 10px !important;
+    }
+    .btnGenerate {
+        padding-top: 2px !important;
+        padding-bottom: 2px !important;
+        margin-top: 10px !important;
+        margin-bottom: 10px !important;
+    }
+    .btnGenerate, .btnReset {
         font-size: 13px !important;
     }
     .filterDropdown {
@@ -407,42 +510,47 @@ td {
         font-size: 13px !important;
         width: max-content;
     }
-    .resetBtn {
-        width: 150px !important;
-        margin-bottom: 10px !important;
+    .close {
+        width: 50px;
     }
 }
 
 @media (max-width: 450px) {
+    #dropdownMenuPageSizeSecond {
+        height: 36px !important;
+        width: 100px !important;
+        min-width: 100px !important;
+    }
+    #dropdownMenuPageSize {
+        height: 36px !important;
+        width: 100px !important;
+        min-width: 100px !important;
+    }
+    .dropdown-toggle {
+        font-size: 13px !important;
+    }
     .pagination {
         padding: 0px !important;
         width: 100% !important;
     }
     .page-link {
         width: fit-content !important;
+        font-size: 13px !important;
     }
-    .cellHeader {
-        font-size: 13px;
-    }
-    .complexHeader {
-        font-size: 13px;
-    }
-    .secondComplexHeader {
-        font-size: 13px;
-    }
-    .dropdown {
-        font-size: 13px;
-    }
-    .dropdown-item {
-        font-size: 13px;
-    }
-    .cell {
+    .cellHeader, .complexHeader {
         font-size: 14px;
     }
-    .complexCell {
-        font-size: 14px;
+    .secondComplexHeader, .dropdown, .dropdown-item, .cell, .complexCell {
+        font-size: 13px !important;
     }
     .nestedComplexCell {
         font-size: 14px;
+    }
+    .btnReset, .btnShowMore, .btnGenerate {
+        font-size: 12px !important;
+        width: fit-content !important;
+    }
+    .tableTitle {
+        font-size: 30px;
     }
 }

@@ -52,7 +52,7 @@ class Entry extends React.Component {
                 return (
                     <tbody key={"tbody" + element.name}>
                         <tr key={element.name} onClick={() => onClickedRow(nestedIndex)} className="accordion-toggle collapsed complexAccordionTwo" style={{ backgroundColor: "#F2F2F2" }} id="accordion1" data-toggle="collapse" data-parent="#accordion1" data-target={"#row" + nestedIndex}>
-                            <td className="complexCell"><Button className="btnAction">Prikaži</Button></td>
+                            <td className="complexCell"><Button className="btnShowMore">Prikaži</Button></td>
                             <td className="complexCell">{parentRow[0]}</td>
                             <td className="complexCell">{element.data[0].city_name}</td>
                             <td className="complexCell">{element.data[0].location_name}</td>
@@ -132,75 +132,105 @@ class Entry extends React.Component {
                 width: 100,
             },
         }));
-        let filterRow = (
-            <div className="filterCard" style={{ marginBottom: 10 }}>
-                <div className="row firstRow">
-                    <div className="col-md-2 filterColumn">
-                        <span id="filterTitle">FILTERI</span>
-                    </div>
-                    <div className="col-md-3 filterColumn">
-                        <button className="btn btn-light dropdown-toggle" type="button" id="dropdownMenuPageSizeSecond" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {pageSize}
-                        </button>
-                        <div className="dropdown-menu pagesize" aria-labelledby="dropdownMenuPageSizeSecond">
-                            <button className="dropdown-item" onClick={() => onChangePageSize(5)} type="button">5</button>
-                            <button className="dropdown-item" onClick={() => onChangePageSize(10)} type="button">10</button>
-                            <button className="dropdown-item" onClick={() => onChangePageSize(15)} type="button">15</button>
+        let filterRow = null;
+
+        if (isLoggedAdmin) {
+            filterRow = (
+                <div className="filterCard" style={{ marginBottom: 10 }}>
+                    <div className="row firstRow">
+                        <div className="col-md-2 filterColumn">
+                            <span id="filterTitle">FILTERI</span>
+                        </div>
+                        <div className="col-md-3 filterColumn">
+                            <button className="btn btn-light dropdown-toggle" type="button" id="dropdownMenuPageSizeSecond" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {pageSize}
+                            </button>
+                            <div className="dropdown-menu pagesize" aria-labelledby="dropdownMenuPageSizeSecond">
+                                <button className="dropdown-item" onClick={() => onChangePageSize(5)} type="button">5</button>
+                                <button className="dropdown-item" onClick={() => onChangePageSize(10)} type="button">10</button>
+                                <button className="dropdown-item" onClick={() => onChangePageSize(15)} type="button">15</button>
+                            </div>
+                        </div>
+                        <div className='col-md-3 filterColumn'>
+                            <div className="dateText startDateText">
+                                POČETNI DATUM
+                            </div>
+                            <TextField
+                                id="startDate"
+                                type="date"
+                                format="DD/MM/YYYY"
+                                value={dateFilter.startDate}
+                                className={classes.textField}
+                                onChange={(e) => onStartDateFilterChange(e.target.value)}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                            />
+                        </div>
+                        <div className='col-md-3 filterColumn'>
+                            <div className="dateText">
+                                KRAJNJI DATUM
+                            </div>
+                            <TextField
+                                id="endDate"
+                                type="date"
+                                format="DD/MM/YYYY"
+                                value={dateFilter.endDate}
+                                className={classes.textField}
+                                onChange={(e) => onEndDateFilterChange(e.target.value)}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                            />
                         </div>
                     </div>
-                    <div className='col-md-3 filterColumn'>
-                        <div className="dateText">
-                            POČETNI DATUM
+                    <div className="row">
+                        <div className='col-md-2 filterColumn'>
                         </div>
-                        <TextField
-                            id="startDate"
-                            type="date"
-                            format="DD/MM/YYYY"
-                            value={dateFilter.startDate}
-                            className={classes.textField}
-                            onChange={(e) => onStartDateFilterChange(e.target.value)}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                        />
-                    </div>
-                    <div className='col-md-3 filterColumn'>
-                        <div className="dateText">
-                            KRAJNJI DATUM
+                        <div className='col-md-3 filterColumn'>
+                            <DropdownButton style={{ margin: "auto" }} className="vertical-center lowerDropdown" variant="light" title={cityFilter.city_name ? cityFilter.city_name : "Svi gradovi"} style={{ marginBottom: 10 }}>
+                                <Dropdown.Item key="default_city" onSelect={() => onCityFilterChange({ city_id: "", city_name: "" })}>Svi gradovi</Dropdown.Item>
+                                {cities.map((city) => {
+                                    return <Dropdown.Item key={city.city_id} onSelect={() => onCityFilterChange(city)}>{city.city_name}</Dropdown.Item>;
+                                })
+                                }
+                            </DropdownButton>
                         </div>
-                        <TextField
-                            id="endDate"
-                            type="date"
-                            format="DD/MM/YYYY"
-                            value={dateFilter.endDate}
-                            className={classes.textField}
-                            onChange={(e) => onEndDateFilterChange(e.target.value)}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                        />
+                        <div className='col-md-3 filterColumn'>
+                            <Button className="btn btn-primary btnGenerate" onClick={(e) => { e.preventDefault(); onGeneratePdfClick() }}>Generiraj izvješće</Button>
+                        </div>
+                        <div className='col-md-3 filterColumn'>
+                            <Button className="btn btn-dark btnReset" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button>
+                        </div>
                     </div>
-                </div>
-                <div className="row">
-                    <div className='col-md-2 filterColumn'>
+                </div>);
+        }
+        else {
+            filterRow = (
+                <div className="filterCard" style={{ marginBottom: 10 }}>
+                    <div className="row">
+                        <div className="col-md-2 filterColumn">
+                            <span id="filterTitle">FILTERI</span>
+                        </div>
+                        <div className="col-md-3 filterColumn">
+                            <button className="btn btn-light dropdown-toggle" type="button" id="dropdownMenuPageSizeSecond" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {pageSize}
+                            </button>
+                            <div className="dropdown-menu pagesize" aria-labelledby="dropdownMenuPageSizeSecond">
+                                <button className="dropdown-item" onClick={() => onChangePageSize(5)} type="button">5</button>
+                                <button className="dropdown-item" onClick={() => onChangePageSize(10)} type="button">10</button>
+                                <button className="dropdown-item" onClick={() => onChangePageSize(15)} type="button">15</button>
+                            </div>
+                        </div>
+                        <div className='col-md-4 filterColumn'>
+                        </div>
+                        <div className='col-md-3 filterColumn'>
+                            <Button className="btn btn-dark btnReset" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button>
+                        </div>
                     </div>
-                    <div className='col-md-3 filterColumn'>
-                        <DropdownButton style={{ margin: "auto" }} className="vertical-center" variant="light" title={cityFilter.city_name ? cityFilter.city_name : "Svi gradovi"} style={{ marginBottom: 10 }}>
-                            <Dropdown.Item key="default_city" onSelect={() => onCityFilterChange({ city_id: "", city_name: "" })}>Svi gradovi</Dropdown.Item>
-                            {cities.map((city) => {
-                                return <Dropdown.Item key={city.city_id} onSelect={() => onCityFilterChange(city)}>{city.city_name}</Dropdown.Item>;
-                            })
-                            }
-                        </DropdownButton>
-                    </div>
-                    <div className='col-md-3 filterColumn'>
-                        <Button className="btn btn-primary btnAction btnGenerate" onClick={(e) => { e.preventDefault(); onGeneratePdfClick() }}>Generiraj izvješće</Button>
-                    </div>
-                    <div className='col-md-3 filterColumn'>
-                        <Button className="btn btn-dark btnAction resetBtn" onClick={(e) => { e.preventDefault(); onResetFilterClick() }}>Resetiraj</Button>
-                    </div>
-                </div>
-            </div>);
+                </div>);
+        }
+        
         return (
             <Layout isLoaderVisible={isLoaderVisible}>
                 <ModalEntry modalTarget="modalTargetAdd" errorMessage={errorMessage} warehouses={filteredWarehouses} cities={cities} locations={filteredLocations} products={products} onSubmit={onCreateClick} warehouse_name={clickedEntry.warehouse_name} city_name={clickedEntry.city_name} location_name={clickedEntry.location_name} category_name={clickedEntry.category_name} subcategory_name={clickedEntry.subcategory_name} product_name={clickedEntry.product_name} subcategory_name={clickedEntry.subcategory_name} packaging_name={clickedEntry.packaging_name} quantity={clickedEntry.quantity} onWarehouseChange={onWarehouseChange} onCityChange={onCityChange} onLocationChange={onLocationChange} onProductChange={onProductChange} onQuantityChange={onQuantityChange} isSubmitDisabled={isSubmitDisabled} />
