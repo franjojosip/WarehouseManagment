@@ -20,37 +20,9 @@ class Home extends React.Component {
         return (
             <Layout isLoaderVisible={isLoaderVisible}>
 
-                <div className="row" style={{ marginLeft:20, marginRight: 10 }}>
-                    <div className="column">
-                        <div className="card">
-                            <h3>Card 1</h3>
-                            <p>Some text</p>
-                            <p>Some text</p>
-                        </div>
-                    </div>
-
-                    <div className="column">
-                        <div className="card">
-                            <h3>Card 2</h3>
-                            <p>Some text</p>
-                            <p>Some text</p>
-                        </div>
-                    </div>
-
-                    <div className="column">
-                        <div className="card">
-                            <h3>Card 3</h3>
-                            <p>Some text</p>
-                            <p>Some text</p>
-                        </div>
-                    </div>
-
-                    <div className="column">
-                        <div className="card">
-                            <h3>Card 4</h3>
-                            <p>Some text</p>
-                            <p>Some text</p>
-                        </div>
+                <div className="row" style={{ marginLeft: 20, marginRight: 10 }}>
+                    <div className="col-md-4 filterColumn">
+                        TEXT
                     </div>
                 </div>
                 <ToastContainer style={{ fontSize: 15 }} />
