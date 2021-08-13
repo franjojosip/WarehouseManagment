@@ -262,59 +262,55 @@ function generatePdf(title, docTitle, data) {
   //Postavi font za tablicu
   doc.setFontSize(16);
   doc.setDrawColor(0, 0, 0);
-  try {
-    data.forEach((warehouse, i) => {
-      head = [
-        [
-          { content: 'Naziv skladista: ' + warehouse.warehouse_name, colSpan: 2, styles: { halign: 'center', fillColor: [20, 151, 124] } },
-          { content: 'Lokacija: ' + warehouse.location_name, colSpan: 2, styles: { halign: 'center', fillColor: [20, 151, 124] } },
-          { content: 'Grad: ' + warehouse.city_name, colSpan: 2, styles: { halign: 'center', fillColor: [20, 151, 124] } }
-        ],
-        [
-          { content: 'Proizvod', colSpan: 1, styles: { halign: 'center' } },
-          { content: 'Kategorija', colSpan: 1, styles: { halign: 'center' } },
-          { content: 'Potkategorija', colSpan: 1, styles: { halign: 'center' } },
-          { content: 'Ambalaza', colSpan: 1, styles: { halign: 'center' } },
-          { content: 'Trenutna Kolicina', colSpan: 1, styles: { halign: 'center' } },
-          { content: 'Min. Kolicina', colSpan: 1, styles: { halign: 'center' } }
-        ],
+  data.forEach((warehouse, i) => {
+    head = [
+      [
+        { content: 'Naziv skladista: ' + warehouse.warehouse_name, colSpan: 2, styles: { halign: 'center', fillColor: [20, 151, 124] } },
+        { content: 'Lokacija: ' + warehouse.location_name, colSpan: 2, styles: { halign: 'center', fillColor: [20, 151, 124] } },
+        { content: 'Grad: ' + warehouse.city_name, colSpan: 2, styles: { halign: 'center', fillColor: [20, 151, 124] } }
+      ],
+      [
+        { content: 'Proizvod', colSpan: 1, styles: { halign: 'center' } },
+        { content: 'Kategorija', colSpan: 1, styles: { halign: 'center' } },
+        { content: 'Potkategorija', colSpan: 1, styles: { halign: 'center' } },
+        { content: 'Ambalaza', colSpan: 1, styles: { halign: 'center' } },
+        { content: 'Trenutna Kolicina', colSpan: 1, styles: { halign: 'center' } },
+        { content: 'Min. Kolicina', colSpan: 1, styles: { halign: 'center' } }
+      ],
+    ];
+    tableRows = [];
+    warehouse.data.forEach(item => {
+      const itemData = [
+        item.product_name,
+        item.category_name,
+        item.subcategory_name,
+        item.packaging_name,
+        item.quantity,
+        item.minimum_quantity,
       ];
-      tableRows = [];
-      warehouse.data.forEach(item => {
-        const itemData = [
-          item.product_name,
-          item.category_name,
-          item.subcategory_name,
-          item.packaging_name,
-          item.quantity,
-          item.minimum_quantity,
-        ];
-        tableRows.push(itemData);
-      });
-      if (i != 0 && doc.lastAutoTable.finalY && y >= pageHeight) {
-        doc.addPage();
-        y = 0
-      }
-      else if (i != 0) {
-        y = doc.lastAutoTable.finalY + 15
-      }
-      let number = 2;
-      doc.autoTable({
-        startY: y,
-        head: head,
-        body: tableRows,
-        theme: 'grid',
-        tableWidth: 'auto',
-        styles: {
-          cellPadding: { top: number, right: number, bottom: number, left: number },
-        },
-        bodyStyles: { halign: 'center', valign: 'middle' },
-        headStyles: { halign: 'center', valign: 'middle' }
-      });
+      tableRows.push(itemData);
     });
-  } catch (e) {
-    console.log(e);
-  }
+    if (i != 0 && doc.lastAutoTable.finalY && y >= pageHeight) {
+      doc.addPage();
+      y = 0
+    }
+    else if (i != 0) {
+      y = doc.lastAutoTable.finalY + 15
+    }
+    let number = 2;
+    doc.autoTable({
+      startY: y,
+      head: head,
+      body: tableRows,
+      theme: 'grid',
+      tableWidth: 'auto',
+      styles: {
+        cellPadding: { top: number, right: number, bottom: number, left: number },
+      },
+      bodyStyles: { halign: 'center', valign: 'middle' },
+      headStyles: { halign: 'center', valign: 'middle' }
+    });
+  });
 
   let date = moment().format("DD_MM_YYYY_HH_mm").toString();
 
