@@ -6,5 +6,5 @@ export default class RoleDataStore extends React.Component {
         super();
         this.httpClient = new HttpClient("role");
     }
-    get = async () => this.httpClient.get();
+    get = async () => this.httpClient.get(this.httpClient.createBodyWithTokens({}));
 }

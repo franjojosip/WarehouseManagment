@@ -55,7 +55,7 @@ class Reciept extends React.Component {
 
                 return (
                     <tbody key={"tbody" + i}>
-                        <tr key={i} onClick={() => onClickedRow(nestedIndex)} className="accordion-toggle collapsed complexAccordionTwo" style={{ backgroundColor: "#F2F2F2" }} id="accordion1" data-toggle="collapse" data-parent="#accordion1" data-target={"#row" + nestedIndex}>
+                        <tr key={i} onClick={() => onClickedRow(nestedIndex)} className="accordion-toggle collapsed complexAccordion" style={{ backgroundColor: "#F2F2F2" }} id="accordion1" data-toggle="collapse" data-parent="#accordion1" data-target={"#row" + nestedIndex}>
                             <td className="complexCell"><Button className="btnShowMore">Prikaži</Button></td>
                             <td className="complexCell">{parentRow[0]}</td>
                             <td className="complexCell">{parentRow[1]}</td>

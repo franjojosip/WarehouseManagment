@@ -5,37 +5,23 @@
 
 .homeRow {
   margin-top: 50px !important;
-  margin-right: 50px !important;
 }
 
 .homeCard {
-  padding-left: 0px !important;
-  min-width: 400px;
-}
-
-.page-contain {
-  display: flex;
-  min-height: 100vh;
-  align-items: center;
-  justify-content: center;
-  background: #e7f3f1;
-  border: 0.75em solid white;
-  padding: 2em;
-  font-family: 'Open Sans', sans-serif;
+  min-width: 450px;
+  max-width: 570px !important;
+  margin-bottom: 20px !important;
 }
 
 .data-card {
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 27.75em;
-  min-height: 25.75em;
-  overflow: hidden;
+  height: 360px;
   border-radius: 0.5em;
   text-decoration: none;
   background: rgba(255, 255, 255, 0.91);
-  margin: 0.7em;
-  padding: 2.75em 2.5em;
+  padding: 45px;
   box-shadow: 0 1.5em 2.5em -0.5em rgba(0, 0, 0, .1);
 }
 
@@ -130,38 +116,48 @@
   }
 }
 
-@media all and (max-width: 876px) {
+@media all and (max-width: 768px) {
   .data-card {
+    margin: auto !important;
     width: 100% !important;
-    margin: 0 auto !important;
+    max-width: 420px !important;
+    height: 340px !important;
+    min-height: 240px !important;
   }
-  .homeCard {
-    margin: 0 auto !important;
-    margin-bottom: 30px!important;
+  .data-card h3 {
+    padding-bottom: 10px !important;
   }
 }
 
 @media all and (max-width: 550px) {
   .data-card {
-    width: 350px !important;
-    height: 350px !important;
-    min-height: 350px !important;
+    width: 100% !important;
+    min-width: 400px !important;
+    height: 320px !important;
   }
   .data-card h3 {
     font-size: 35px;
   }
   .homeCard {
-    margin-bottom: 20px!important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-bottom: 25px!important;
   }
 }
 
-@media all and (max-width: 446px) {
+@media all and (max-width: 536px) {
   .data-card {
-    width: 300px !important;
+    width: 250px !important;
+    min-width: 250px !important;
     height: 300px !important;
     min-height: 300px !important;
     padding-top: 30px;
     padding-bottom: 20px;
+    justify-content: center;
+  }
+
+  .homeRow{
+    justify-content: center;
   }
   .data-card h3 {
     font-size: 35px;
@@ -178,7 +174,6 @@
 
 @media all and (max-width: 450px) {
   .data-card {
-    margin-left: 15% !important;
     width: 240px !important;
     height: 270px !important;
     min-height: 270px !important;
@@ -189,7 +184,6 @@
 
 @media all and (max-width: 390px) {
   .data-card {
-    margin-left: 12% !important;
     width: 220px !important;
     height: 270px !important;
     min-height: 270px !important;
@@ -212,7 +206,6 @@
 
 @media all and (max-width: 370px) {
   .data-card {
-    margin-left: 13% !important;
     width: 200px !important;
     height: 240px !important;
     min-height: 240px !important;
@@ -221,9 +214,8 @@
 
 @media all and (max-width: 340px) {
   .data-card {
-    margin-left: 8% !important;
     width: 200px !important;
-    height: 240px !important;
-    min-height: 240px !important;
+    height: 210px !important;
+    min-height: 210px !important;
   }
 }

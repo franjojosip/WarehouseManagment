@@ -19,8 +19,6 @@ export default function CollapsibleTable({ filterRow, isAdmin, tableParentColumn
               <a className="text-success" style={{ width: "fit-content" }}><i className="fas fa-plus fa-2x" aria-hidden="true" data-toggle="modal" data-target="#modalTargetAdd" onClick={() => onActionClicked(null, true)}></i></a>
             </div>
         }
-        <br />
-
         {
           filterRow ?
             filterRow :
@@ -49,7 +47,7 @@ export default function CollapsibleTable({ filterRow, isAdmin, tableParentColumn
           <table className="table table-bordered text-center">
             <thead>
               <tr>
-                <th className="btnCellSecond"></th>
+                <th className="cellHeader"></th>
                 {tableParentColumns}
               </tr>
             </thead>

@@ -13,7 +13,7 @@ export default class CityDataStore extends React.Component {
             zip_code: city.zip_code
         }, true))
 
-    get = async () => this.httpClient.get();
+    get = async () => this.httpClient.get(this.httpClient.createBodyWithTokens({}));
 
     update = async (city) => this.httpClient.update(
         city.id,

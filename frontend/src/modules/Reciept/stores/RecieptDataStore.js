@@ -15,7 +15,7 @@ export default class RecieptDataStore extends React.Component {
             quantity: reciept.quantity
         }))
 
-    get = async () => this.httpClient.get();
+    get = async () => this.httpClient.get(this.httpClient.createBodyWithTokens({}));
 
     update = async (reciept) => this.httpClient.update(
         reciept.id,

@@ -15,7 +15,7 @@ export default class RecieptDataStore extends React.Component {
             counted_quantity: stocktaking.quantity
         }))
 
-    get = async () => this.httpClient.get();
+    get = async () => this.httpClient.get(this.httpClient.createBodyWithTokens({}));
 
     update = async (stocktaking) => this.httpClient.update(
         stocktaking.id,

@@ -20,7 +20,6 @@ export default function Table({ title, filterRow, hideAddButton, columns, tableR
               <a className="text-success" style={{ width: "fit-content" }}><i className="fas fa-plus fa-2x" aria-hidden="true" data-toggle="modal" data-target="#modalTargetAdd" onClick={() => onActionClicked(null, true)}></i></a>
             </div>
         }
-        <br />
         {
           filterRow ?
             filterRow :
@@ -52,7 +51,7 @@ export default function Table({ title, filterRow, hideAddButton, columns, tableR
             <thead>
               <tr>
                 {columns.map((element, i) => {
-                  return <th key={i} className="text-center cellHeader">{element}</th>
+                  return <th key={i} className="text-center cellHeaderThree">{element}</th>
                 })}
               </tr>
             </thead>

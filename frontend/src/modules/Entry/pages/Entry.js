@@ -51,7 +51,13 @@ class Entry extends React.Component {
                 let nestedIndex = i;
                 return (
                     <tbody key={"tbody" + element.name}>
-                        <tr key={element.name} onClick={() => onClickedRow(nestedIndex)} className="accordion-toggle collapsed complexAccordionTwo" style={{ backgroundColor: "#F2F2F2" }} id="accordion1" data-toggle="collapse" data-parent="#accordion1" data-target={"#row" + nestedIndex}>
+                        {
+                            i == 0 ?
+                                null
+                                :
+                                <br />
+                        }
+                        <tr key={element.name} onClick={() => onClickedRow(nestedIndex)} className="accordion-toggle collapsed complexAccordion" style={{ backgroundColor: "#F2F2F2" }} id="accordion1" data-toggle="collapse" data-parent="#accordion1" data-target={"#row" + nestedIndex}>
                             <td className="complexCell"><Button className="btnShowMore">Prikaži</Button></td>
                             <td className="complexCell">{parentRow[0]}</td>
                             <td className="complexCell">{element.data[0].city_name}</td>
@@ -230,7 +236,7 @@ class Entry extends React.Component {
                     </div>
                 </div>);
         }
-        
+
         return (
             <Layout isLoaderVisible={isLoaderVisible}>
                 <ModalEntry modalTarget="modalTargetAdd" errorMessage={errorMessage} warehouses={filteredWarehouses} cities={cities} locations={filteredLocations} products={products} onSubmit={onCreateClick} warehouse_name={clickedEntry.warehouse_name} city_name={clickedEntry.city_name} location_name={clickedEntry.location_name} category_name={clickedEntry.category_name} subcategory_name={clickedEntry.subcategory_name} product_name={clickedEntry.product_name} subcategory_name={clickedEntry.subcategory_name} packaging_name={clickedEntry.packaging_name} quantity={clickedEntry.quantity} onWarehouseChange={onWarehouseChange} onCityChange={onCityChange} onLocationChange={onLocationChange} onProductChange={onProductChange} onQuantityChange={onQuantityChange} isSubmitDisabled={isSubmitDisabled} />

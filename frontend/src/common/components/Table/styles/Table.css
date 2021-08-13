@@ -11,13 +11,17 @@
     font-size: 20px !important;
 }
 
+.text-success {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 .col-md-3 {
     margin: 0 auto !important;
 }
 
 .filterCard {
     padding: 10px;
-    margin-top: 10px;
     border-radius: 5px;
     background-color: rgba(77, 75, 75, 0.097);
 }
@@ -39,6 +43,10 @@
     justify-content: center !important;
     vertical-align: middle !important;
     margin: auto !important;
+}
+
+.table-responsive {
+    margin-top: 20px;
 }
 
 .basicCard {
@@ -166,18 +174,25 @@ td {
 }
 
 .cellHeader {
+    background: rgba(128, 128, 128, 0.45) !important;
     vertical-align: middle !important;
     font-size: 20px;
 }
 
 .cellHeaderTwo {
-    background: rgba(128, 128, 128, 0.20) !important;
+    background: rgba(107, 105, 105, 0.22) !important;
+    vertical-align: middle !important;
+    font-size: 18px;
+}
+
+.cellHeaderThree {
+    background: rgba(107, 105, 105, 0.3) !important;
     vertical-align: middle !important;
     font-size: 18px;
 }
 
 .tableTitle {
-    margin-top: 10px;
+    margin-top: 20px;
     font-size: 35px;
 }
 
@@ -200,7 +215,8 @@ td {
 }
 
 .complexCell {
-    padding: 3px !important;
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
     vertical-align: middle !important;
     font-size: 17px;
 }
@@ -232,12 +248,8 @@ td {
 }
 
 .complexAccordion {
-    border-top: rgb(158, 158, 158) solid 2px !important;
-}
-
-.complexAccordionTwo {
     margin-top: 5px !important;
-    border-top: rgb(158, 158, 158) solid 3px !important;
+    border-top: rgb(104, 104, 104) solid 2.5px !important;
 }
 
 .btnReset {
@@ -332,7 +344,7 @@ td {
     .cell {
         font-size: 16px !important;
     }
-    .cellHeader {
+    .cellHeader, .cellHeaderTwo, .cellHeaderThree {
         font-size: 18px !important;
     }
 }
@@ -390,7 +402,7 @@ td {
     .dropdown-menu.pagesize.show {
         transform: translate(-50%, 45%) !important;
     }
-    .cellHeader, .complexHeader {
+    .cellHeader, .cellHeaderTwo, .cellHeaderThree, .complexHeader {
         font-size: 15px;
     }
     .secondComplexHeader, .dropdown, .dropdown-item, .cell, .nestedComplexCell {
@@ -560,7 +572,7 @@ td {
         width: fit-content !important;
         font-size: 13px !important;
     }
-    .cellHeader, .complexHeader {
+    .cellHeader, .cellHeaderTwo, .cellHeaderThree, .complexHeader {
         font-size: 14px;
     }
     .secondComplexHeader, .dropdown, .dropdown-item, .cell, .complexCell {

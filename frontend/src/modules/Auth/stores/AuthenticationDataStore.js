@@ -53,7 +53,7 @@ export default class AuthenticationDataStore extends React.Component {
         return data;
     }
 
-    get = async () => this.httpClient.get();
+    get = async () => this.httpClient.get(this.httpClient.createBodyWithTokens({}));
 
     update = async (user) => this.httpClient.update(
         user.id,

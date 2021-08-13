@@ -13,7 +13,7 @@ export default class LocationDataStore extends React.Component {
             city_id: location.city_id
         }))
 
-    get = async () => this.httpClient.get();
+    get = async () => this.httpClient.get(this.httpClient.createBodyWithTokens({}));
 
     update = async (location) => this.httpClient.update(
         location.id,
