@@ -1,16 +1,16 @@
 const Joi = require("joi");
 const NotificationSetting = require("../../notification_settings/schema");
+const NotificationLog = require("../../notification_log/schema");
 const Stock = require("../../stock/schema");
-const Warehouse = require("../../warehouse/schema");
 const Location = require("../../location/schema");
 const Product = require("../../product/schema");
 const PasswordRequest = require("../../users/passwordRequestSchema");
 const cron = require('node-cron');
 const moment = require("moment");
 var nodemailer = require('nodemailer');
+var fs = require('fs');
 const { default: jsPDF } = require("jspdf");
 require('jspdf-autotable');
-var fs = require('fs');
 
 const serializer = Joi.object({
   password: Joi.string().required()
@@ -25,8 +25,6 @@ async function refresh(req, res) {
     if (result.value.password != process.env.SUPER_ADMIN_PASSWORD) {
       return res.status(403).json({ error: "Nemate prava pristupa!" });
     }
-    let data = await getPdfData();
-    generatePdf("DNEVNI IZVJEŠTAJ", "dnevni_izvjestaj_13_08_2021", data);
 
     const notificationSettings = await NotificationSetting.find({}).populate("notification_type_id", { name: 1 });
 
@@ -50,16 +48,32 @@ async function refresh(req, res) {
       await Promise.all(tasks);
     });
 
-    notificationSettings.forEach(setting => {
+    await notificationSettings.forEach(async (setting) => {
       if (setting.notification_type_id.name == "Dnevna obavijest") {
         let time = moment(setting.time).format("HH:mm").toString();
         let timeArray = time.split(":");
 
-        cron.schedule(`${timeArray[1]} ${timeArray[0]} * * *`, () => {
+        await cron.schedule(`${timeArray[1]} ${timeArray[0]} * * *`, async () => {
           let date = moment().format("YYYY/MM/DD HH:mm").toString();
           let email = setting.email;
-          let title = `Dnevni izvještaj ${date}`
-          sendEmail(title, email)
+          let title = `Dnevni izvještaj ${date}`;
+
+          let data = await getPdfData();
+          if (data.length > 0) {
+            let path = generatePdf("Dnevni izvještaj", "dnevni_izvjestaj", data);
+            sendEmail(title, email, path);
+          }
+          else {
+            sendEmail(title, email, null);
+          }
+          let logData = getLogData(data);
+
+          const newNotificationLog = new NotificationLog();
+          newNotificationLog.notification_type_id = setting.notification_type_id.id;
+          newNotificationLog.subject = "Dnevni izvještaj";
+          newNotificationLog.email = email;
+          newNotificationLog.data = logData;
+          await newNotificationLog.save();
         });
       }
       else if (setting.notification_type_id.name == "Tjedna obavijest") {
@@ -67,22 +81,54 @@ async function refresh(req, res) {
         let timeArray = time.split(":");
         let day_of_week = setting.day_of_week;
 
-        cron.schedule(`${timeArray[1]} ${timeArray[0]} * * ${day_of_week}`, () => {
+        await cron.schedule(`${timeArray[1]} ${timeArray[0]} * * ${day_of_week}`, async () => {
           let date = moment().format("YYYY/MM/DD HH:mm").toString();
           let email = setting.email;
-          let title = `Tjedni izvještaj ${date}`
-          sendEmail(title, email)
+          let title = `Tjedni izvještaj ${date}`;
+
+          let data = await getPdfData();
+          if (data.length > 0) {
+            let path = generatePdf("Tjedni izvještaj", "tjedni_izvjestaj", data);
+            sendEmail(title, email, path);
+          }
+          else {
+            sendEmail(title, email, null);
+          }
+          let logData = getLogData(data);
+
+          const newNotificationLog = new NotificationLog();
+          newNotificationLog.notification_type_id = setting.notification_type_id.id;
+          newNotificationLog.subject = "Tjedni izvještaj";
+          newNotificationLog.email = email;
+          newNotificationLog.data = logData;
+          await newNotificationLog.save();
         });
       }
       else if (setting.notification_type_id.name == "Mjesečna obavijest") {
         let time = moment(setting.time).format("HH:mm").toString();
         let timeArray = time.split(":");
 
-        cron.schedule(`${timeArray[1]} ${timeArray[0]} * 1-12 *`, () => {
+        await cron.schedule(`${timeArray[1]} ${timeArray[0]} * 1-12 *`, async () => {
           let date = moment().format("YYYY/MM/DD HH:mm").toString();
           let email = setting.email;
-          let title = `Mjesečni izvještaj ${date}`
-          sendEmail(title, email)
+          let title = `Mjesečni izvještaj ${date}`;
+
+          let data = await getPdfData();
+          if (data.length > 0) {
+            let path = generatePdf("Mjesečni izvještaj", "mjesecni_izvjestaj", data);
+            sendEmail(title, email, path);
+          }
+          else {
+            sendEmail(title, email, null);
+          }
+          let logData = getLogData(data);
+
+          const newNotificationLog = new NotificationLog();
+          newNotificationLog.notification_type_id = setting.notification_type_id.id;
+          newNotificationLog.subject = "Mjesečni izvještaj";
+          newNotificationLog.email = email;
+          newNotificationLog.data = logData;
+          await newNotificationLog.save();
         });
       }
     });
@@ -93,7 +139,28 @@ async function refresh(req, res) {
   }
 }
 
-function sendEmail(title, email) {
+function getLogData(data) {
+  if (data.length > 0) {
+    let text = `Proizvodi fale na stanju:\n\n`;
+
+    data.forEach(warehouse => {
+      text += `SKLADIŠTE: ${warehouse.warehouse_name}, ${warehouse.location_name}, ${warehouse.city_name}\n`;
+
+      warehouse.data.forEach(item => {
+        text += `PROIZVOD: ${item.product_name}\nKATEGORIJA: ${item.category_name}\nPOTKATEGORIJA: ${item.subcategory_name}\nAMBALAŽA: ${item.packaging_name}\nKOLIČINA: ${item.quantity}\nMIN KOLIČINA: ${item.minimum_quantity}\n\n`;
+      });
+
+      text += `\n\n`;
+    });
+    return text;
+
+  }
+  else {
+    return "U skladištima ne fale proizvodi."
+  }
+}
+
+function sendEmail(title, email, path) {
   const transporter = nodemailer.createTransport({
     port: 465,
     host: "smtp.gmail.com",
@@ -103,18 +170,51 @@ function sendEmail(title, email) {
     },
     secure: true,
   });
-  var mailOptions = {
-    from: "upravljanjeskladistem@gmail.com",
-    to: email,
-    subject: title,
-    html: '<!DOCTYPE html>' +
-      '<html><head><title>Dnevna obavijest o stanju proizvoda na skladištima</title>' +
-      '</head><body></body></html>'
-  };
+
+  let html = "";
+  if (path) {
+    html = '<!DOCTYPE html>' +
+      `<html><head><title>${title} o stanju proizvoda na skladištima</title>` +
+      '</head><body>' +
+      '<h3>U Vašim skladištima fale proizvodi!</h3>' +
+      '<p>Za više informacija provjerite dobiveni pdf iz priloga.</p>' +
+      '</body></html>';
+
+    let nameArray = path.split("/");
+
+    var mailOptions = {
+      from: "upravljanjeskladistem@gmail.com",
+      to: email,
+      subject: title,
+      html: html,
+      attachments: [{
+        filename: nameArray[nameArray.length - 1],
+        path: path,
+        contentType: 'application/pdf'
+      }],
+    };
+  }
+  else {
+    html = '<!DOCTYPE html>' +
+      `<html><head><title>${title} o stanju proizvoda na skladištima</title>` +
+      '</head><body>' +
+      '<h3>Ne fale proizvodi na skladištu!</h3>' +
+      '</body></html>';
+
+    var mailOptions = {
+      from: "upravljanjeskladistem@gmail.com",
+      to: email,
+      subject: title,
+      html: html
+    };
+  }
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       console.log(error);
     }
+    fs.unlink(path, function (err) {
+      if (err) console.log(err);
+    });
   });
 }
 
@@ -133,7 +233,17 @@ function generatePdf(title, docTitle, data) {
 
   //PDF naslov
   doc.setFontSize(22);
-  doc.text(title, 125, 22);
+  let width = 145;
+  if (title == "Dnevni izvještaj") {
+    width = 140;
+  }
+  else if (title == "Tjedni izvještaj") {
+    width = 142;
+  }
+  else {
+    width = 138;
+  }
+  doc.text(replaceUtf8(title), width, 22);
 
   //Naziv stranice
   doc.setFontSize(15);
@@ -143,9 +253,6 @@ function generatePdf(title, docTitle, data) {
 
   //Url
   doc.text("www.upravljanjeskladistima.hr", 136, 42);
-
-  //Period izvještaja
-  doc.text("Izvještaj za period TEST", 115.1, 60);
 
   //Prijelom linija
   doc.setLineWidth(1.1);
@@ -161,14 +268,15 @@ function generatePdf(title, docTitle, data) {
         [
           { content: 'Naziv skladista: ' + warehouse.warehouse_name, colSpan: 2, styles: { halign: 'center', fillColor: [20, 151, 124] } },
           { content: 'Lokacija: ' + warehouse.location_name, colSpan: 2, styles: { halign: 'center', fillColor: [20, 151, 124] } },
-          { content: 'Grad: ' + warehouse.city_name, colSpan: 1, styles: { halign: 'center', fillColor: [20, 151, 124] } }
+          { content: 'Grad: ' + warehouse.city_name, colSpan: 2, styles: { halign: 'center', fillColor: [20, 151, 124] } }
         ],
         [
           { content: 'Proizvod', colSpan: 1, styles: { halign: 'center' } },
           { content: 'Kategorija', colSpan: 1, styles: { halign: 'center' } },
           { content: 'Potkategorija', colSpan: 1, styles: { halign: 'center' } },
           { content: 'Ambalaza', colSpan: 1, styles: { halign: 'center' } },
-          { content: 'Kolicina', colSpan: 1, styles: { halign: 'center' } }
+          { content: 'Trenutna Kolicina', colSpan: 1, styles: { halign: 'center' } },
+          { content: 'Min. Kolicina', colSpan: 1, styles: { halign: 'center' } }
         ],
       ];
       tableRows = [];
@@ -179,6 +287,7 @@ function generatePdf(title, docTitle, data) {
           item.subcategory_name,
           item.packaging_name,
           item.quantity,
+          item.minimum_quantity,
         ];
         tableRows.push(itemData);
       });
@@ -209,7 +318,10 @@ function generatePdf(title, docTitle, data) {
 
   let date = moment().format("DD_MM_YYYY_HH_mm").toString();
 
-  doc.save(`${date}_${docTitle}.pdf`);
+  let path = `src/schedule/pdf/${date}_${docTitle}.pdf`;
+
+  doc.save(path);
+  return path;
 };
 
 
@@ -230,29 +342,31 @@ async function getPdfData() {
       reportReciept.warehouse_id == stock.warehouse_id.id
       && reportReciept.product_id == stock.product_id.id
     );
-    if (filteredReciepts.length == 0) {
-      reportStocks.push({
-        warehouse_id: stock.warehouse_id.id,
-        warehouse_name: replaceUtf8(stock.warehouse_id.name),
-        city_id: location.city_id.id,
-        city_name: replaceUtf8(location.city_id.name),
-        location_id: location.id,
-        location_name: location.street,
-        product_id: product.id,
-        product_name: replaceUtf8(product.name),
-        category_id: product.category_id.id,
-        category_name: replaceUtf8(product.category_id.name),
-        subcategory_id: product.subcategory_id != null ? product.subcategory_id.id : "",
-        subcategory_name: product.subcategory_id != null ? replaceUtf8(product.subcategory_id.name) : "",
-        packaging_id: product.packaging_id.id,
-        packaging_name: replaceUtf8(product.packaging_id.name),
-        quantity: stock.quantity,
-        minimum_quantity: stock.minimum_quantity
-      })
-    }
-    else {
-      let index = reportStocks.indexOf(filteredReciepts[0]);
-      reportStocks[index].quantity = reportStocks[index].quantity + stock.quantity;
+    if (stock.quantity <= stock.minimum_quantity) {
+      if (filteredReciepts.length == 0) {
+        reportStocks.push({
+          warehouse_id: stock.warehouse_id.id,
+          warehouse_name: replaceUtf8(stock.warehouse_id.name),
+          city_id: location.city_id.id,
+          city_name: replaceUtf8(location.city_id.name),
+          location_id: location.id,
+          location_name: location.street,
+          product_id: product.id,
+          product_name: replaceUtf8(product.name),
+          category_id: product.category_id.id,
+          category_name: replaceUtf8(product.category_id.name),
+          subcategory_id: product.subcategory_id != null ? product.subcategory_id.id : "",
+          subcategory_name: product.subcategory_id != null ? replaceUtf8(product.subcategory_id.name) : "",
+          packaging_id: product.packaging_id.id,
+          packaging_name: replaceUtf8(product.packaging_id.name),
+          quantity: stock.quantity,
+          minimum_quantity: stock.minimum_quantity
+        })
+      }
+      else {
+        let index = reportStocks.indexOf(filteredReciepts[0]);
+        reportStocks[index].quantity = reportStocks[index].quantity + stock.quantity;
+      }
     }
   });
   if (reportStocks.length > 0) {

@@ -61,7 +61,7 @@ async function submit(req, res) {
           let quantityName = `STANJE: ${currentStock.quantity}`;
           let minimumQuantityName = `MIN. STANJE: ${currentStock.minimum_quantity}`;
 
-          let item = `Proizvoda više nema na stanju:\n\n${warehouseName}\n${cityName}\n${locationName}\n\n${productName}\n${categoryName}\n${subcategoryName}\n${packagingName}\n\n${quantityName}\n${minimumQuantityName}\n`;
+          let item = `Proizvod fali na stanju:\n\n${warehouseName}\n${cityName}\n${locationName}\n\n${productName}\n${categoryName}\n${subcategoryName}\n${packagingName}\n\n${quantityName}\n${minimumQuantityName}\n`;
           newNotificationLog.data = item;
           await newNotificationLog.save();
           
