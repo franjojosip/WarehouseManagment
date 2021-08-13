@@ -42,6 +42,7 @@
 }
 
 .basicCard {
+    margin-top: 100px;
     margin-left: 300px;
     margin-right: 300px;
 }
@@ -305,6 +306,7 @@ td {
 
 @media all and (max-width: 1700px) {
     .basicCard {
+        margin-top: 100px;
         margin-left: 200px;
         margin-right: 200px;
     }
@@ -312,6 +314,7 @@ td {
 
 @media all and (max-width: 1500px) {
     .basicCard {
+        margin-top: 80px;
         margin-left: 100px;
         margin-right: 100px;
     }
@@ -319,6 +322,7 @@ td {
 
 @media all and (max-width: 1300px) {
     .basicCard {
+        margin-top: 50px;
         margin-left: 0;
         margin-right: 0;
     }

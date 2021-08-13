@@ -8,7 +8,7 @@
   margin-right: 50px !important;
 }
 
-.homeCard{
+.homeCard {
   padding-left: 0px !important;
   min-width: 400px;
 }
@@ -155,7 +155,7 @@
   }
 }
 
-@media all and (max-width: 438px) {
+@media all and (max-width: 446px) {
   .data-card {
     width: 300px !important;
     height: 300px !important;
@@ -176,9 +176,10 @@
   }
 }
 
-@media all and (max-width: 390px) {
+@media all and (max-width: 450px) {
   .data-card {
-    width: 270px !important;
+    margin-left: 15% !important;
+    width: 240px !important;
     height: 270px !important;
     min-height: 270px !important;
     padding-top: 30px;
@@ -186,15 +187,43 @@
   }
 }
 
-@media all and (max-width: 356px) {
+@media all and (max-width: 390px) {
   .data-card {
-    width: 100% !important;
+    margin-left: 12% !important;
+    width: 220px !important;
     height: 270px !important;
     min-height: 270px !important;
     padding-top: 30px;
     padding-bottom: 20px;
   }
+  .data-card h3 {
+    font-size: 28px !important;
+  }
+  .data-card h4 {
+    font-size: 14px !important;
+  }
+  .data-card p {
+    font-size: 13px !important;
+  }
   .link-text {
-    font-size: 15px !important;
+    font-size: 13px !important;
+  }
+}
+
+@media all and (max-width: 370px) {
+  .data-card {
+    margin-left: 13% !important;
+    width: 200px !important;
+    height: 240px !important;
+    min-height: 240px !important;
+  }
+}
+
+@media all and (max-width: 340px) {
+  .data-card {
+    margin-left: 8% !important;
+    width: 200px !important;
+    height: 240px !important;
+    min-height: 240px !important;
   }
 }

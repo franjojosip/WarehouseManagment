@@ -6,7 +6,7 @@ import "./styles/Table.css";
 
 export default function CollapsibleTable({ filterRow, isAdmin, tableParentColumns, tableNestedRows, title, page, pageSize, totalPages, previousEnabled, nextEnabled, onActionClicked, onPageClick, onChangePageSize, onPreviousPageClick, onNextPageClick }) {
   return (
-    <div className="card mt-5 mb-5 basicCard">
+    <div className="card mb-5 basicCard">
       <div className="card-body">
         <h2 className="text-center font-weight-bold tableTitle">
           {title}

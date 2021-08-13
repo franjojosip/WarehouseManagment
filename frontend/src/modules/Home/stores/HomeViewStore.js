@@ -60,7 +60,6 @@ class HomeViewStore {
             console.clear();
         }
         else {
-            console.log(response.data);
             this.data = {
                 total_reciepts: response.data.total_reciepts,
                 total_stocktakings: response.data.total_stocktakings,
