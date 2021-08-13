@@ -25,6 +25,13 @@ async function list(req, res) {
       }
     });
     let users = await User.find({});
+    let loggedUser = await User.findById(req.body.userId).populate("role_id", { name: 1 });
+
+    if (loggedUser.role_id.name.toLowerCase() !== "administrator") {
+      reciepts = reciepts.filter(reciept => reciept.user_id == loggedUser._id)
+      stocktakings = stocktakings.filter(stocktaking => stocktaking.user_id == loggedUser._id)
+      entries = entries.filter(entry => entry.user_id == loggedUser._id)
+    }
 
     return res.status(200).json({
       data: {
