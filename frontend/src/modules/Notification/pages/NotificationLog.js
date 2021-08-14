@@ -22,7 +22,6 @@ class Notification extends React.Component {
     render() {
         const { isLoaderVisible, types, notificationTypeFilter, onNotificationTypeFilterChange, onResetFilterClick, title, clickedNotificationLog, onNotificationClicked, columns, rows, page, pageSize, totalPages, previousEnabled, nextEnabled, onPageClick, onChangePageSize, onPreviousPageClick, onNextPageClick, onDeleteClick } = this.props.viewStore;
 
-        console.log(rows);
         let tableRows = rows.map((element, i) => {
             return (<tr key={i}>
                 <td className="cell">{element.subject}</td>
