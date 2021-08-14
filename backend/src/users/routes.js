@@ -16,7 +16,7 @@ const requestResetPassword = require('./auth/requestResetPassword')
 
 router.post('/', authenticateJWT, authenticateAdmin, list);
 router.patch('/:id', checkParamID, authenticateJWT, authenticateAdmin, edit);
-router.delete('/remove/:id', checkParamID, authenticateJWT, authenticateAdmin, remove);
+router.delete('/remove/:id', checkParamID, authenticateJWT, remove);
 
 router.post('/login', login);
 router.post('/register', authenticateJWT, authenticateAdmin, register);

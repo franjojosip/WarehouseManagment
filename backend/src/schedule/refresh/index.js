@@ -141,7 +141,7 @@ async function refresh(req, res) {
 
 function getLogData(data) {
   if (data.length > 0) {
-    let text = `Proizvodi fale na stanju:\n\n`;
+    let text = `U skladištima nedostaju proizvodi:\n\n`;
 
     data.forEach(warehouse => {
       text += `SKLADIŠTE: ${warehouse.warehouse_name}, ${warehouse.location_name}, ${warehouse.city_name}\n`;
@@ -156,7 +156,7 @@ function getLogData(data) {
 
   }
   else {
-    return "U skladištima ne fale proizvodi."
+    return "Skladišta sadrže potrebnu količinu proizvoda."
   }
 }
 
@@ -176,7 +176,7 @@ function sendEmail(title, email, path) {
     html = '<!DOCTYPE html>' +
       `<html><head><title>${title} o stanju proizvoda na skladištima</title>` +
       '</head><body>' +
-      '<h3>U Vašim skladištima fale proizvodi!</h3>' +
+      '<h3>U Vašim skladištima nedostaju proizvodi!</h3>' +
       '<p>Za više informacija provjerite dobiveni pdf iz priloga.</p>' +
       '</body></html>';
 
@@ -198,7 +198,7 @@ function sendEmail(title, email, path) {
     html = '<!DOCTYPE html>' +
       `<html><head><title>${title} o stanju proizvoda na skladištima</title>` +
       '</head><body>' +
-      '<h3>Ne fale proizvodi na skladištu!</h3>' +
+      '<h3>Skladišta sadrže potrebnu količinu proizvoda!</h3>' +
       '</body></html>';
 
     var mailOptions = {
