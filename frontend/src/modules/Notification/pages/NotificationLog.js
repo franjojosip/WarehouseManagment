@@ -52,7 +52,7 @@ class Notification extends React.Component {
             </tr>);
         });
         let filterRow = (
-            <div className="filterCard" style={{ marginBottom: 10 }}>
+            <div className="filterCard" style={{ marginBottom: 10, marginTop: 40 }}>
                 <div className="row">
                     <div className="col-md-2 filterColumn">
                         <span id="filterTitle">FILTERI</span>

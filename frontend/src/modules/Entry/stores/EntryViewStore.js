@@ -138,7 +138,9 @@ class EntryViewStore {
             );
         }
         this.allData = filteredData;
-        this.groupData();
+        if (this.allData.length !== 0) {
+            this.groupData();
+        }
         this.setPagination(1);
     }
 
@@ -160,7 +162,9 @@ class EntryViewStore {
             }
         }
         this.allData = filteredData;
-        this.groupData();
+        if (this.allData.length !== 0) {
+            this.groupData();
+        }
         this.setPagination(1);
     }
 
@@ -182,7 +186,9 @@ class EntryViewStore {
             }
         }
         this.allData = filteredData;
-        this.groupData();
+        if (this.allData.length !== 0) {
+            this.groupData();
+        }
         this.setPagination(1);
     }
 
@@ -194,7 +200,9 @@ class EntryViewStore {
         this.dateFilter.endDate = "";
         this.allData = this.response;
         this.onChangePageSize(5);
-        this.groupData();
+        if (this.allData.length !== 0) {
+            this.groupData();
+        }
         this.setPagination(1);
     }
 
@@ -319,7 +327,9 @@ class EntryViewStore {
                 response.entries.forEach(item => item.date_created = moment(new Date(item.date_created)).format('DD/MM/YYYY'));
                 this.allData = response.entries;
                 this.response = response.entries;
-                this.groupData();
+                if (this.allData.length !== 0) {
+                    this.groupData();
+                }
             }
             else {
                 this.allData = [

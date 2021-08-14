@@ -86,6 +86,9 @@ class SubcategoryViewStore {
         else {
             this.allData = this.response;
         }
+        if (this.allData.length == 0) {
+            this.allData = [{ id: "", name: "Nema podataka", category_id: "", category_name: "" }];
+        }
         this.setPagination(1);
     }
 
@@ -94,6 +97,9 @@ class SubcategoryViewStore {
         this.categoryFilter.id = "";
         this.categoryFilter.name = "";
         this.allData = this.response;
+        if (this.allData.length == 0) {
+            this.allData = [{ id: "", name: "Nema podataka", category_id: "", category_name: "" }];
+        }
         this.onChangePageSize(5);
         this.setPagination(1);
     }

@@ -76,13 +76,12 @@
 }
 
 .dropdown-menu.pagesize.show {
-    margin-top: 3px !important;
+    margin-top: 60px !important;
     padding: 0 !important;
     width: 150px !important;
     left: 50% !important;
     right: auto !important;
     text-align: center !important;
-    transform: translate(-50%, 45%) !important;
 }
 
 #dropdownMenuPageSize {
@@ -113,13 +112,13 @@
 }
 
 .dropdown-menu.show {
-    margin-top: 5px !important;
+    margin-top: 60px !important;
     padding: 0 !important;
     width: 100% !important;
     left: 50% !important;
     right: auto !important;
     text-align: center !important;
-    transform: translate(-50%, 28%) !important;
+    transform: translate(-50%, 0) !important;
 }
 
 .lowerDropdown {
@@ -127,7 +126,11 @@
 }
 
 .roleDropdown .dropdown-menu.show {
-    margin-top: 20px !important;
+    margin-top: 60px !important;
+}
+
+.productPageSize.dropdown-menu.pagesize.show {
+    margin-top: 50px !important;
 }
 
 .row {
@@ -357,7 +360,7 @@ td {
 
 @media (max-width: 950px) {
     .dropdown-menu.pagesize.show {
-        transform: translate(-47%, 45%) !important;
+        margin-top: 60px !important;
     }
     .MuiFormControl-root {
         width: 150px !important;
@@ -375,16 +378,20 @@ td {
         padding: 0px !important;
     }
     .dropdown-menu.pagesize.show {
-        left: 50% !important;
+        margin-top: 60px !important;
+        left: 55% !important;
         right: auto !important;
         text-align: center !important;
-        transform: translate(-45%, 45%) !important;
+    }
+    .productPageSize.dropdown-menu.pagesize.show {
+        margin-top: 60px !important;
     }
 }
 
 @media (max-width: 830px) {
     .dropdown-menu.pagesize.show {
-        transform: translate(-41%, 45%) !important;
+        margin-top: 60px !important;
+        left: 58% !important;
     }
 }
 
@@ -399,8 +406,12 @@ td {
 }
 
 @media (max-width: 768px) {
+    .dropdown-menu.show {
+        margin-top: 60px !important;
+    }
     .dropdown-menu.pagesize.show {
-        transform: translate(-50%, 45%) !important;
+        margin-top: 60px !important;
+        left: 50% !important;
     }
     .cellHeader, .cellHeaderTwo, .cellHeaderThree, .complexHeader {
         font-size: 15px;
@@ -447,6 +458,9 @@ td {
         padding: 0 !important;
         width: 100px !important;
         min-width: 100px !important;
+    }
+    .dropdown-menu.show {
+        margin-top: 50px !important;
     }
     .dateText {
         margin: 0 !important;
@@ -551,6 +565,13 @@ td {
 }
 
 @media (max-width: 450px) {
+    .productPageSize.dropdown-menu.pagesize.show {
+        margin-top: 50px !important;
+    }
+    .dropdown-menu.pagesize.show {
+        margin-top: 50px !important;
+        left: 50% !important;
+    }
     #dropdownMenuPageSizeSecond {
         height: 36px !important;
         width: 100px !important;

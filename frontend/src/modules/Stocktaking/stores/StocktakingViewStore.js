@@ -139,7 +139,9 @@ class StocktakingViewStore {
             );
         }
         this.allData = filteredData;
-        this.groupData();
+        if (this.allData.length !== 0) {
+            this.groupData();
+        }
         this.setPagination(1);
     }
 
@@ -161,7 +163,9 @@ class StocktakingViewStore {
             }
         }
         this.allData = filteredData;
-        this.groupData();
+        if (this.allData.length !== 0) {
+            this.groupData();
+        }
         this.setPagination(1);
     }
 
@@ -183,7 +187,9 @@ class StocktakingViewStore {
             }
         }
         this.allData = filteredData;
-        this.groupData();
+        if (this.allData.length !== 0) {
+            this.groupData();
+        }
         this.setPagination(1);
     }
 
@@ -195,7 +201,9 @@ class StocktakingViewStore {
         this.dateFilter.endDate = "";
         this.allData = this.response;
         this.onChangePageSize(5);
-        this.groupData();
+        if (this.allData.length !== 0) {
+            this.groupData();
+        }
         this.setPagination(1);
     }
 

@@ -127,7 +127,7 @@ class ProductViewStore {
         if (this.productFilter.packaging_id != "") {
             filteredData = filteredData.filter(data => data.packaging_id === this.productFilter.packaging_id);
         }
-        if(filteredData.length == 0){
+        if (filteredData.length == 0) {
             filteredData = [{ id: "", name: "Nema podataka", category_id: "", category_name: "", subcategory_id: "", subcategory_name: "", packaging_id: "", packaging_name: "" }];
         }
         this.allData = filteredData;
@@ -143,6 +143,9 @@ class ProductViewStore {
         this.productFilter.packaging_id = "";
         this.productFilter.packaging_name = "";
         this.allData = this.response;
+        if (this.allData.length == 0) {
+            this.allData = [{ id: "", name: "Nema podataka", category_id: "", category_name: "", subcategory_id: "", subcategory_name: "", packaging_id: "", packaging_name: "" }];
+        }
         this.onChangePageSize(5);
         this.setPagination(1);
     }

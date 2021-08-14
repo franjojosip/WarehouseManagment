@@ -95,6 +95,9 @@ class UserViewStore {
         else {
             this.allData = this.response;
         }
+        if (this.allData.length == 0) {
+            this.allData = [{ id: "", fname: "Nema podataka", lname: "", email: "", phone: "", role_id: "", role_name: "", password: "" }];
+        }
         this.setPagination(1);
     }
 
@@ -393,10 +396,10 @@ class UserViewStore {
         if (this.emailExists()) {
             this.errorMessage.email = "Email se već koristi!";
         }
-        if(!isEmailValid){
+        if (!isEmailValid) {
             this.errorMessage.email = "Neispravan format email-a!";
         }
-        if(!isValidPhoneNumber){
+        if (!isValidPhoneNumber) {
             this.errorMessage.phone = "Neispravan broj telefona!";
         }
         if (this.clickedUser.fname.length < 2) {
@@ -414,7 +417,7 @@ class UserViewStore {
         if (this.isCreateClick && this.clickedUser.password.length < 6) {
             this.errorMessage.password = "Neispravna duljina šifre (min. 6)";
         }
-        if(this.clickedUser.role_id.toString() == ""){
+        if (this.clickedUser.role_id.toString() == "") {
             this.errorMessage.role = "Odaberite ulogu!";
         }
 

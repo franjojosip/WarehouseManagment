@@ -130,7 +130,9 @@ class StockViewStore {
         if (this.allData.length == 0) {
             this.allData = [{ id: "", name: "Nema podataka", city_id: "", city_name: "", location_id: "", location_name: "", warehouse_id: "", warehouse_name: "", product_id: "", product_name: "", subcategory_id: "", subcategory_name: "", packaging_id: "", packaging_name: "", quantity: 0, min_quantity: 1 }];
         }
-        this.groupData();
+        if(this.response.length !== 0){
+            this.groupData();
+        }
         this.setPagination(1);
     }
 
@@ -140,7 +142,9 @@ class StockViewStore {
         this.cityFilter.name = "";
         this.allData = this.response;
         this.onChangePageSize(5);
-        this.groupData();
+        if (this.allData.length !== 0) {
+            this.groupData();
+        }
         this.setPagination(1);
     }
 

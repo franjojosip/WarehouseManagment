@@ -118,6 +118,9 @@ class WarehouseViewStore {
         this.cityFilter.id = "";
         this.cityFilter.name = "";
         this.allData = this.response;
+        if (this.allData.length === 0) {
+            this.allData = [{ id: "", name: "Nema podataka", city_id: "", city_name: "", location_id: "", location_name: "", users: [] }];
+        }
         this.onChangePageSize(5);
         this.setPagination(1);
     }

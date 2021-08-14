@@ -92,6 +92,9 @@ class LocationViewStore {
         this.cityFilter.id = "";
         this.cityFilter.name = "";
         this.allData = this.response;
+        if (this.allData.length == 0) {
+            this.allData = [{ id: "", name: "Nema podataka", city_id: "", city_name: "", zip_code: "" }];
+        }
         this.onChangePageSize(5);
         this.setPagination(1);
     }

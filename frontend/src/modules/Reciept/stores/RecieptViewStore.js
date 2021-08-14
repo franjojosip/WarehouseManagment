@@ -137,7 +137,9 @@ class RecieptViewStore {
             );
         }
         this.allData = filteredData;
-        this.groupData();
+        if (this.allData.length !== 0) {
+            this.groupData();
+        }
         this.setPagination(1);
     }
 
@@ -145,10 +147,10 @@ class RecieptViewStore {
     onStartDateFilterChange(value) {
         let filteredData = this.response;
         this.dateFilter.startDate = value;
-        if(this.dateFilter.startDate != "" && this.dateFilter.endDate != ""){
+        if (this.dateFilter.startDate != "" && this.dateFilter.endDate != "") {
             let startDate = moment(new Date(this.dateFilter.startDate)).format("DD/MM/YYYY");
             let endDate = moment(new Date(value)).format("DD/MM/YYYY");
-            if(moment(this.dateFilter.startDate).diff(moment(this.dateFilter.endDate), 'days') <= 0){
+            if (moment(this.dateFilter.startDate).diff(moment(this.dateFilter.endDate), 'days') <= 0) {
                 filteredData = filteredData.filter(data =>
                     (moment(data.date_created, "DD/MM/YYYY").isAfter(moment(startDate, "DD/MM/YYYY")) || moment(data.date_created, "DD/MM/YYYY").isSame(moment(startDate, "DD/MM/YYYY")))
                     && (moment(data.date_created, "DD/MM/YYYY").isBefore(moment(endDate, "DD/MM/YYYY")) || moment(data.date_created, "DD/MM/YYYY").isSame(moment(endDate, "DD/MM/YYYY")))
@@ -159,7 +161,9 @@ class RecieptViewStore {
             }
         }
         this.allData = filteredData;
-        this.groupData();
+        if (this.allData.length !== 0) {
+            this.groupData();
+        }
         this.setPagination(1);
     }
 
@@ -167,10 +171,10 @@ class RecieptViewStore {
     onEndDateFilterChange(value) {
         let filteredData = this.response;
         this.dateFilter.endDate = value;
-        if(this.dateFilter.startDate != "" && this.dateFilter.endDate != ""){
+        if (this.dateFilter.startDate != "" && this.dateFilter.endDate != "") {
             let startDate = moment(new Date(this.dateFilter.startDate)).format("DD/MM/YYYY");
             let endDate = moment(new Date(value)).format("DD/MM/YYYY");
-            if(moment(this.dateFilter.startDate).diff(moment(this.dateFilter.endDate), 'days') <= 0){
+            if (moment(this.dateFilter.startDate).diff(moment(this.dateFilter.endDate), 'days') <= 0) {
                 filteredData = filteredData.filter(data =>
                     (moment(data.date_created, "DD/MM/YYYY").isAfter(moment(startDate, "DD/MM/YYYY")) || moment(data.date_created, "DD/MM/YYYY").isSame(moment(startDate, "DD/MM/YYYY")))
                     && (moment(data.date_created, "DD/MM/YYYY").isBefore(moment(endDate, "DD/MM/YYYY")) || moment(data.date_created, "DD/MM/YYYY").isSame(moment(endDate, "DD/MM/YYYY")))
@@ -181,7 +185,9 @@ class RecieptViewStore {
             }
         }
         this.allData = filteredData;
-        this.groupData();
+        if (this.allData.length !== 0) {
+            this.groupData();
+        }
         this.setPagination(1);
     }
 
@@ -193,7 +199,9 @@ class RecieptViewStore {
         this.dateFilter.endDate = "";
         this.allData = this.response;
         this.onChangePageSize(5);
-        this.groupData();
+        if (this.allData.length !== 0) {
+            this.groupData();
+        }
         this.setPagination(1);
     }
 
