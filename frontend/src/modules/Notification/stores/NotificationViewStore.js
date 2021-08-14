@@ -80,6 +80,9 @@ class NotificationViewStore {
         this.notificationTypeFilter.name = "";
         this.allData = this.response;
         this.onChangePageSize(5);
+        if (this.allData.length == 0) {
+            this.allData = [{ id: "", notification_type_id: "", subject: "Nema podataka", notification_type_name: "", email: "", date_created: "", data: "" }];
+        }
         this.setPagination(1);
     }
 
@@ -240,7 +243,7 @@ class NotificationViewStore {
     @action
     onChangePageSize(pageSize) {
         this.pageSize = pageSize;
-        this.setPagination();
+        this.setPagination(1);
     }
 
 }

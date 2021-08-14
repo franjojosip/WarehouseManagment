@@ -107,6 +107,9 @@ class NotificationViewStore {
         this.notifcationTypeFilter.name = "";
         this.allData = this.response;
         this.onChangePageSize(5);
+        if (this.allData.length == 0) {
+            this.allData = [{ id: "", notification_type_id: "", notification_type_name: "Nema podataka", time: "", day_of_week: "", email: "" }];
+        }
         this.setPagination(1);
     }
 

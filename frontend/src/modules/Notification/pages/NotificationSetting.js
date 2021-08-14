@@ -46,6 +46,16 @@ class NotificationSetting extends React.Component {
                 </td>
             </tr>);
         });
+        if (tableRows.length === 0) {
+            tableRows.push(<tr key="noData">
+                <td className="cell">Nema podataka</td>
+                <td className="cell"></td>
+                <td className="cell"></td>
+                <td className="cell"></td>
+                <td className="cell"></td>
+                <td className="cell"></td>
+            </tr>);
+        }
         let filterRow = (
             <div className="filterCard" style={{ marginBottom: 10 }}>
                 <div className="row">

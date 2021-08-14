@@ -22,6 +22,7 @@ class Notification extends React.Component {
     render() {
         const { isLoaderVisible, types, notificationTypeFilter, onNotificationTypeFilterChange, onResetFilterClick, title, clickedNotificationLog, onNotificationClicked, columns, rows, page, pageSize, totalPages, previousEnabled, nextEnabled, onPageClick, onChangePageSize, onPreviousPageClick, onNextPageClick, onDeleteClick } = this.props.viewStore;
 
+        console.log(rows);
         let tableRows = rows.map((element, i) => {
             return (<tr key={i}>
                 <td className="cell">{element.subject}</td>
@@ -51,6 +52,17 @@ class Notification extends React.Component {
                 </td>
             </tr>);
         });
+        if (tableRows.length === 0) {
+            tableRows.push(<tr key="noData">
+                <td className="cell">Nema podataka</td>
+                <td className="cell"></td>
+                <td className="cell"></td>
+                <td className="cell"></td>
+                <td className="cell"></td>
+                <td className="cell"></td>
+                <td className="cell"></td>
+            </tr>);
+        }
         let filterRow = (
             <div className="filterCard" style={{ marginBottom: 10, marginTop: 40 }}>
                 <div className="row">
