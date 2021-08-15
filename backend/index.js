@@ -13,7 +13,8 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
 
-mongoose.connect(process.env.DB_CONNECTION, { useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true }).then(() => {
+const mongoDBurl = process.env.MONGO_DB_URL;
+mongoose.connect(mongoDBurl, { useNewUrlParser: true, useFindAndModify: false, useUnifiedTopology: true }).then(() => {
   //Express Modules
   loadModules();
   // Express Routes
